@@ -15,6 +15,9 @@
   --brand-color: #011F39;
   --press-brand-color: #001527;
   --hover-brand-color: #012748;
+
+  --success-color: #34c759;
+  --failure-color: #ff383c;
 }
 
 @layer base {

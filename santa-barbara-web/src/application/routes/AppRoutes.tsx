@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 const AppLayout = lazy(() => import('@/application/layout/AppLayout'));
 
 const Components = lazy(() => import('@/application/pages/Components'));
+const ProfilePage = lazy(() => import('@/application/pages/ProfilePage'));
 const Login = lazy(() => import('@/application/pages/Login'));
 
 
@@ -13,6 +14,7 @@ function AppRoutes() {
             <Suspense fallback={<div>Carregando...</div>}>
                 <Routes>
                     <Route path="/dev/components" element={<Components/>} />
+                    <Route path="/profile" element={<ProfilePage/>} />
                     <Route element={<AppLayout />}>
                         <Route path="/login" element={<Login />} />
                     </Route>
