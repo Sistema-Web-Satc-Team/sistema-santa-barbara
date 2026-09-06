@@ -63,7 +63,13 @@ build/
 .vscode/
 
 
+# Chaves RSA de segurança
+
+src/main/resources/*.pem
+src/main/resources/certs/*.pem
+*.pem
 certs/**
 .certs/**
 **/certs/**
 **/.certs/**
+
