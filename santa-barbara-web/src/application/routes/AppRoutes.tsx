@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
+import { PrivateRoute } from "./PrivateRoute";
 
 const AppLayout = lazy(() => import('@/application/layout/AppLayout'));
 
@@ -13,11 +14,16 @@ function AppRoutes() {
         <BrowserRouter>
             <Suspense fallback={<div>Carregando...</div>}>
                 <Routes>
-                    <Route path="/dev/components" element={<Components/>} />
-                    <Route path="/profile" element={<ProfilePage/>} />
+                    
                     <Route element={<AppLayout />}>
                         <Route path="/login" element={<Login />} />
+
+                        <Route element={<PrivateRoute />}>
+                            <Route path="/dev/components" element={<Components/>} />
+                            <Route path="/profile" element={<ProfilePage/>} />
+                        </Route>
                     </Route>
+
                 </Routes>
             </Suspense>
         </BrowserRouter>
