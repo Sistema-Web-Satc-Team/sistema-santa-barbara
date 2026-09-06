@@ -1,22 +1,17 @@
-package br.org.bandasantabarbara.application;
+package br.org.bandasantabarbara.application.usecase;
 
+import br.org.bandasantabarbara.application.dtos.RegistrarAdminRequest;
 import br.org.bandasantabarbara.model.Membro;
-import br.org.bandasantabarbara.model.Papel;
 import br.org.bandasantabarbara.model.Senha;
-import br.org.bandasantabarbara.repositories.MembroRepository;
 import br.org.bandasantabarbara.repositories.SetupApplicationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class SetupApplicationUsecase {
 
-    private SetupApplicationRepository setupAppRepository;
-    private PasswordEncoder passwordEncoder;
+    private final SetupApplicationRepository setupAppRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public SetupApplicationUsecase(
             SetupApplicationRepository setupAppRepository,
@@ -27,7 +22,7 @@ public class SetupApplicationUsecase {
 
     }
 
-    public void registrarAdmin(RegisterAdminDTO dto) {
+    public void registrarAdmin(RegistrarAdminRequest dto) {
 
         var senha = Senha.criar(dto.senha());
 

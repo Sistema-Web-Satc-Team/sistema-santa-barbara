@@ -1,6 +1,6 @@
 package br.org.bandasantabarbara.infrastructure.security;
 
-import br.org.bandasantabarbara.application.DefaultMessageResponse;
+import br.org.bandasantabarbara.application.dtos.DefaultMessageResponse;
 import br.org.bandasantabarbara.repositories.MembroRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

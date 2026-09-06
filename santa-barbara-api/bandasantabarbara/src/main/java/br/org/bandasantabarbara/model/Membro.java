@@ -5,10 +5,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.domain.Persistable;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,12 +20,28 @@ import java.util.UUID;
         name = "membro_credencial",
         pkJoinColumns = @PrimaryKeyJoinColumn(name = "membro_id")
 )
-public class Membro {
+public class Membro implements Persistable<UUID> {
     @Id
-    @GeneratedValue
-    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
-    @Getter
     private UUID id;
+
+    @Transient
+    private boolean isNovo = true;
+
+    @Override
+    public UUID getId() {
+        return id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNovo;
+    }
+
+    @PostLoad
+    @PostPersist
+    void markNotNew() {
+        this.isNovo = false;
+    }
 
     @Getter @Setter
     @Column(name = "email", nullable = false, unique = true)
@@ -91,10 +109,12 @@ public class Membro {
     *
      */
 
-    public Membro(String email, String nomeDeUsuario) {
-        this();
-        this.email = email;
-        this.nomeDeUsuario = nomeDeUsuario;
+    public static Membro criarMembro(String email, String nome) {
+        var membro = new Membro();
+        membro.setEmail(email);
+        membro.setNome(nome);
+
+        return membro;
     }
 
     protected Membro() {
@@ -123,14 +143,21 @@ public class Membro {
         this.atualizadoEm = Instant.now();
     }
 
+    public void atribuirPapeis(List<Papel> novosPapeis) {
+        this.papeis.addAll(novosPapeis);
+        this.atualizadoEm = Instant.now();
+    }
+
 
     public static Membro criarAdministrador(
             String email,
             String username,
             String hashSenha
     ) {
-        var membro = new Membro(email, username);
+        var membro = new Membro();
 
+        membro.setEmail(email);
+        membro.setNomeDeUsuario(username);
         membro.atribuirCredencial(hashSenha);
         membro.atribuirPapel(Papel.superAdmin());
 

@@ -1,7 +1,8 @@
-package br.org.bandasantabarbara.application;
+package br.org.bandasantabarbara.application.usecase;
 
+import br.org.bandasantabarbara.application.dtos.LoginRequest;
+import br.org.bandasantabarbara.application.dtos.TokenResponse;
 import br.org.bandasantabarbara.exception.InvalidoException;
-import br.org.bandasantabarbara.exception.NaoEncontradoException;
 import br.org.bandasantabarbara.infrastructure.security.TokenService;
 import br.org.bandasantabarbara.repositories.MembroRepository;
 

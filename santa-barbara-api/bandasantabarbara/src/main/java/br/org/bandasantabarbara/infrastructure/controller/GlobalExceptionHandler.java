@@ -1,7 +1,7 @@
 package br.org.bandasantabarbara.infrastructure.controller;
 
-import br.org.bandasantabarbara.application.DefaultMessageResponse;
-import br.org.bandasantabarbara.application.DomainExceptionResponse;
+import br.org.bandasantabarbara.application.dtos.DefaultMessageResponse;
+import br.org.bandasantabarbara.application.dtos.DomainExceptionResponse;
 import br.org.bandasantabarbara.exception.DomainException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

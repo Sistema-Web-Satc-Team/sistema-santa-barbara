@@ -1,17 +1,18 @@
 package br.org.bandasantabarbara.infrastructure.controller;
 
 
-import br.org.bandasantabarbara.application.*;
+import br.org.bandasantabarbara.application.dtos.DefaultMessageResponse;
+import br.org.bandasantabarbara.application.dtos.LoginRequest;
+import br.org.bandasantabarbara.application.dtos.MeResponse;
+import br.org.bandasantabarbara.application.dtos.TokenResponse;
+import br.org.bandasantabarbara.application.usecase.AutenticarMembroUseCase;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")

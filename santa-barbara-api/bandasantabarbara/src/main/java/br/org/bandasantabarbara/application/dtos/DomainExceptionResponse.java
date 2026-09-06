@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application;
+package br.org.bandasantabarbara.application.dtos;
 
 import java.util.List;
 

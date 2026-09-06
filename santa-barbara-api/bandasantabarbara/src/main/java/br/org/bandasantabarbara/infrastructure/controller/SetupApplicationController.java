@@ -1,13 +1,11 @@
 package br.org.bandasantabarbara.infrastructure.controller;
 
-import br.org.bandasantabarbara.application.DefaultMessageResponse;
-import br.org.bandasantabarbara.application.RegisterAdminDTO;
-import br.org.bandasantabarbara.application.SetupApplicationUsecase;
+import br.org.bandasantabarbara.application.dtos.DefaultMessageResponse;
+import br.org.bandasantabarbara.application.dtos.RegistrarAdminRequest;
+import br.org.bandasantabarbara.application.usecase.SetupApplicationUsecase;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.ServerResponse;
 
 @RestController
 @RequestMapping("/setup")
@@ -21,7 +19,7 @@ public class SetupApplicationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public DefaultMessageResponse registerAdmin(@RequestBody @Valid RegisterAdminDTO dto) {
+    public DefaultMessageResponse registerAdmin(@RequestBody @Valid RegistrarAdminRequest dto) {
             usecase.registrarAdmin(dto);
             return new DefaultMessageResponse("Admin criado com sucesso.");
     }

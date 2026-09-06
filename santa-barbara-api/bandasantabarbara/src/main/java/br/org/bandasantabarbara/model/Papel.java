@@ -1,18 +1,21 @@
 package br.org.bandasantabarbara.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
 
 @Entity
 @Table(name = "papel")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Papel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
-    private int Id;
+    private Integer id;
 
     @Getter
     @Setter
