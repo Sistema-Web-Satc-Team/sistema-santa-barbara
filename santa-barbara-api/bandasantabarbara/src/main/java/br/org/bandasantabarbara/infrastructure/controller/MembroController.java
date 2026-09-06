@@ -6,6 +6,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/membros")
 public class MembroController {
@@ -33,4 +35,15 @@ public class MembroController {
         var dto = new OffsetPaginationRequest(page, size);
         return usecase.listarMembros(dto);
     }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void atualizarMembro(
+            @PathVariable UUID id,
+            @RequestBody AtualizarParcialmenteMembroRequest dto
+    ) {
+        usecase.atualizarParcialmente(id, dto);
+    }
+
+
 }

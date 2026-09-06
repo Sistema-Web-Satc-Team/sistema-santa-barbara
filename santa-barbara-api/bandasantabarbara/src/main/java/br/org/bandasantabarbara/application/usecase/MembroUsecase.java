@@ -1,9 +1,6 @@
 package br.org.bandasantabarbara.application.usecase;
 
-import br.org.bandasantabarbara.application.dtos.MembroResponse;
-import br.org.bandasantabarbara.application.dtos.OffsetPaginationRequest;
-import br.org.bandasantabarbara.application.dtos.PageResponse;
-import br.org.bandasantabarbara.application.dtos.RegistrarMembroRequest;
+import br.org.bandasantabarbara.application.dtos.*;
 import br.org.bandasantabarbara.exception.NaoEncontradoException;
 import br.org.bandasantabarbara.model.Membro;
 import br.org.bandasantabarbara.model.Papel;
@@ -18,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -93,5 +91,28 @@ public class MembroUsecase {
                 dto.page(),
                 dto.size()
         );
+    }
+
+    @Transactional
+    public void atualizarParcialmente(UUID id, AtualizarParcialmenteMembroRequest dto) {
+        Membro membro = membroRepository.findById(id)
+                .orElseThrow(() -> new NaoEncontradoException("Membro não encontrado com o ID informado"));
+
+        membro.atualizarInformacoes(
+                dto.nome(),
+                dto.sobrenome(),
+                dto.email(),
+                dto.telefone(),
+                dto.endereco(),
+                dto.dataNascimento()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public MeResponse obterPerfilDoMembroAutenticado(UUID membroId) {
+        Membro membro = membroRepository.findById(membroId)
+                .orElseThrow(() -> new NaoEncontradoException("Membro autenticado não encontrado no banco de dados."));
+
+        return MeResponse.deEntidade(membro);
     }
 }

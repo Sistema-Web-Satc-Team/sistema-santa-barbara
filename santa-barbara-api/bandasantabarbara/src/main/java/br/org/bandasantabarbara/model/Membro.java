@@ -109,14 +109,6 @@ public class Membro implements Persistable<UUID> {
     *
      */
 
-    public static Membro criarMembro(String email, String nome) {
-        var membro = new Membro();
-        membro.setEmail(email);
-        membro.setNome(nome);
-
-        return membro;
-    }
-
     protected Membro() {
         this.id = GUID.v7().toUUID();
         criadoEm = Instant.now();
@@ -148,6 +140,12 @@ public class Membro implements Persistable<UUID> {
         this.atualizadoEm = Instant.now();
     }
 
+    /*
+    *
+    * MÉTODOS DE CRIACAO
+    *
+     */
+
 
     public static Membro criarAdministrador(
             String email,
@@ -162,6 +160,31 @@ public class Membro implements Persistable<UUID> {
         membro.atribuirPapel(Papel.superAdmin());
 
         return membro;
+    }
+
+    public static Membro criarMembro(String email, String nome) {
+        var membro = new Membro();
+        membro.setEmail(email);
+        membro.setNome(nome);
+
+        return membro;
+    }
+
+    /*
+    *
+    * MÉTODOS DE ATUALIZACAO
+    *
+     */
+
+    public void atualizarInformacoes(String nome, String sobrenome, String email, String telefone, String endereco, LocalDate dataNascimento) {
+        if (nome != null && !nome.isBlank()) this.nome = nome;
+        if (sobrenome != null && !sobrenome.isBlank()) this.sobrenome = sobrenome;
+        if (email != null && !email.isBlank()) this.email = email;
+        if (telefone != null && !telefone.isBlank()) this.telefone = telefone;
+        if (endereco != null && !endereco.isBlank()) this.endereco = endereco;
+        if (dataNascimento != null) this.dataNascimento = dataNascimento;
+        this.atualizadoEm = Instant.now();
+        isNovo = false;
     }
 
 }

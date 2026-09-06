@@ -5,10 +5,11 @@ import br.org.bandasantabarbara.model.Papel;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public record MembroResponse(
+        UUID id,
         String nome,
         String sobrenome,
         String nomeUsuario,
@@ -31,6 +32,7 @@ public record MembroResponse(
                 .toList();
 
         return new MembroResponse(
+                membro.getId(),
                 membro.getNome(),
                 membro.getSobrenome(),
                 membro.getNomeDeUsuario(),
