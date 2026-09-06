@@ -1,14 +1,21 @@
 package br.org.bandasantabarbara.application.usecase;
 
+import br.org.bandasantabarbara.application.dtos.MembroResponse;
+import br.org.bandasantabarbara.application.dtos.OffsetPaginationRequest;
+import br.org.bandasantabarbara.application.dtos.PageResponse;
 import br.org.bandasantabarbara.application.dtos.RegistrarMembroRequest;
 import br.org.bandasantabarbara.exception.NaoEncontradoException;
 import br.org.bandasantabarbara.model.Membro;
 import br.org.bandasantabarbara.model.Papel;
 import br.org.bandasantabarbara.repositories.MembroRepository;
 import br.org.bandasantabarbara.repositories.PapelRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -65,5 +72,26 @@ public class MembroUsecase {
         }
 
         this.membroRepository.save(membro);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<MembroResponse> listarMembros(OffsetPaginationRequest dto)
+    {
+        Pageable pageable = PageRequest.of(
+                dto.page(),
+                dto.size(),
+                Sort.by("criadoEm").descending()
+        );
+        List<Membro> membros = membroRepository.listar(pageable);
+
+        List<MembroResponse> membrosResponse = membros.stream()
+                .map(MembroResponse::deEntidade)
+                .toList();
+
+        return new PageResponse<>(
+                membrosResponse,
+                dto.page(),
+                dto.size()
+        );
     }
 }

@@ -1,7 +1,6 @@
 package br.org.bandasantabarbara.infrastructure.controller;
 
-import br.org.bandasantabarbara.application.dtos.DefaultMessageResponse;
-import br.org.bandasantabarbara.application.dtos.RegistrarMembroRequest;
+import br.org.bandasantabarbara.application.dtos.*;
 import br.org.bandasantabarbara.application.usecase.MembroUsecase;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,5 +21,16 @@ public class MembroController {
     public DefaultMessageResponse registrarMembro(@RequestBody @Valid RegistrarMembroRequest dto) {
         usecase.registrarMembro(dto);
         return new DefaultMessageResponse("Membro adicionado com sucesso.");
+    }
+
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public PageResponse<MembroResponse> listarMembros(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        var dto = new OffsetPaginationRequest(page, size);
+        return usecase.listarMembros(dto);
     }
 }
