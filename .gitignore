@@ -61,3 +61,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+certs/**
+.certs/**
+**/certs/**
+**/.certs/**
