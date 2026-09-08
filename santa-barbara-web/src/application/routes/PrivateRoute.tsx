@@ -3,11 +3,12 @@ import { Navigate, Outlet } from "react-router";
 import { AuthService } from "../services/auth.service";
 
 const PrivateRoute = () => {
-    const [isAutenticado, setIsAutenticado] = useState(null);
+    const [isAutenticado, setIsAutenticado] = useState<boolean | null>(null);
 
     useEffect(() => {
         (async function () {
-            const isAutenticado = await AuthService.isAutenticado();
+            //const isAutenticado = await AuthService.isAutenticado();
+            const isAutenticado = true; // Simulação 
             setIsAutenticado(isAutenticado);
         })()
     }, [])

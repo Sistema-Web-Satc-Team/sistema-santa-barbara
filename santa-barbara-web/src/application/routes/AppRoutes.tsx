@@ -7,6 +7,7 @@ const AppLayout = lazy(() => import('@/application/layout/AppLayout'));
 const Components = lazy(() => import('@/application/pages/Components'));
 const ProfilePage = lazy(() => import('@/application/pages/ProfilePage'));
 const Login = lazy(() => import('@/application/pages/Login'));
+const MembersListPage = lazy(() => import('@/application/pages/MembersListPage'));
 
 
 function AppRoutes() {
@@ -21,6 +22,7 @@ function AppRoutes() {
                         <Route element={<PrivateRoute />}>
                             <Route path="/dev/components" element={<Components/>} />
                             <Route path="/profile" element={<ProfilePage/>} />
+                            <Route path="/dashboard/members" element={<MembersListPage/>} />
                         </Route>
                     </Route>
 
