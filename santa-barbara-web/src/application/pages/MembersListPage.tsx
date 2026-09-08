@@ -5,28 +5,39 @@ import { Input } from "@/ui/components/input";
 import { Button } from "@/ui/components/button";
 import { 
     Search, MoreVertical, Users, UserPlus, Shield, 
-    AlertCircle, Filter, ArrowDownUp, Settings2, Plus, Edit2, Mail, Ban 
+    AlertCircle, Filter, Settings2, Plus, Edit2, Mail, Ban, ArrowDownAZ, ArrowUpAZ
 } from "lucide-react";
 
 export function MembersListPage() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const [searchTerm, setSearchTerm] = useState("");
     const [members, setMembers] = useState<MemberData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
     const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+    const [statusFilter, setStatusFilter] = useState(""); 
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc"); // "asc" = A-Z, "desc" = Z-A
 
+    
+    const filterRef = useRef<HTMLDivElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
+            
             if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
                 setOpenMenuId(null);
+            }
+           
+            if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+                setIsFilterOpen(false);
             }
         };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-
     useEffect(() => {
         const fetchMembers = async () => {
             try {
@@ -48,6 +59,50 @@ export function MembersListPage() {
     const handleActionClick = (action: string, memberId: string) => {
         setOpenMenuId(null);
         alert(`Ação "${action}" acionada para o membro ID: ${memberId}`);
+    };
+
+    const filteredMembers = members.filter(member => {
+        const matchesSearch = member.fullName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                              member.email.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesStatus = statusFilter === "" || member.status === statusFilter;
+        
+        return matchesSearch && matchesStatus;
+    });
+
+
+    const sortedMembers = [...filteredMembers].sort((a, b) => {
+        if (sortOrder === "asc") {
+            return a.fullName.localeCompare(b.fullName);
+        }
+        return b.fullName.localeCompare(a.fullName);
+    });
+
+
+    const totalPages = Math.ceil(sortedMembers.length / itemsPerPage) || 1;
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentMembers = sortedMembers.slice(startIndex, startIndex + itemsPerPage);
+
+    const goToPage = (page: number) => {
+        if (page >= 1 && page <= totalPages) setCurrentPage(page);
+    };
+
+    const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setItemsPerPage(Number(e.target.value));
+        setCurrentPage(1); 
+    };
+
+
+
+    const getPageNumbers = () => {
+        const pages = [];
+        let start = Math.max(1, currentPage - 2);
+        const end = Math.min(totalPages, start + 4);
+        if (end - start < 4) start = Math.max(1, end - 4);
+
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+        return pages;
     };
 
     return (
@@ -88,15 +143,66 @@ export function MembersListPage() {
                                     placeholder="Placeholder" 
                                     className="pl-10 w-full bg-(--surface-color)"
                                     value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    onChange={(e) => {
+                                         setSearchTerm(e.target.value);
+                                             setCurrentPage(1); 
+                                         }}
                                 />
                             </div>
-                            <Button variant="outline" className="flex items-center gap-2 bg-(--surface-color) border-(--light-neutral-color)">
-                                Filtros <Filter className="w-4 h-4" />
-                            </Button>
-                            <button className="text-(--neutral-color) hover:text-(--strong-foreground-color) transition-colors">
-                                <ArrowDownUp className="w-5 h-5" />
-                            </button>
+                        
+                            <div className="relative" ref={filterRef}>
+                                <Button 
+                                    variant="outline" 
+                                    className="flex items-center gap-2 bg-(--surface-color) border-(--light-neutral-color)"
+                                    onClick={() => setIsFilterOpen(!isFilterOpen)}
+                                >
+                                    Filtros {statusFilter ? `(${statusFilter})` : ""} <Filter className="w-4 h-4" />
+                                </Button>
+
+                                
+                                {isFilterOpen && (
+                                    <div className="absolute top-full mt-2 left-0 w-48 bg-(--surface-color) border border-(--light-neutral-color) rounded-md shadow-lg z-50 py-1 text-left">
+                                        <div className="px-4 py-2 text-xs font-semibold text-(--neutral-color) border-b border-(--light-neutral-color)">
+                                            Status
+                                        </div>
+                                        <button 
+                                            onClick={() => { setStatusFilter(""); setIsFilterOpen(false); setCurrentPage(1); }}
+                                            className={`w-full px-4 py-2 text-sm text-left ${statusFilter === "" ? "bg-(--strong-surface-color) font-semibold text-(--strong-foreground-color)" : "text-(--neutral-color) hover:bg-(--strong-surface-color)"}`}
+                                        >
+                                            Todos
+                                        </button>
+                                        <button 
+                                            onClick={() => { setStatusFilter("Ativo"); setIsFilterOpen(false); setCurrentPage(1); }}
+                                            className={`w-full px-4 py-2 text-sm text-left ${statusFilter === "Ativo" ? "bg-(--strong-surface-color) font-semibold text-(--strong-foreground-color)" : "text-(--neutral-color) hover:bg-(--strong-surface-color)"}`}
+                                        >
+                                            Ativo
+                                        </button>
+                                        <button 
+                                            onClick={() => { setStatusFilter("Inativo"); setIsFilterOpen(false); setCurrentPage(1); }}
+                                            className={`w-full px-4 py-2 text-sm text-left ${statusFilter === "Inativo" ? "bg-(--strong-surface-color) font-semibold text-(--strong-foreground-color)" : "text-(--neutral-color) hover:bg-(--strong-surface-color)"}`}
+                                        >
+                                            Inativo
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                         
+                            <div className="flex items-center gap-1 border border-(--light-neutral-color) rounded bg-(--surface-color) p-0.5">
+                                <button 
+                                    onClick={() => { setSortOrder("asc"); setCurrentPage(1); }}
+                                    className={`p-1.5 rounded transition-colors ${sortOrder === "asc" ? "bg-(--strong-surface-color) text-(--strong-foreground-color)" : "text-(--neutral-color) hover:bg-(--strong-surface-color)"}`}
+                                    title="Ordem Crescente (A-Z)"
+                                >
+                                    <ArrowDownAZ className="w-5 h-5" />
+                                </button>
+                                <button 
+                                    onClick={() => { setSortOrder("desc"); setCurrentPage(1); }}
+                                    className={`p-1.5 rounded transition-colors ${sortOrder === "desc" ? "bg-(--strong-surface-color) text-(--strong-foreground-color)" : "text-(--neutral-color) hover:bg-(--strong-surface-color)"}`}
+                                    title="Ordem Decrescente (Z-A)"
+                                >
+                                    <ArrowUpAZ className="w-5 h-5" />
+                                </button>
+                            </div>
                         </div>
                         <Button variant="ghost" className="flex items-center gap-2 text-(--neutral-color) hover:text-(--strong-foreground-color)">
                             <Settings2 className="w-4 h-4" /> Colunas
@@ -133,7 +239,7 @@ export function MembersListPage() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {members.map((member, index) => (
+                                            {currentMembers.map((member, index) => (
                                                 <tr key={member.id} className={`${index % 2 === 0 ? 'bg-(--surface-color)' : 'bg-(--strong-surface-color)'} hover:bg-(--light-neutral-color) transition-colors relative`}>
                                                     <td className="p-3 text-(--strong-foreground-color)">{member.fullName}</td>
                                                     <td className="p-3 text-(--neutral-color) capitalize">{member.role}</td>
@@ -189,22 +295,46 @@ export function MembersListPage() {
 
                                 <div className="flex items-center justify-between mt-4 text-sm">
                                     <div className="flex border border-(--light-neutral-color) rounded overflow-hidden bg-(--surface-color)">
-                                        <button className="px-3 py-1.5 border-r border-(--light-neutral-color) hover:bg-(--strong-surface-color) text-(--neutral-color)">&lt;&lt; First</button>
-                                        <button className="px-3 py-1.5 border-r border-(--light-neutral-color) hover:bg-(--strong-surface-color) text-(--neutral-color)">&lt; Previous</button>
-                                        <button className="px-3.5 py-1.5 border-r border-(--light-neutral-color) bg-(--strong-surface-color) font-semibold text-(--strong-foreground-color)">1</button>
-                                        <button className="px-3.5 py-1.5 border-r border-(--light-neutral-color) hover:bg-(--strong-surface-color) text-(--neutral-color)">2</button>
-                                        <button className="px-3.5 py-1.5 border-r border-(--light-neutral-color) hover:bg-(--strong-surface-color) text-(--neutral-color)">3</button>
-                                        <button className="px-3.5 py-1.5 border-r border-(--light-neutral-color) hover:bg-(--strong-surface-color) text-(--neutral-color)">4</button>
-                                        <span className="px-3 py-1.5 border-r border-(--light-neutral-color) text-(--neutral-color)">...</span>
-                                        <button className="px-3.5 py-1.5 border-r border-(--light-neutral-color) hover:bg-(--strong-surface-color) text-(--neutral-color)">7</button>
-                                        <button className="px-3.5 py-1.5 border-r border-(--light-neutral-color) hover:bg-(--strong-surface-color) text-(--neutral-color)">Next &gt;</button>
-                                        <button className="px-3.5 py-1.5 hover:bg-(--strong-surface-color) text-(--neutral-color)">Last &gt;&gt;</button>
-                                    </div>
-                                    <select className="border border-(--light-neutral-color) rounded px-2 py-1.5 bg-(--surface-color) text-(--neutral-color) cursor-pointer outline-none focus:border-(--light-neutral-color)">
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
+        
+     
+                                    <button onClick={() => goToPage(1)} disabled={currentPage === 1} className="px-3 py-1.5 border-r border-(--light-neutral-color) hover:bg-(--strong-surface-color) text-(--neutral-color) disabled:opacity-50">
+                                         &lt;&lt; First
+                                        </button>
+                                            <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1} className="px-3 py-1.5 border-r border-(--light-neutral-color) hover:bg-(--strong-surface-color) text-(--neutral-color) disabled:opacity-50">
+                                                 &lt; Previous
+                                            </button>
+
+        
+                                            {getPageNumbers().map((page) => (
+                                              <button 
+                                          key={page}
+                                         onClick={() => goToPage(page)}
+                                              className={`px-3.5 py-1.5 border-r border-(--light-neutral-color) ${currentPage === page ? 'bg-(--strong-surface-color) font-semibold text-(--strong-foreground-color)' : 'hover:bg-(--strong-surface-color) text-(--neutral-color)'}`}
+            >
+                                                    {page}
+                                              </button>
+                                                    ))}
+
+        
+                                        <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages} className="px-3.5 py-1.5 border-r border-(--light-neutral-color) hover:bg-(--strong-surface-color) text-(--neutral-color) disabled:opacity-50">
+                                          Next &gt;
+                                         </button>
+                                          <button onClick={() => goToPage(totalPages)} disabled={currentPage === totalPages} className="px-3.5 py-1.5 hover:bg-(--strong-surface-color) text-(--neutral-color) disabled:opacity-50">
+                                         Last &gt;&gt;
+                                          </button>
+                                         </div>
+
+
+                                         <select 
+                                         value={itemsPerPage}
+                                                 onChange={handleItemsPerPageChange}
+                                                      className="border border-(--light-neutral-color) rounded px-2 py-1.5 bg-(--surface-color) text-(--neutral-color) outline-none"
+    >
+                                                    <option value="5">5</option>
+                                                 <option value="10">10</option>
+                                               <option value="20">20</option>
+                                                     </select>
+                                                </div>
                             </>
                         )}
                     </div>
