@@ -17,7 +17,7 @@
   --hover-brand-color: #012748;
 
   --success-color: #34c759;
-  --failure-color: #ff383c;
+  --error-color: #ff383c;
 }
 
 @layer base {

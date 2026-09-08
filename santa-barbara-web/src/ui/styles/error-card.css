@@ -1,0 +1,9 @@
+.error-card {
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: var(--error-color);
+  border-radius: 0.5rem;
+  background-color: color-mix(in srgb, var(--error-color) 20%, transparent);
+  border: 1px solid color-mix(in srgb, var(--error-color) 50%, transparent);
+  transition: all 150ms ease;
+}

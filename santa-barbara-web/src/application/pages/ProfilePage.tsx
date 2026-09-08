@@ -1,54 +1,65 @@
-import { useState } from "react";
-import { Card } from "@/ui/components/card";
 import { Avatar } from "@/ui/components/avatar";
-import { Input } from "@/ui/components/input";
 import { Button } from "@/ui/components/button";
-import { SuccessCard } from "@/ui/components/sucessCard";
+import { Card } from "@/ui/components/card";
+import { ErrorCard } from "@/ui/components/error-card";
+import { Input } from "@/ui/components/input";
+import { SuccessCard } from "@/ui/components/sucess-card";
 import { AlertTriangle, Edit2, Save, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { ProfileData } from "../model/ProfileData";
+import { AuthService } from "../services/auth.service";
 
-interface ProfileData {
-    fullName: string;
-    email: string;
-    role: string;
-    phone: string;
-    adress: string;
-    instrumentos: string;
-}
 
 const initialProfile: ProfileData = {
-    fullName: "Felipe Elias Leal",
-    email: "Testes123@gmail.com",
-    role: "Aluno",
-    phone: "(48) 99173-2269",
-    adress: "45 R. Pref. Flávio Righeto",
-    instrumentos: "Trompete",
-};
+    nome: null,
+    sobrenome: null,
+    email: null,
+    nomeUsuario: null,
+    telefone: null,
+    endereco: null,
+    instrumentos: "",
+    papeis: []
+}
 
 export function ProfilePage() {
     const [isEditing, setIsEditing] = useState(false);
 
     const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [errorsField, setFieldErrors] = useState<Record<string, string>>({});
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [showExitModal, setShowExitModal] = useState(false);
 
-    const [originalProfile, setOriginalProfile] = useState(initialProfile);
-    const [profile, setProfile] = useState(initialProfile);
+    const [originalProfile, setOriginalProfile] = useState<ProfileData>(initialProfile);
+    const [profile, setProfile] = useState<ProfileData>(initialProfile);
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const profileData = await AuthService.me();
+                setOriginalProfile(profileData);
+                setProfile(profileData);
+            } catch(err) {
+                setErrorMessage(err.message);
+            }
+        })()
+    }, [])
 
     const handleEditClick = () => {
         setOriginalProfile(profile);
-        setErrors({});
+        setFieldErrors({});
         setHasUnsavedChanges(false);
         setIsEditing(true);
     };
 
     const handleInputChange = (field: keyof ProfileData, value: string) => {
+
         setProfile((previousProfile) => ({ ...previousProfile, [field]: value }));
         setHasUnsavedChanges(true);
 
-        if (errors[field]) {
-            setErrors((previousErrors) => ({ ...previousErrors, [field]: "" }));
+        if (errorsField[field]) {
+            setFieldErrors((previousErrors) => ({ ...previousErrors, [field]: "" }));
         }
     };
 
@@ -59,32 +70,36 @@ export function ProfilePage() {
             newErrors.email = "E-mail inválido ou obrigatório.";
         }
 
-        if (!profile.phone.trim() || profile.phone.replace(/\D/g, "").length < 10) {
-            newErrors.phone = "Informe um telefone válido com DDD.";
+        if (!profile.telefone.trim() || profile.telefone.replace(/\D/g, "").length < 10) {
+            newErrors.telefone = "Informe um telefone válido com DDD.";
         }
 
-        if (!profile.adress.trim()) {
-            newErrors.adress = "O endereço não pode estar vazio.";
+        if (!profile.endereco.trim()) {
+            newErrors.endereco = "O endereço não pode estar vazio.";
         }
 
-        if (!profile.instrumentos.trim()) {
+        if (profile.instrumentos.length < 1) {
             newErrors.instrumentos = "Informe pelo menos um instrumento.";
         }
 
-        setErrors(newErrors);
+        setFieldErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSave = async () => {
         if (!validateForm()) return;
-
-        setOriginalProfile(profile);
-        setSuccessMessage("Dados atualizados com sucesso!");
-        setIsEditing(false);
-        setHasUnsavedChanges(false);
-        setErrors({});
-
-        setTimeout(() => setSuccessMessage(""), 3000);
+        
+        try {
+            AuthService.updateMe(profile);
+            setOriginalProfile(profile);
+            setSuccessMessage("Dados atualizados com sucesso!");
+            setIsEditing(false);
+            setHasUnsavedChanges(false);
+            setFieldErrors({});
+            setTimeout(() => setSuccessMessage(""), 3000);
+        } catch(e) {
+            setErrorMessage(e.message);
+        }
     };
 
     const handleCancelClick = () => {
@@ -93,13 +108,13 @@ export function ProfilePage() {
             return;
         }
 
-        setErrors({});
+        setFieldErrors({});
         setIsEditing(false);
     };
 
     const confirmExit = () => {
         setProfile(originalProfile);
-        setErrors({});
+        setFieldErrors({});
         setHasUnsavedChanges(false);
         setShowExitModal(false);
         setIsEditing(false);
@@ -110,7 +125,8 @@ export function ProfilePage() {
         <div className="max-w-5xl mx-auto p-6 space-y-6 relative">
             <h1 className="text-2xl font-bold text-(--strong-foreground-color)">Meu Perfil</h1>
 
-            <SuccessCard successMessage={successMessage} />
+            <SuccessCard message={successMessage} />
+            <ErrorCard message={errorMessage} />
 
             {showExitModal && (
                 <div className="fixed inset-0 bg-(--strong-foreground-color)/50 flex items-center justify-center z-50 p-4">
@@ -139,9 +155,14 @@ export function ProfilePage() {
                     <Avatar  className="w-20 h-20" />
                     <div>
                         <h2 className="text-4xl font-bold text-(--strong-foreground-color)">
-                            {profile.fullName}
+                            {`${profile.nome} ${profile.sobrenome}`}
                         </h2>
-                        <p className="text-xl text-(--strong-foreground-color)">{profile.role}</p>
+                        {
+                            profile.papeis?.map(
+                                (p: string) => 
+                                    (<span className="text-xl text-(--strong-foreground-color)">{p}</span>)
+                            )
+                        }
                     </div>
                 </div>
 
@@ -164,45 +185,50 @@ export function ProfilePage() {
             </Card>
 
             <Card className="space-y-4">
+              
+                
                 <div className="flex flex-col gap-4">
+
                     <div className="flex flex-col sm:flex-row sm:items-start justify-start gap-2 border-b text-(--light-neutral-color) pb-3">
                         <span className="text-2xl font-semibold text-(--strong-foreground-color) mt-1 sm:w-40">Telefone:</span>
                         <div className="flex flex-col flex-1">
                             {!isEditing ? (
-                                <span className="text-(--strong-foreground-color) text-lg mt-1">{profile.phone}</span>
+                                <span className="text-(--strong-foreground-color) text-lg mt-1">{profile.telefone}</span>
                             ) : (
                                 <>
                                     <Input
-                                        value={profile.phone}
-                                        onChange={(event) => handleInputChange("phone", event.target.value)}
-                                        className={`mt-1 text-lg text-(--strong-foreground-color) ${errors.phone ? "border-(--failure-color) focus:ring-(--failure-color)" : ""}`}
+                                        value={profile.telefone}
+                                        onChange={(event) => handleInputChange("telefone", event.target.value)}
+                                        className={`mt-1 text-lg text-(--strong-foreground-color) ${errorsField.telefone ? "border-(--failure-color) focus:ring-(--failure-color)" : ""}`}
                                     />
-                                    {errors.phone && <span className="text-sm text-(--failure-color) mt-1">{errors.phone}</span>}
+                                    {errorsField.telefone && <span className="text-sm text-(--failure-color) mt-1">{errorsField.telefone}</span>}
                                 </>
                             )}
                         </div>
                     </div>
+                    
 
                     <div className="flex flex-col sm:flex-row sm:items-start justify-start gap-2 border-b text-(--light-neutral-color) pb-3">
                         <span className="text-2xl font-semibold text-(--strong-foreground-color) mt-1 sm:w-40">Endereço:</span>
                         <div className="flex flex-col flex-1">
                             {!isEditing ? (
-                                <span className="text-(--strong-foreground-color) text-lg mt-1">{profile.adress}</span>
+                                <span className="text-(--strong-foreground-color) text-lg mt-1">{profile.endereco}</span>
                             ) : (
                                 <>
                                     <Input
-                                        value={profile.adress}
-                                        onChange={(event) => handleInputChange("adress", event.target.value)}
-                                        className={`mt-1 text-lg text-(--strong-foreground-color) ${errors.adress ? "border-(--failure-color) focus:ring-(--failure-color)" : ""}`}
+                                        value={profile.endereco}
+                                        onChange={(event) => handleInputChange("endereco", event.target.value)}
+                                        className={`mt-1 text-lg text-(--strong-foreground-color) ${errorsField.endereco ? "border-(--failure-color) focus:ring-(--failure-color)" : ""}`}
                                     />
-                                    {errors.adress && <span className="text-sm text-(--failure-color) mt-1">{errors.adress}</span>}
+                                    {errorsField.endereco && <span className="text-sm text-(--failure-color) mt-1">{errorsField.endereco}</span>}
                                 </>
                             )}
                         </div>
                     </div>
+                    
 
                     <div className="flex flex-col sm:flex-row sm:items-start justify-start gap-2 border-b text-(--light-neutral-color) pb-3">
-                        <span className="text-2xl font-semibold text-(--strong-foreground-color) mt-1 sm:w-40">Gmail:</span>
+                        <span className="text-2xl font-semibold text-(--strong-foreground-color) mt-1 sm:w-40">Email:</span>
                         <div className="flex flex-col flex-1">
                             {!isEditing ? (
                                 <span className="text-(--strong-foreground-color) text-lg mt-1">{profile.email}</span>
@@ -211,13 +237,14 @@ export function ProfilePage() {
                                     <Input
                                         value={profile.email}
                                         onChange={(event) => handleInputChange("email", event.target.value)}
-                                        className={`mt-1 text-lg text-(--strong-foreground-color) ${errors.email ? "border-(--failure-color) focus:ring-(--failure-color)" : ""}`}
+                                        className={`mt-1 text-lg text-(--strong-foreground-color) ${errorsField.email ? "border-(--failure-color) focus:ring-(--failure-color)" : ""}`}
                                     />
-                                    {errors.email && <span className="text-sm text-(--failure-color) mt-1">{errors.email}</span>}
+                                    {errorsField.email && <span className="text-sm text-(--failure-color) mt-1">{errorsField.email}</span>}
                                 </>
                             )}
                         </div>
                     </div>
+                    
 
                     <div className="flex flex-col sm:flex-row sm:items-start justify-start gap-2">
                         <span className="text-2xl font-semibold text-(--strong-foreground-color) mt-1 sm:w-40">Instrumentos:</span>
@@ -229,9 +256,9 @@ export function ProfilePage() {
                                     <Input
                                         value={profile.instrumentos}
                                         onChange={(event) => handleInputChange("instrumentos", event.target.value)}
-                                        className={`mt-1 text-lg text-(--strong-foreground-color) ${errors.instrumentos ? "border-(--failure-color) focus:ring-(--failure-color)" : ""}`}
+                                        className={`mt-1 text-lg text-(--strong-foreground-color) ${errorsField.instrumentos ? "border-(--failure-color) focus:ring-(--failure-color)" : ""}`}
                                     />
-                                    {errors.instrumentos && <span className="text-sm text-(--failure-color) mt-1">{errors.instrumentos}</span>}
+                                    {errorsField.instrumentos && <span className="text-sm text-(--failure-color) mt-1">{errorsField.instrumentos}</span>}
                                 </>
                             )}
                         </div>

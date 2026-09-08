@@ -1,16 +1,16 @@
-import "../styles/sucessCard.css";
+import "@/ui/styles/sucess-card.css";
 import type { HTMLAttributes } from "react";
 
 export interface SuccessCardProps extends HTMLAttributes<HTMLDivElement> {
-    successMessage: string;
+    message: string;
 }
 
-export function SuccessCard({ successMessage, className = "", ...props }: SuccessCardProps) {
-    if (!successMessage) return null;
+export function SuccessCard({ message, className = "", ...props }: SuccessCardProps) {
+    if (!message) return <></>;
 
     return (
         <div className={`success-card ${className}`.trim()} {...props}>
-            {successMessage}
+            {message}
         </div>
     );
 }
