@@ -11,12 +11,12 @@ import { AuthService } from "../services/auth.service";
 
 
 const initialProfile: ProfileData = {
-    nome: null,
-    sobrenome: null,
-    email: null,
-    nomeUsuario: null,
-    telefone: null,
-    endereco: null,
+    nome: "",
+    sobrenome: "",
+    email: "",
+    nomeUsuario: "",
+    telefone: "",
+    endereco: "",
     instrumentos: "",
     papeis: []
 }
@@ -41,7 +41,7 @@ export function ProfilePage() {
                 setOriginalProfile(profileData);
                 setProfile(profileData);
             } catch(err) {
-                setErrorMessage(err.message);
+                setErrorMessage(err instanceof Error ? err.message : String(err));
             }
         })()
     }, [])
@@ -90,15 +90,15 @@ export function ProfilePage() {
         if (!validateForm()) return;
         
         try {
-            AuthService.updateMe(profile);
+            await AuthService.updateMe(profile);
             setOriginalProfile(profile);
             setSuccessMessage("Dados atualizados com sucesso!");
             setIsEditing(false);
             setHasUnsavedChanges(false);
             setFieldErrors({});
             setTimeout(() => setSuccessMessage(""), 3000);
-        } catch(e) {
-            setErrorMessage(e.message);
+        } catch (e) {
+            setErrorMessage(e instanceof Error ? e.message : "Não foi possível atualizar os dados.");
         }
     };
 

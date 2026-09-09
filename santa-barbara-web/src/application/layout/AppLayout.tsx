@@ -20,7 +20,7 @@ function AppLayout() {
                 </nav>
             </header>
             <main className={`
-                w-sreen 
+                w-screen 
                 flex flex-col
                 min-h-[calc(100vh-64px)] lg:min-h-[calc(100vh-72px)] xl:min-h-[calc(100vh-92px)] 2xl:min-h-[calc(100vh-126px)]
             `}>

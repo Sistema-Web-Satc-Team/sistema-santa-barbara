@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application.dtos;
+package br.org.bandasantabarbara.application.dtos.profile;
 
 import br.org.bandasantabarbara.model.Membro;
 import br.org.bandasantabarbara.model.Papel;
@@ -8,20 +8,19 @@ import java.time.Period;
 import java.util.List;
 import java.util.UUID;
 
-public record MembroResponse(
+public record MeResponse(
         UUID id,
         String nome,
         String sobrenome,
         String nomeUsuario,
+        String email,
         String telefone,
         String endereco,
-        String email,
         List<String> papeis,
         Integer age,
         String dataNascimento
-)
-{
-    public static MembroResponse deEntidade(Membro membro) {
+) {
+    public static MeResponse deEntidade(Membro membro) {
         Integer idadeCalculada = null;
         if (membro.getDataNascimento() != null) {
             idadeCalculada = Period.between(membro.getDataNascimento(), LocalDate.now()).getYears();
@@ -31,14 +30,14 @@ public record MembroResponse(
                 .map(Papel::getNome)
                 .toList();
 
-        return new MembroResponse(
+        return new MeResponse(
                 membro.getId(),
                 membro.getNome(),
                 membro.getSobrenome(),
                 membro.getNomeDeUsuario(),
+                membro.getEmail(),
                 membro.getTelefone(),
                 membro.getEndereco(),
-                membro.getEmail(),
                 papeis,
                 idadeCalculada,
                 membro.getDataNascimento() != null ? membro.getDataNascimento().toString() : null

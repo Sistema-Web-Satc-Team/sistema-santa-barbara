@@ -1,6 +1,11 @@
 package br.org.bandasantabarbara.application.usecase;
 
 import br.org.bandasantabarbara.application.dtos.*;
+import br.org.bandasantabarbara.application.dtos.membros.AtualizarMembroParcialmenteRequest;
+import br.org.bandasantabarbara.application.dtos.membros.MembroResponse;
+import br.org.bandasantabarbara.application.dtos.membros.RegistrarMembroRequest;
+import br.org.bandasantabarbara.application.dtos.profile.AtualizarMeParcialmenteRequest;
+import br.org.bandasantabarbara.application.dtos.profile.MeResponse;
 import br.org.bandasantabarbara.exception.NaoEncontradoException;
 import br.org.bandasantabarbara.model.Membro;
 import br.org.bandasantabarbara.model.Papel;
@@ -12,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -94,7 +98,20 @@ public class MembroUsecase {
     }
 
     @Transactional
-    public void atualizarParcialmente(UUID id, AtualizarParcialmenteMembroRequest dto) {
+    public void atualizarPerfilParcialmente(UUID id, AtualizarMeParcialmenteRequest dto) {
+        Membro membro = membroRepository.findById(id)
+                .orElseThrow(() -> new NaoEncontradoException("Membro não encontrado com o ID informado"));
+
+        membro.atualizarDadosDoPerfil(
+                dto.email(),
+                dto.telefone(),
+                dto.endereco(),
+                dto.nomeDeUsuario()
+        );
+    }
+
+    @Transactional
+    public void atualizarMembro(UUID id, AtualizarMembroParcialmenteRequest dto) {
         Membro membro = membroRepository.findById(id)
                 .orElseThrow(() -> new NaoEncontradoException("Membro não encontrado com o ID informado"));
 
@@ -104,7 +121,9 @@ public class MembroUsecase {
                 dto.email(),
                 dto.telefone(),
                 dto.endereco(),
-                dto.dataNascimento()
+                dto.dataNascimento(),
+                dto.papeis(),
+                dto.status()
         );
     }
 

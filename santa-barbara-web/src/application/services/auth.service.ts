@@ -8,7 +8,7 @@ class AuthService {
 
     static async login(request: LoginRequest): Promise<void> {
         try {
-            const response = await axios.post(
+            await axios.post(
                 Api.getAuthResource() + "login", 
                 request, 
                 { withCredentials: true }
@@ -52,8 +52,10 @@ class AuthService {
                 papeis: Array.isArray(data.papeis) ? data.papeis : []
             } as ProfileData
         } catch (err) {
-            console.log(err)
-            const message = err.response?.data?.message || "Falha na autenticação.";
+            console.log(err);
+            const message = axios.isAxiosError(err)
+                ? err.response?.data?.message || "Falha na autenticação."
+                : "Falha na autenticação.";
             throw new Error(message);
         }
     }
@@ -71,8 +73,10 @@ class AuthService {
                 { withCredentials: true }
             );
         } catch (err) {
-            console.log(err)
-            const message = err.response?.data?.message || "Falha ao atualizar o perfil.";
+            console.log(err);
+            const message = axios.isAxiosError(err)
+                ? err.response?.data?.message || "Falha ao atualizar o perfil."
+                : "Falha ao atualizar o perfil.";
             throw new Error(message);
         }
     }

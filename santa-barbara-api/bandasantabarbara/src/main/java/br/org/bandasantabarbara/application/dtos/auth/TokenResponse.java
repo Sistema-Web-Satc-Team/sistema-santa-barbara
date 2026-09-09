@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application.dtos;
+package br.org.bandasantabarbara.application.dtos.auth;
 
 public record TokenResponse(
         String token,

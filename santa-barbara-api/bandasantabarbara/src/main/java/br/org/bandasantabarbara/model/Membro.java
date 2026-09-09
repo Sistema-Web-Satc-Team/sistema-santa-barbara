@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import static java.util.Arrays.stream;
+
 @Entity
 @Table(name = "membro")
 @SecondaryTable(
@@ -79,6 +81,11 @@ public class Membro implements Persistable<UUID> {
     @Column(name = "atualizado_em", nullable = false)
     private Instant atualizadoEm;
 
+    @Getter @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private MembroStatus status = MembroStatus.ATIVO;
+
     /*
     *
     * Filhos
@@ -140,6 +147,10 @@ public class Membro implements Persistable<UUID> {
         this.atualizadoEm = Instant.now();
     }
 
+    private void resetarPapeis() {
+        this.papeis = new HashSet<>();
+    }
+
     /*
     *
     * MÉTODOS DE CRIACAO
@@ -176,13 +187,40 @@ public class Membro implements Persistable<UUID> {
     *
      */
 
-    public void atualizarInformacoes(String nome, String sobrenome, String email, String telefone, String endereco, LocalDate dataNascimento) {
+    public void atualizarInformacoes(
+            String nome,
+            String sobrenome,
+            String email,
+            String telefone,
+            String endereco,
+            LocalDate dataNascimento,
+            String[] papeis,
+            MembroStatus status
+
+    ) {
         if (nome != null && !nome.isBlank()) this.nome = nome;
         if (sobrenome != null && !sobrenome.isBlank()) this.sobrenome = sobrenome;
         if (email != null && !email.isBlank()) this.email = email;
         if (telefone != null && !telefone.isBlank()) this.telefone = telefone;
         if (endereco != null && !endereco.isBlank()) this.endereco = endereco;
         if (dataNascimento != null) this.dataNascimento = dataNascimento;
+
+        if (papeis != null) {
+            this.resetarPapeis();
+            this.atribuirPapeis(stream(papeis).map(Papel::new).toList());
+        }
+
+        if (status != null) this.status = status;
+
+        this.atualizadoEm = Instant.now();
+        isNovo = false;
+    }
+
+    public void atualizarDadosDoPerfil(String email, String telefone, String endereco, String nomeDeUsuario) {
+        if (nomeDeUsuario != null && !nomeDeUsuario.isBlank()) this.nomeDeUsuario = nomeDeUsuario;
+        if (email != null && !email.isBlank()) this.email = email;
+        if (telefone != null && !telefone.isBlank()) this.telefone = telefone;
+        if (endereco != null && !endereco.isBlank()) this.endereco = endereco;
         this.atualizadoEm = Instant.now();
         isNovo = false;
     }

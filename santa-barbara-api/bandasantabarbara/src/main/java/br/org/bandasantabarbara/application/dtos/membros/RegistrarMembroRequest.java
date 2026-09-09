@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application.dtos;
+package br.org.bandasantabarbara.application.dtos.membros;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
@@ -20,7 +20,7 @@ public record RegistrarMembroRequest(
         @NotEmpty(message = "O membro deve possuir pelo menos um papel")
         String[] papeis,
 
-        @Size(min = 2, max = 15, message = "O telefone deve ter pelo menos 11 dígitios.")
+        @Size(min = 11, max = 15, message = "O telefone deve ter pelo menos 11 dígitios.")
         String telefone,
 
         @Size(min = 2, max = 200, message = "O endereço deve ter pelo menos 2 dígitios.")
