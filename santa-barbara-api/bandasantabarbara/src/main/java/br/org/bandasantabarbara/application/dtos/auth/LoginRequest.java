@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application.dtos;
+package br.org.bandasantabarbara.application.dtos.auth;
 
 import jakarta.validation.constraints.NotBlank;
 

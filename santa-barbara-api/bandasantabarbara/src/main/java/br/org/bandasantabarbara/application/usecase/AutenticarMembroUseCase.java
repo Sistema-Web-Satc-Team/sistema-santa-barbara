@@ -1,7 +1,7 @@
 package br.org.bandasantabarbara.application.usecase;
 
-import br.org.bandasantabarbara.application.dtos.LoginRequest;
-import br.org.bandasantabarbara.application.dtos.TokenResponse;
+import br.org.bandasantabarbara.application.dtos.auth.LoginRequest;
+import br.org.bandasantabarbara.application.dtos.auth.TokenResponse;
 import br.org.bandasantabarbara.exception.InvalidoException;
 import br.org.bandasantabarbara.infrastructure.security.TokenService;
 import br.org.bandasantabarbara.repositories.MembroRepository;
@@ -28,7 +28,7 @@ public class AutenticarMembroUseCase {
 
     @Transactional(readOnly = true)
     public TokenResponse executar(LoginRequest request) {
-        var membro = membroRepository.findByUsernameOuEmail(request.login())
+        var membro = membroRepository.findByUsernameOuEmailWithPapel(request.login())
                 .orElseThrow(() -> new InvalidoException("Usuário ou senha incorreto."));
 
         boolean senhaValida = passwordEncoder.matches(request.senha(), membro.getCredencial().getHashSenha());

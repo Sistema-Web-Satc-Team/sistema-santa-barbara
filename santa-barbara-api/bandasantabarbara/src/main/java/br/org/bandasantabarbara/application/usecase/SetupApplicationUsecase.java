@@ -1,6 +1,6 @@
 package br.org.bandasantabarbara.application.usecase;
 
-import br.org.bandasantabarbara.application.dtos.RegistrarAdminRequest;
+import br.org.bandasantabarbara.application.dtos.setup.RegistrarAdminRequest;
 import br.org.bandasantabarbara.model.Membro;
 import br.org.bandasantabarbara.model.Senha;
 import br.org.bandasantabarbara.repositories.SetupApplicationRepository;

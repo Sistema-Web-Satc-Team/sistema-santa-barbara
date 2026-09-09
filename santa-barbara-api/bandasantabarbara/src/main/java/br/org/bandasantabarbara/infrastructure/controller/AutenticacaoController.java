@@ -2,6 +2,10 @@ package br.org.bandasantabarbara.infrastructure.controller;
 
 
 import br.org.bandasantabarbara.application.dtos.*;
+import br.org.bandasantabarbara.application.dtos.auth.LoginRequest;
+import br.org.bandasantabarbara.application.dtos.auth.TokenResponse;
+import br.org.bandasantabarbara.application.dtos.profile.AtualizarMeParcialmenteRequest;
+import br.org.bandasantabarbara.application.dtos.profile.MeResponse;
 import br.org.bandasantabarbara.application.usecase.AutenticarMembroUseCase;
 import br.org.bandasantabarbara.application.usecase.MembroUsecase;
 import jakarta.validation.Valid;
@@ -72,9 +76,9 @@ public class AutenticacaoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void atualizarMeuPerfil(
             @AuthenticationPrincipal Jwt jwt,
-            @Valid @RequestBody AtualizarParcialmenteMembroRequest dto
+            @RequestBody @Valid AtualizarMeParcialmenteRequest dto
     ) {
         UUID membroId = UUID.fromString(jwt.getSubject());
-        membroUsecase.atualizarParcialmente(membroId, dto);
+        membroUsecase.atualizarPerfilParcialmente(membroId, dto);
     }
 }

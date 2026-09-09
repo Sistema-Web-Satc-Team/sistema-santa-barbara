@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application.dtos;
+package br.org.bandasantabarbara.application.dtos.setup;
 
 
 import jakarta.validation.constraints.Email;
