@@ -1,6 +1,6 @@
 
 
-interface ProfileData {
+interface ProfileState {
     nome: string,
     sobrenome: string,
     email: string,
@@ -11,5 +11,5 @@ interface ProfileData {
     papeis: string[]
 }
 
-export type { ProfileData };
+export type { ProfileState };
 

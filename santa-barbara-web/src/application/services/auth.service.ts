@@ -1,21 +1,20 @@
 import { Api } from "@/application/api/Api";
 import type { LoginRequest } from "@/application/model/LoginRequest";
-import type { ProfileData } from "@/application/model/ProfileData";
+import type { ProfileResponseApi } from "@/application/model/ProfileResponseApi";
 import axios from "axios";
+import type { ProfileUpdateRequest } from "../model/ProfileUpdateRequest";
 
 
 class AuthService {
 
     static async login(request: LoginRequest): Promise<void> {
-        try {
-            await axios.post(
-                Api.getAuthResource() + "login", 
-                request, 
-                { withCredentials: true }
-            )
-        } catch(err) {
-            throw err;
-        }
+
+        await axios.post(
+            Api.getAuthResource() + "login", 
+            request, 
+            { withCredentials: true }
+        )
+
     }
 
    static async isAutenticado(): Promise<boolean> {
@@ -26,13 +25,13 @@ class AuthService {
             );
 
             return response.status === 200;
-        } catch (err) {
+        } catch  {
             return false;
         }
     }
 
 
-     static async me(): Promise<ProfileData> {
+     static async me(): Promise<ProfileResponseApi> {
         try {
             const response = await axios.get(
                 Api.getAuthResource() + "me",
@@ -50,7 +49,7 @@ class AuthService {
                 endereco: data.endereco ?? "",
                 instrumentos: Array.isArray(data.instrumentos) ? data.instrumentos : [],
                 papeis: Array.isArray(data.papeis) ? data.papeis : []
-            } as ProfileData
+            } as ProfileResponseApi
         } catch (err) {
             console.log(err);
             const message = axios.isAxiosError(err)
@@ -60,7 +59,7 @@ class AuthService {
         }
     }
 
-    static async updateMe(newData: ProfileData): Promise<void> {
+    static async updateMe(newData: ProfileUpdateRequest): Promise<void> {
         try {
             await axios.patch(
                 Api.getAuthResource() + "me",

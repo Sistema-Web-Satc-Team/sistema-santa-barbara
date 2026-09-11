@@ -6,11 +6,12 @@ import { Input } from "@/ui/components/input";
 import { SuccessCard } from "@/ui/components/sucess-card";
 import { AlertTriangle, Edit2, Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { ProfileData } from "../model/ProfileData";
 import { AuthService } from "../services/auth.service";
+import type { ProfileResponseApi } from "../model/ProfileResponseApi";
+import type { ProfileState } from "../model/ProfileState";
 
 
-const initialProfile: ProfileData = {
+const initialProfile: ProfileResponseApi = {
     nome: "",
     sobrenome: "",
     email: "",
@@ -31,8 +32,8 @@ export function ProfilePage() {
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [showExitModal, setShowExitModal] = useState(false);
 
-    const [originalProfile, setOriginalProfile] = useState<ProfileData>(initialProfile);
-    const [profile, setProfile] = useState<ProfileData>(initialProfile);
+    const [originalProfile, setOriginalProfile] = useState<ProfileState>(initialProfile);
+    const [profile, setProfile] = useState<ProfileState>(initialProfile);
 
     useEffect(() => {
         (async () => {
@@ -47,13 +48,13 @@ export function ProfilePage() {
     }, [])
 
     const handleEditClick = () => {
-        setOriginalProfile(profile);
+        setOriginalProfile((prev) => ({ ...prev, ...profile }));
         setFieldErrors({});
         setHasUnsavedChanges(false);
         setIsEditing(true);
     };
 
-    const handleInputChange = (field: keyof ProfileData, value: string) => {
+    const handleInputChange = (field: keyof ProfileState, value: string) => {
 
         setProfile((previousProfile) => ({ ...previousProfile, [field]: value }));
         setHasUnsavedChanges(true);
@@ -90,7 +91,7 @@ export function ProfilePage() {
         if (!validateForm()) return;
         
         try {
-            await AuthService.updateMe(profile);
+            await AuthService.updateMe({...profile});
             setOriginalProfile(profile);
             setSuccessMessage("Dados atualizados com sucesso!");
             setIsEditing(false);
