@@ -21,4 +21,7 @@ public class Permissao {
 
     @Column(name = "atualizado_em", nullable = false)
     private Instant atualizadoEm;
+
+    protected Permissao() { }
+
 }
