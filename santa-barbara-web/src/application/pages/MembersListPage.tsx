@@ -18,6 +18,8 @@ export function MembersListPage() {
     const [members, setMembers] = useState<MemberData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
+    const [isLastPage, setIsLastPage] = useState(false);
+    
     const filterRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -35,7 +37,13 @@ export function MembersListPage() {
         const fetchMembers = async () => {
             try {
                 setIsLoading(true);
-                setMembers(await memberService.getAllMembers());
+                const response = await memberService.getMembers({
+                    page: currentPage,
+                    limit: itemsPerPage
+                });
+                
+                setMembers(response.content);
+                setIsLastPage(response.content.length < itemsPerPage);
                 setHasError(false);
             } catch (error) {
                 console.error("Erro ao buscar a lista de membros:", error);
@@ -46,33 +54,16 @@ export function MembersListPage() {
         };
 
         fetchMembers();
-    }, []);
-
-    const filteredMembers = members.filter((member) => {
-        const normalizedSearch = searchTerm.toLowerCase();
-        const matchesSearch = member.fullName.toLowerCase().includes(normalizedSearch)
-            || member.email.toLowerCase().includes(normalizedSearch);
-        const matchesStatus = !statusFilter || member.status === statusFilter;
-        return matchesSearch && matchesStatus;
-    });
-
-    const sortedMembers = [...filteredMembers].sort((firstMember, secondMember) => {
-        const result = firstMember.fullName.localeCompare(secondMember.fullName);
-        return sortOrder === "asc" ? result : -result;
-    });
-
-    const totalPages = Math.max(1, Math.ceil(sortedMembers.length / itemsPerPage));
-    const pageStart = (currentPage - 1) * itemsPerPage;
-    const currentMembers = sortedMembers.slice(pageStart, pageStart + itemsPerPage);
+    }, [currentPage, itemsPerPage]);
 
     const membersColumns: TableColumn<MemberData>[] = [
         {
             header: "Nome",
-            accessor: "fullName",
-            render: (member) => <span className="text-(--strong-foreground-color)">{member.fullName}</span>,
+            accessor: "nome",
+            render: (member) => <span className="text-(--strong-foreground-color)">{member.nome} {member.sobrenome}</span>,
         },
-        { header: "Papel", accessor: "role", render: (member) => <span className="capitalize">{member.role}</span> },
-        { header: "Telefone", accessor: "phone" },
+        { header: "Papel", accessor: "papeis", render: (member) => <span className="capitalize">{member.papeis?.join(", ")}</span> },
+        { header: "Telefone", accessor: "telefone" },
         { header: "E-Mail", accessor: "email" },
         { header: "Status", accessor: "status" },
         {
@@ -215,10 +206,10 @@ export function MembersListPage() {
                         </div>
                     ) : (
                         <>
-                            <Table data={currentMembers} columns={membersColumns} keyExtractor={(member) => member.id} />
+                            <Table data={members} columns={membersColumns} keyExtractor={(member) => String(member.id)} />
                             <Pagination
                                 currentPage={currentPage}
-                                totalPages={totalPages}
+                                totalPages={isLastPage ? currentPage : currentPage + 1}
                                 itemsPerPage={itemsPerPage}
                                 onPageChange={setCurrentPage}
                                 onItemsPerPageChange={(event) => changeItemsPerPage(Number(event.target.value))}

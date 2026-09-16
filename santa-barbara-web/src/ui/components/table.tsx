@@ -13,7 +13,7 @@ export interface TableColumn<T> {
 interface TableProps<T> {
     data: T[];
     columns: TableColumn<T>[];
-    keyExtractor: (item: T) => string; 
+    keyExtractor: (item: T) => string;
 }
 
 export function Table<T>({ data, columns, keyExtractor }: TableProps<T>) {

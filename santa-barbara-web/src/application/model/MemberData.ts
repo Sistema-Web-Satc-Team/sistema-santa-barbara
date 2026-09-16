@@ -1,8 +1,9 @@
 export interface MemberData {
-    id: string;
-    fullName: string;
-    role: string;
-    phone: string;
+    id: string | number;
+    nome: string;
+    sobrenome: string;
+    papeis: string[];
+    telefone: string;
     email: string;
     status: string;
 }
