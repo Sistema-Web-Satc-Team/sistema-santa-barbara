@@ -27,7 +27,7 @@ public class Papel {
             joinColumns = @JoinColumn(name = "id_papel"),
             inverseJoinColumns = @JoinColumn(name = "id_permissao")
     )
-    @Getter
+    @Getter @Setter
     private Set<Permissao> permissoes = new HashSet<>();
 
     @Getter
@@ -44,7 +44,8 @@ public class Papel {
     private Instant atualizadoEm;
 
 
-    protected Papel(String nome) {
+
+    public Papel(String nome) {
 
         if (nome == null || nome.trim().isBlank()) {
             throw new DomainException("O nome do papel não pode ser nulo ou vazio.");
@@ -64,6 +65,28 @@ public class Papel {
         criadoEm = Instant.now();
         atualizadoEm = Instant.now();
         this.nome = formatado;
+    }
+
+    public static Papel formatar(String nome) {
+
+        if (nome == null || nome.trim().isBlank()) {
+            throw new DomainException("O nome do papel não pode ser nulo ou vazio.");
+        }
+
+        String formatado = Normalizer.normalize(nome, java.text.Normalizer.Form.NFD)
+                .trim()
+                .toUpperCase()
+                .replaceAll("\\p{M}", "")
+                .replaceAll("[\\s\\-/]+", "_")
+                .replaceAll("[^A-Z0-9_]", "")
+                .replaceAll("^_+|_+$", "")
+                .replaceAll("_+", "_");
+
+
+        var papel = new Papel();
+        papel.setNome(formatado);
+
+        return papel;
     }
 
     public static Papel superAdmin() {
