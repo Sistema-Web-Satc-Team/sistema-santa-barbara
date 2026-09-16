@@ -69,9 +69,9 @@ CREATE TABLE IF NOT EXISTS partitura_instrumento (
 -- Tabela principal de membros
 CREATE TABLE IF NOT EXISTS membro (
     id UUID PRIMARY KEY NOT NULL,
-    nome_legal VARCHAR(256) NOT NULL,
+    nome_legal VARCHAR(256),
     sobrenome_legal VARCHAR(256),
-    data_nascimento DATE NOT NULL,
+    data_nascimento DATE,
     endereco VARCHAR(256),
     nome_usuario VARCHAR(256) UNIQUE,
     telefone VARCHAR(15),

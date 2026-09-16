@@ -8,6 +8,7 @@ const buttonVariants = cva("button", {
     variant: {
       normal: "button-normal",
       outline: "button-outline",
+      ghost: "button-ghost",
     },
     isPressed: {
       true: "",
@@ -24,6 +25,11 @@ const buttonVariants = cva("button", {
       variant: "outline",
       isPressed: true,
       class: "button-outline--pressed",
+    },
+    {
+      variant: "ghost",
+      isPressed: true,
+      class: "button-ghost--pressed",
     },
   ],
   defaultVariants: {

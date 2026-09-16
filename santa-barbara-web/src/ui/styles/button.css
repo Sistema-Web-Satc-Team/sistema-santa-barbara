@@ -6,7 +6,6 @@
     align-items: center;
     justify-content: center;
     height: fit-content;
-    width: auto;
     border: none;
     background: none;
     cursor: pointer;
@@ -70,4 +69,27 @@
 .button-outline--pressed {
     background-color: var(--press-brand-color);
     color: var(--surface-color);
+}
+
+
+/*
+* GHOST VARIANT
+*/
+.button-ghost {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--neutral-color);
+}
+
+.button-ghost:hover,
+.button-ghost--hover {
+    background-color: var(--strong-surface-color);
+    color: var(--strong-foreground-color);
+}
+
+.button-ghost:active,
+.button-ghost--pressed {
+    background-color: var(--light-neutral-color);
+    color: var(--strong-foreground-color);
 }

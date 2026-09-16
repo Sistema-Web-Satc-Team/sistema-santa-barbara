@@ -1,0 +1,228 @@
+package br.org.bandasantabarbara.model;
+
+import com.github.f4b6a3.uuid.alt.GUID;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.domain.Persistable;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import static java.util.Arrays.stream;
+
+@Entity
+@Table(name = "membro")
+@SecondaryTable(
+        name = "membro_credencial",
+        pkJoinColumns = @PrimaryKeyJoinColumn(name = "membro_id")
+)
+public class Membro implements Persistable<UUID> {
+    @Id
+    private UUID id;
+
+    @Transient
+    private boolean isNovo = true;
+
+    @Override
+    public UUID getId() {
+        return id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNovo;
+    }
+
+    @PostLoad
+    @PostPersist
+    void markNotNew() {
+        this.isNovo = false;
+    }
+
+    @Getter @Setter
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
+    @Getter @Setter
+    @Column(name = "nome_legal")
+    private String nome;
+
+    @Getter @Setter
+    @Column(name = "sobrenome_legal")
+    private String sobrenome;
+
+    @Getter @Setter
+    @Column(name = "nome_usuario", unique = true)
+    private String nomeDeUsuario;
+
+    @Getter @Setter
+    @Column(name = "data_nascimento")
+    private LocalDate dataNascimento;
+
+    @Getter @Setter
+    @Column(name = "endereco")
+    private String endereco;
+
+    @Getter @Setter
+    @Column(name = "telefone")
+    private String telefone;
+
+    @Getter
+    @Column(name = "criado_em", nullable = false, updatable = false)
+    private Instant criadoEm;
+
+    @Getter
+    @Column(name = "atualizado_em", nullable = false)
+    private Instant atualizadoEm;
+
+    @Getter @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private MembroStatus status = MembroStatus.ATIVO;
+
+    /*
+    *
+    * Filhos
+    *
+     */
+
+    @Getter
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "hashSenha", column = @Column(table = "membro_credencial", name = "hash_password")),
+            @AttributeOverride(name = "criadoEm", column = @Column(table = "membro_credencial", name = "criado_em")),
+            @AttributeOverride(name = "atualizadoEm", column = @Column(table = "membro_credencial", name = "atualizado_em"))
+    })
+    private MembroCredencial credencial;
+
+    @Getter
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "membro_papel",
+            joinColumns = @JoinColumn(name = "id_membro"),
+            inverseJoinColumns = @JoinColumn(name = "id_papel")
+    )
+    private Set<Papel> papeis = new HashSet<>();
+
+    /*
+    *
+    * CONSTRUTORES
+    *
+     */
+
+    protected Membro() {
+        this.id = GUID.v7().toUUID();
+        criadoEm = Instant.now();
+        atualizadoEm = Instant.now();
+    }
+
+    /*
+    *
+    * Métodos de composição
+    *
+     */
+
+    public void atribuirCredencial(String hashSenha) {
+        if (this.credencial == null) {
+            this.credencial = new MembroCredencial(hashSenha);
+        } else {
+            this.credencial.alterarHashSenha(hashSenha);
+        }
+        this.atualizadoEm = Instant.now();
+    }
+
+    public void atribuirPapel(Papel novoPapel) {
+        this.papeis.add(novoPapel);
+        this.atualizadoEm = Instant.now();
+    }
+
+    public void atribuirPapeis(List<Papel> novosPapeis) {
+        this.papeis.addAll(novosPapeis);
+        this.atualizadoEm = Instant.now();
+    }
+
+    private void resetarPapeis() {
+        this.papeis = new HashSet<>();
+    }
+
+    /*
+    *
+    * MÉTODOS DE CRIACAO
+    *
+     */
+
+
+    public static Membro criarAdministrador(
+            String email,
+            String username,
+            String hashSenha
+    ) {
+        var membro = new Membro();
+
+        membro.setEmail(email);
+        membro.setNomeDeUsuario(username);
+        membro.atribuirCredencial(hashSenha);
+        membro.atribuirPapel(Papel.superAdmin());
+
+        return membro;
+    }
+
+    public static Membro criarMembro(String email, String nome) {
+        var membro = new Membro();
+        membro.setEmail(email);
+        membro.setNome(nome);
+
+        return membro;
+    }
+
+    /*
+    *
+    * MÉTODOS DE ATUALIZACAO
+    *
+     */
+
+    public void atualizarInformacoes(
+            String nome,
+            String sobrenome,
+            String email,
+            String telefone,
+            String endereco,
+            LocalDate dataNascimento,
+            String[] papeis,
+            MembroStatus status
+
+    ) {
+        if (nome != null && !nome.isBlank()) this.nome = nome;
+        if (sobrenome != null && !sobrenome.isBlank()) this.sobrenome = sobrenome;
+        if (email != null && !email.isBlank()) this.email = email;
+        if (telefone != null && !telefone.isBlank()) this.telefone = telefone;
+        if (endereco != null && !endereco.isBlank()) this.endereco = endereco;
+        if (dataNascimento != null) this.dataNascimento = dataNascimento;
+
+        if (papeis != null) {
+            this.resetarPapeis();
+            this.atribuirPapeis(stream(papeis).map(Papel::new).toList());
+        }
+
+        if (status != null) this.status = status;
+
+        this.atualizadoEm = Instant.now();
+        isNovo = false;
+    }
+
+    public void atualizarDadosDoPerfil(String email, String telefone, String endereco, String nomeDeUsuario) {
+        if (nomeDeUsuario != null && !nomeDeUsuario.isBlank()) this.nomeDeUsuario = nomeDeUsuario;
+        if (email != null && !email.isBlank()) this.email = email;
+        if (telefone != null && !telefone.isBlank()) this.telefone = telefone;
+        if (endereco != null && !endereco.isBlank()) this.endereco = endereco;
+        this.atualizadoEm = Instant.now();
+        isNovo = false;
+    }
+
+}

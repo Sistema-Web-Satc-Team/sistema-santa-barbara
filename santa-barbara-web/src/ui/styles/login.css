@@ -1,0 +1,12 @@
+
+.login__title {
+    color: var(--brand-color);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.login__label {
+    color: var(--foreground-color);
+    font-size: 1rem;
+    font-weight: 600;
+}

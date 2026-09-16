@@ -1,0 +1,9 @@
+.success-card {
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: var(--success-color);
+  border-radius: 0.5rem;
+  background-color: color-mix(in srgb, var(--success-color) 20%, transparent);
+  border: 1px solid color-mix(in srgb, var(--success-color) 50%, transparent);
+  transition: all 150ms ease;
+}
