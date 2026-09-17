@@ -1,6 +1,6 @@
 
 class Api {
-    private static root: string = "http://localhost:8080/api/v1" 
+    private static root: string = "http://localhost:8080/api/v1/" 
 
     public static getRooutResource(): string {
         return Api.root;

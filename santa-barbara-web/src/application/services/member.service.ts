@@ -13,9 +13,14 @@ interface MembersPageResponse {
 
 export const memberService = {
     getMembers: async ({ page, limit }: GetMembersParams): Promise<MembersPageResponse> => {
-        const endpoint = `${Api.getRooutResource()}/membros?page=${page}&limit=${limit}`;
+        
+        const PageIndex = page - 1;
 
-        const response = await axios.get<MembersPageResponse>(endpoint);
+        const endpoint = `${Api.getRooutResource()}membros?page=${PageIndex}&size=${limit}`;
+
+        const response = await axios.get<MembersPageResponse>(endpoint, 
+            { withCredentials: true }
+        );
 
         return response.data;
     }
