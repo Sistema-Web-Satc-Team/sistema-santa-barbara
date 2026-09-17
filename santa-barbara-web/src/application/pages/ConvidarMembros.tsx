@@ -8,22 +8,16 @@ import {
 } from "@/application/services/ConviteService";
 import "@/ui/styles/ConvidarMembrosPage.css";
 
-/**
- * Página de Convidar Membros
- * Gerencia o estado dos convites e coordena a comunicação com a API
- */
 export default function ConvidarMembrosPage() {
   const [convites, setConvites] = useState<Convite[]>([]);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState("");
   const [sucessoMensagem, setSucessoMensagem] = useState("");
 
-  // Carregar convites ao montar o componente
   useEffect(() => {
     carregarConvites();
   }, []);
 
-  // Limpar mensagem de sucesso após 3 segundos
   useEffect(() => {
     if (sucessoMensagem) {
       const timer = setTimeout(() => setSucessoMensagem(""), 3000);
@@ -74,12 +68,10 @@ export default function ConvidarMembrosPage() {
   return (
     <div className="convidar-membros-page">
       <div className="convidar-membros-page__container">
-        {/* Header */}
         <header className="convidar-membros-page__header">
           <h1>Convidar Novos Membros</h1>
         </header>
 
-        {/* Mensagens de Feedback */}
         {sucessoMensagem && (
           <div className="convidar-membros-page__sucesso">
             {sucessoMensagem}
@@ -92,7 +84,6 @@ export default function ConvidarMembrosPage() {
           </div>
         )}
 
-        {/* Formulário */}
         <section className="convidar-membros-page__form-section">
           <div className="convidar-membros-page__card">
             <h2>Enviar Convite</h2>
@@ -103,7 +94,6 @@ export default function ConvidarMembrosPage() {
           </div>
         </section>
 
-        {/* Tabela de Convites Recentes */}
         <section className="convidar-membros-page__table-section">
           <div className="convidar-membros-page__card">
             <h2>Convites Recentes</h2>
