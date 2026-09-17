@@ -1,0 +1,132 @@
+.convite-table {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.convite-table__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.convite-table__search-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.convite-table__search-input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+  background-color: var(--surface-color);
+  transition: all 200ms ease;
+}
+
+.convite-table__search-input:hover {
+  border-color: var(--border-strong-color);
+}
+
+.convite-table__search-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.convite-table__wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.convite-table__content {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.convite-table__content thead {
+  background-color: var(--surface-strong-color);
+  border-bottom: 1px solid var(--border-strong-color);
+}
+
+.convite-table__content th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.convite-table__content tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 200ms ease;
+}
+
+.convite-table__content tbody tr:hover {
+  background-color: var(--surface-strong-color);
+}
+
+.convite-table__content td {
+  padding: 16px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.convite-table__status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.convite-table__status--pendente {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning);
+}
+
+.convite-table__status--aceito {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.convite-table__status--expirado {
+  background-color: var(--color-error-light);
+  color: var(--color-error);
+}
+
+.convite-table__status--recusado {
+  background-color: var(--color-error-light);
+  color: var(--color-error);
+}
+
+.convite-table__loading,
+.convite-table__empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .convite-table__content {
+    font-size: 12px;
+  }
+
+  .convite-table__content th,
+  .convite-table__content td {
+    padding: 12px 8px;
+  }
+
+  .convite-table__status {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+}

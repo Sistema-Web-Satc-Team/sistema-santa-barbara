@@ -1,0 +1,219 @@
+.aceitar-convite-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--surface-color) 0%, var(--surface-strong-color) 100%);
+}
+
+.aceitar-convite-page__container {
+  width: 100%;
+  max-width: 480px;
+  padding: 32px 24px;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.aceitar-convite-page__logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.aceitar-convite-page__logo-inner {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--surface-strong-color);
+  gap: 2px;
+  text-align: center;
+}
+
+.aceitar-convite-page__logo-inner span {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  line-height: 1;
+}
+
+.aceitar-convite-page__divider {
+  height: 4px;
+  background-color: var(--color-success);
+  border-radius: 2px;
+  margin: 0 auto;
+  width: 120px;
+}
+
+.aceitar-convite-page__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin: 0;
+}
+
+.aceitar-convite-page__message {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.aceitar-convite-page__message p {
+  margin: 0;
+}
+
+.aceitar-convite-page__message-strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.aceitar-convite-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.aceitar-convite-page__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aceitar-convite-page__form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.aceitar-convite-page__required {
+  color: var(--color-error);
+}
+
+.aceitar-convite-page__form-input {
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+  background-color: var(--surface-color);
+  transition: all 200ms ease;
+  font-family: inherit;
+}
+
+.aceitar-convite-page__form-input:hover:not(:disabled) {
+  border-color: var(--border-strong-color);
+}
+
+.aceitar-convite-page__form-input:focus {
+  outline: none;
+  border-color: var(--color-success);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.aceitar-convite-page__form-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.aceitar-convite-page__form-input--disabled {
+  background-color: var(--surface-strong-color);
+}
+
+.aceitar-convite-page__password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.aceitar-convite-page__password-wrapper input {
+  width: 100%;
+}
+
+.aceitar-convite-page__password-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 200ms ease;
+}
+
+.aceitar-convite-page__password-toggle:hover {
+  color: var(--text-primary);
+}
+
+.aceitar-convite-page__password-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.aceitar-convite-page__senhas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.aceitar-convite-page__erro {
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: var(--color-error-light);
+  color: var(--color-error);
+  font-size: 14px;
+  border-left: 4px solid var(--color-error);
+}
+
+.aceitar-convite-page__submit-button {
+  margin-top: 8px;
+}
+
+.aceitar-convite-page__footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.aceitar-convite-page__loading,
+.aceitar-convite-page__erro-grande {
+  text-align: center;
+  padding: 32px;
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 480px) {
+  .aceitar-convite-page__container {
+    padding: 24px 16px;
+    gap: 20px;
+  }
+
+  .aceitar-convite-page__senhas {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .aceitar-convite-page__title {
+    font-size: 20px;
+  }
+
+  .aceitar-convite-page__message {
+    font-size: 13px;
+  }
+}

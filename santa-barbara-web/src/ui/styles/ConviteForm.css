@@ -1,0 +1,65 @@
+.convite-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.convite-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.convite-form__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.convite-form__required {
+  color: var(--color-error);
+}
+
+.convite-form__select {
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+  background-color: var(--surface-color);
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.convite-form__select:hover:not(:disabled) {
+  border-color: var(--border-strong-color);
+}
+
+.convite-form__select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.convite-form__select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.convite-form__error {
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: var(--color-error-light);
+  color: var(--color-error);
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .convite-form {
+    gap: 12px;
+  }
+
+  .convite-form__group {
+    gap: 6px;
+  }
+}
