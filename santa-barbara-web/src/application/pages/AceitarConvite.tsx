@@ -7,10 +7,6 @@ import { Convite, RegistrarNovoUsuarioRequest } from "@/application/model/Convit
 import { Eye, EyeOff } from "lucide-react";
 import "@/ui/styles/AceitarConvitePage.css";
 
-/**
- * Página para aceitar convite e registrar novo usuário
- * Acesso público - sem autenticação necessária
- */
 export default function AceitarConvitePage() {
   const { idConvite } = useParams<{ idConvite: string }>();
   const navigate = useNavigate();
@@ -20,7 +16,6 @@ export default function AceitarConvitePage() {
   const [erroCarregamento, setErroCarregamento] = useState("");
   const [enviando, setEnviando] = useState(false);
 
-  // Formulário
   const [nomeCompleto, setNomeCompleto] = useState("");
   const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
@@ -29,7 +24,6 @@ export default function AceitarConvitePage() {
   const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
   const [erro, setErro] = useState("");
 
-  // Carregar dados do convite
   useEffect(() => {
     if (!idConvite) return;
 
@@ -63,7 +57,6 @@ export default function AceitarConvitePage() {
     e.preventDefault();
     setErro("");
 
-    // Validações
     if (!nomeCompleto.trim()) {
       setErro("Nome completo é obrigatório");
       return;
@@ -101,7 +94,6 @@ export default function AceitarConvitePage() {
 
       await registrarNovoUsuario(dados);
       
-      // Sucesso - redirecionar para login
       alert("✅ Cadastro realizado com sucesso! Você será redirecionado para o login.");
       navigate("/login");
     } catch (error) {
@@ -139,7 +131,6 @@ export default function AceitarConvitePage() {
   return (
     <div className="aceitar-convite-page">
       <div className="aceitar-convite-page__container">
-        {/* Logo */}
         <div className="aceitar-convite-page__logo">
           <div className="aceitar-convite-page__logo-inner">
             <span>BANDA</span>
@@ -148,13 +139,10 @@ export default function AceitarConvitePage() {
           </div>
         </div>
 
-        {/* Linha verde */}
         <div className="aceitar-convite-page__divider" />
 
-        {/* Título */}
         <h1 className="aceitar-convite-page__title">Você foi convidado!</h1>
 
-        {/* Mensagem */}
         <div className="aceitar-convite-page__message">
           <p>Você foi convidado para participar do</p>
           <p className="aceitar-convite-page__message-strong">sistema da</p>
@@ -162,9 +150,7 @@ export default function AceitarConvitePage() {
           <p>Finalize seu cadastro abaixo para acessar.</p>
         </div>
 
-        {/* Formulário */}
         <form onSubmit={handleSubmit} className="aceitar-convite-page__form">
-          {/* Email (desabilitado) */}
           <div className="aceitar-convite-page__form-group">
             <label className="aceitar-convite-page__form-label">
               E-mail (Seu Login)
@@ -177,7 +163,6 @@ export default function AceitarConvitePage() {
             />
           </div>
 
-          {/* Nome Completo */}
           <div className="aceitar-convite-page__form-group">
             <label className="aceitar-convite-page__form-label">
               Nome Completo <span className="aceitar-convite-page__required">*</span>
@@ -192,7 +177,6 @@ export default function AceitarConvitePage() {
             />
           </div>
 
-          {/* Telefone */}
           <div className="aceitar-convite-page__form-group">
             <label className="aceitar-convite-page__form-label">
               Telefone / Whatsapp
@@ -206,7 +190,6 @@ export default function AceitarConvitePage() {
             />
           </div>
 
-          {/* Senhas lado a lado */}
           <div className="aceitar-convite-page__senhas">
             <div className="aceitar-convite-page__form-group">
               <label className="aceitar-convite-page__form-label">
@@ -257,14 +240,12 @@ export default function AceitarConvitePage() {
             </div>
           </div>
 
-          {/* Erro */}
           {erro && (
             <div className="aceitar-convite-page__erro">
               {erro}
             </div>
           )}
 
-          {/* Botão */}
           <Button
             type="submit"
             variant="normal"
@@ -275,7 +256,6 @@ export default function AceitarConvitePage() {
           </Button>
         </form>
 
-        {/* Rodapé */}
         <p className="aceitar-convite-page__footer">
           Ao finalizar seu cadastro, você concordará com nossos termos de serviço.
         </p>
