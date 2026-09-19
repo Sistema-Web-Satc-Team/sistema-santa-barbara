@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import type { Convite, CriarConviteRequest } from "@/application/model/ConviteModel";
+import {
+  criarConvite,
+  listarConvites,
+} from "@/application/services/ConviteService";
 import { ConviteForm } from "@/ui/components/ConviteForm";
 import { ConviteTable } from "@/ui/components/ConviteTable";
-import { Convite, CriarConviteRequest } from "@/application/model/ConviteModel";
-import {
-  listarConvites,
-  criarConvite,
-} from "@/application/services/ConviteService";
 import "@/ui/styles/ConvidarMembrosPage.css";
+import { useEffect, useState } from "react";
 
 export default function ConvidarMembrosPage() {
   const [convites, setConvites] = useState<Convite[]>([]);

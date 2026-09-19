@@ -2,7 +2,7 @@
  * Modelo de dados para Convite
 */
 
-export interface Convite {
+interface Convite {
   id: string;
   emailConvidado: string;
   papelDesignado: 'ALUNO' | 'PROFESSOR' | 'ADMINISTRADOR';
@@ -12,12 +12,12 @@ export interface Convite {
   nomeConvidante?: string;
 }
 
-export interface CriarConviteRequest {
+interface CriarConviteRequest {
   emailConvidado: string;
   papelDesignado: 'ALUNO' | 'PROFESSOR' | 'ADMINISTRADOR';
 }
 
-export interface ConviteResponse {
+interface ConviteResponse {
   id: string;
   emailConvidado: string;
   papelDesignado: string;
@@ -25,10 +25,13 @@ export interface ConviteResponse {
   status: string;
 }
 
-export interface RegistrarNovoUsuarioRequest {
+interface RegistrarNovoUsuarioRequest {
   email: string;
   nomeCompleto: string;
   telefone: string;
   senha: string;
   idConvite: string;
 }
+
+
+export type { Convite, ConviteResponse, CriarConviteRequest, RegistrarNovoUsuarioRequest };

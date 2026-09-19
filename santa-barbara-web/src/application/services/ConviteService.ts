@@ -1,10 +1,10 @@
-import axios from 'axios';
-import { 
-  Convite, 
-  CriarConviteRequest, 
-  ConviteResponse, 
-  RegistrarNovoUsuarioRequest 
+import type {
+  Convite,
+  ConviteResponse,
+  CriarConviteRequest,
+  RegistrarNovoUsuarioRequest
 } from '@/application/model/ConviteModel';
+import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -13,20 +13,9 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true
 });
 
-apiClient.interceptors.request.use((config) => {
-  const token = 
-    localStorage.getItem('token') ||
-    localStorage.getItem('authToken') ||
-    localStorage.getItem('accessToken') ||
-    localStorage.getItem('jwt');
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
 
 export async function listarConvites(): Promise<Convite[]> {
   try {

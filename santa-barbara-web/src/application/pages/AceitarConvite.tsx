@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router";
+import type { Convite, RegistrarNovoUsuarioRequest } from "@/application/model/ConviteModel";
+import { obterConvite, registrarNovoUsuario } from "@/application/services/ConviteService";
 import { Button } from "@/ui/components/button";
 import { Input } from "@/ui/components/input";
-import { obterConvite, registrarNovoUsuario } from "@/application/services/ConviteService";
-import { Convite, RegistrarNovoUsuarioRequest } from "@/application/model/ConviteModel";
-import { Eye, EyeOff } from "lucide-react";
 import "@/ui/styles/AceitarConvitePage.css";
+import { Eye, EyeOff } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 
 export default function AceitarConvitePage() {
   const { idConvite } = useParams<{ idConvite: string }>();

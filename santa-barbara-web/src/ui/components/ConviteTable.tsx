@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Search } from "lucide-react";
-import { Convite } from "@/application/model/ConviteModel";
+import type { Convite } from "@/application/model/ConviteModel";
 import "@/ui/styles/ConviteTable.css";
+import { Search } from "lucide-react";
+import { useState } from "react";
 
 export interface ConviteTableProps {
   convites: Convite[];
