@@ -1,52 +1,85 @@
 .pagination {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-top: 1rem;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    width: 100%;
+    padding: 1rem 0.5rem;
     font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--neutral-color);
 }
 
-.pagination__controls {
+.pagination__navigation {
     display: flex;
-    overflow: hidden;
-    background-color: var(--surface-color);
-    border: 1px solid var(--light-neutral-color);
-    border-radius: 0.25rem;
-}
-
-.pagination__button {
-    padding: 0.375rem 0.875rem;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0;
     color: var(--neutral-color);
     border: none;
     background: transparent;
     cursor: pointer;
-    transition: background-color 150ms ease;
+    transition: color 150ms ease;
 }
 
-.pagination__button--bordered {
-    border-right: 1px solid var(--light-neutral-color);
+.pagination__navigation:hover:not(:disabled) {
+    color: var(--strong-foreground-color);
 }
 
-.pagination__button:hover:not(:disabled) {
-    background-color: var(--strong-surface-color);
-}
-
-.pagination__button:disabled {
+.pagination__navigation:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.pagination__button--selected {
+.pagination__pages {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pagination__page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.pagination__page--active {
+    color: var(--surface-color);
+    background-color: var(--strong-foreground-color);
+}
+
+.pagination__page--available {
     color: var(--strong-foreground-color);
-    font-weight: 600;
-    background-color: var(--strong-surface-color);
+    background: transparent;
+}
+
+.pagination__page--available:hover {
+    background-color: var(--light-neutral-color);
+}
+
+.pagination__page--ellipsis {
+    color: var(--strong-foreground-color);
+    background: transparent;
+    cursor: default;
 }
 
 .pagination__select {
-    padding: 0.375rem 0.5rem;
+    padding: 0.375rem 0.75rem;
     color: var(--neutral-color);
     background-color: var(--surface-color);
     border: 1px solid var(--light-neutral-color);
-    border-radius: 0.25rem;
+    border-radius: 0.375rem;
     outline: none;
+    cursor: pointer;
+}
+
+.pagination__select:focus {
+    border-color: var(--neutral-color);
+    box-shadow: 0 0 0 1px var(--neutral-color);
 }

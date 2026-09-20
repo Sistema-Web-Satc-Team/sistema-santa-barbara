@@ -71,6 +71,15 @@
     color: var(--surface-color);
 }
 
+button.button-outline.button-outline--brand-dark,
+button.button-outline.button-outline--brand-dark:hover,
+button.button-outline.button-outline--brand-dark:active,
+button.button-outline.button-outline--brand-dark.button-outline--pressed {
+    background-color: var(--brand-color);
+    border-color: var(--brand-color);
+    color: var(--surface-color);
+}
+
 
 /*
 * GHOST VARIANT

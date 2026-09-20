@@ -100,16 +100,16 @@ export function MembersListPage() {
 
     return (
         <div className="flex flex-1 w-full bg-(--surface-color) overflow-hidden">
-            <aside className="w-64 bg-(--surface-color) border-r border-(--light-neutral-color) hidden md:flex flex-col py-6">
-                <nav className="flex flex-col gap-2 px-4">
-                    <button className="flex items-center gap-3 px-4 py-3 bg-(--strong-surface-color) rounded-lg font-semibold text-(--strong-foreground-color)">
-                        <Users className="w-5 h-5" /> Membros
+            <aside className="w-80 bg-(--surface-color) border-r border-(--light-neutral-color) hidden md:flex flex-col">
+                <nav className="flex flex-col">
+                    <button className="flex items-center gap-4 px-6 py-5 bg-(--strong-surface-color) border-b border-(--light-neutral-color) font-semibold text-(--strong-foreground-color)">
+                        <Users className="w-7 h-7" /> Membros
                     </button>
-                    <button className="flex items-center gap-3 px-4 py-3 text-(--foreground-color) hover:bg-(--strong-surface-color) rounded-lg transition-colors">
-                        <UserPlus className="w-5 h-5" /> Convidar Membros
+                    <button className="flex items-center gap-4 px-6 py-5 text-(--foreground-color) border-b border-(--light-neutral-color) hover:bg-(--strong-surface-color) transition-colors">
+                        <UserPlus className="w-7 h-7" /> Convidar Membros
                     </button>
-                    <button className="flex items-center gap-3 px-4 py-3 text-(--foreground-color) hover:bg-(--strong-surface-color) rounded-lg transition-colors">
-                        <Shield className="w-5 h-5" /> Papeis
+                    <button className="flex items-center gap-4 px-6 py-5 text-(--foreground-color) border-b border-(--light-neutral-color) hover:bg-(--strong-surface-color) transition-colors">
+                        <Shield className="w-7 h-7" /> Papeis
                     </button>
                 </nav>
             </aside>
@@ -120,7 +120,7 @@ export function MembersListPage() {
                         <h1 className="text-3xl font-normal text-(--strong-foreground-color)">Membros</h1>
                         <Button
                             variant="outline"
-                            className="flex items-center gap-2 bg-(--strong-surface-color) text-(--strong-foreground-color) border-(--light-neutral-color)"
+                            className="button-outline--brand-dark flex items-center gap-2 bg-(--strong-surface-color) border-(--light-neutral-color)"
                             onClick={() => alert("Redirecionando para rota de cadastro ainda não existente.")}
                         >
                             <Plus className="w-4 h-4" /> Cadastrar Membro
