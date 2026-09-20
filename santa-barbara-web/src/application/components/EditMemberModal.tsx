@@ -112,7 +112,7 @@ export function EditMemberModal({ member, onClose, onSuccess }: EditMemberModalP
                     <div>
                         <h2 id="edit-member-title" className="text-xl font-bold text-(--strong-foreground-color)">Editar Membro</h2>
                     </div>
-                    <button type="button" onClick={handleClose} className="rounded p-1 text-(--neutral-color) transition-colors hover:bg-(--strong-surface-color) hover:text-(--strong-foreground-color)" aria-label="Fechar">
+                    <button type="button" onClick={handleClose} className="flex h-7 w-7 items-center justify-center rounded-md border border-(--brand-color)/50 bg-(--surface-color) text-(--neutral-color) transition-colors hover:bg-(--strong-surface-color) hover:text-(--strong-foreground-color)" aria-label="Fechar">
                         <X size={20} />
                     </button>
                 </div>
@@ -150,7 +150,7 @@ export function EditMemberModal({ member, onClose, onSuccess }: EditMemberModalP
 
                         <div className="col-span-full flex justify-end gap-3 border-t border-(--light-neutral-color) pt-4">
                             <Button type="button" variant="outline" onClick={handleClose}>Cancelar</Button>
-                            <Button type="submit" variant="normal" disabled={saving}>{saving ? "Salvando..." : "Salvar Alterações"}</Button>
+                            <Button type="submit" variant="normal" disabled={saving || !hasUnsavedChanges}>{saving ? "Salvando..." : "Salvar Alterações"}</Button>
                         </div>
                     </form>
 
