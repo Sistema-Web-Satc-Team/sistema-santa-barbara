@@ -2,6 +2,7 @@ package br.org.bandasantabarbara.application.usecase;
 
 import br.org.bandasantabarbara.application.dtos.*;
 import br.org.bandasantabarbara.application.dtos.membros.AtualizarMembroParcialmenteRequest;
+import br.org.bandasantabarbara.application.dtos.membros.ListMembroRequest;
 import br.org.bandasantabarbara.application.dtos.membros.MembroResponse;
 import br.org.bandasantabarbara.application.dtos.membros.RegistrarMembroRequest;
 import br.org.bandasantabarbara.application.dtos.profile.AtualizarMeParcialmenteRequest;
@@ -77,14 +78,14 @@ public class MembroUsecase {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<MembroResponse> listarMembros(OffsetPaginationRequest dto)
+    public PageResponse<MembroResponse> listarMembros(ListMembroRequest dto)
     {
         Pageable pageable = PageRequest.of(
-                dto.page(),
-                dto.size(),
+                dto.pagination().page(),
+                dto.pagination().size(),
                 Sort.by("criadoEm").descending()
         );
-        List<Membro> membros = membroRepository.listar(pageable);
+        List<Membro> membros = membroRepository.listar(pageable, dto.filter());
 
         List<MembroResponse> membrosResponse = membros.stream()
                 .map(MembroResponse::deEntidade)
@@ -92,8 +93,8 @@ public class MembroUsecase {
 
         return new PageResponse<>(
                 membrosResponse,
-                dto.page(),
-                dto.size()
+                dto.pagination().page(),
+                dto.pagination().size()
         );
     }
 

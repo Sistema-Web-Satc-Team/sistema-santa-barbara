@@ -2,14 +2,18 @@ package br.org.bandasantabarbara.infrastructure.controller;
 
 import br.org.bandasantabarbara.application.dtos.*;
 import br.org.bandasantabarbara.application.dtos.membros.AtualizarMembroParcialmenteRequest;
+import br.org.bandasantabarbara.application.dtos.membros.ListMembroRequest;
 import br.org.bandasantabarbara.application.dtos.membros.MembroResponse;
 import br.org.bandasantabarbara.application.dtos.membros.RegistrarMembroRequest;
+import br.org.bandasantabarbara.application.filters.MembroFilter;
 import br.org.bandasantabarbara.application.usecase.MembroUsecase;
+import br.org.bandasantabarbara.model.Papel;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -37,9 +41,25 @@ public class MembroController {
     public PageResponse<MembroResponse> listarMembros(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String papel
+            @RequestParam(required = false)
+            List<String> papel,
+            String nome
     ) {
-        var dto = new OffsetPaginationRequest(page, size, papel);
+        var membroFilter = new MembroFilter();
+
+        if (papel != null && !papel.isEmpty()) {
+            membroFilter.setPapeis(papel);
+        }
+
+        if (nome != null && !nome.isBlank()) {
+            membroFilter.setNome(nome);
+        }
+
+
+        var offsetPaginationRequest = new OffsetPaginationRequest(page, size);
+
+        var dto = new ListMembroRequest(offsetPaginationRequest, membroFilter);
+
         return usecase.listarMembros(dto);
     }
 

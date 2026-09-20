@@ -1,5 +1,6 @@
 package br.org.bandasantabarbara.repositories;
 
+import br.org.bandasantabarbara.application.filters.MembroFilter;
 import br.org.bandasantabarbara.model.Membro;
 import br.org.bandasantabarbara.model.MembroCredencial;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +19,37 @@ public interface MembroRepository extends Repository<Membro, UUID> {
 
     Optional<Membro> findById(UUID id);
 
-    @Query("SELECT m FROM Membro m LEFT JOIN m.papeis p")
-    List<Membro> listar(Pageable pageable);
+    @Query("""
+        SELECT DISTINCT m FROM Membro m 
+        LEFT JOIN m.papeis p
+        WHERE 
+            (
+                :#{#filter.nome} IS NULL
+                OR 
+                LOWER(
+                    CONCAT(
+                        COALESCE(m.nome, ''), 
+                            ' ', 
+                        COALESCE(m.sobrenome, '')
+                    )
+                ) 
+                LIKE 
+                LOWER(
+                    CONCAT(
+                        '%', 
+                        :#{#filter.nome}, 
+                        '%'
+                    )
+                )
+            )
+        AND
+            (
+                :#{#filter.papeis} IS NULL
+                OR 
+                p.nome IN :#{#filter.papeis}
+            )          
+    """)
+    List<Membro> listar(Pageable pageable, @Param("filter") MembroFilter filter);
 
 
     @Query("""
