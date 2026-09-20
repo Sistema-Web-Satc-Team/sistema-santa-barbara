@@ -36,7 +36,7 @@ export function FilterDropdown({ label, options, selected, onSelect }: FilterDro
                 className="filter-dropdown__trigger"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                {label} {selected ? `(${selected})` : ""} <Filter className="filter-dropdown__icon" size={16} />
+                <Filter className="filter-dropdown__icon" size={16} /> {label} {selected ? `(${selected})` : ""}
             </Button>
             
             {isOpen && (

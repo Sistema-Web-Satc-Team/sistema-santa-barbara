@@ -3,12 +3,27 @@ import { AlertCircle, ArrowDownAZ, ArrowUpAZ, Ban, Edit2, Mail, Plus, Settings2,
 import { memberService } from "@/application/services/member.service";
 import type { MemberData } from "@/application/model/MemberData";
 import { Button } from "@/ui/components/button";
+import { Badge } from "@/ui/components/badge";
 import { DropdownActions } from "@/ui/components/DropdownActions";
 import { FilterDropdown } from "@/ui/components/Filterdropdown";
 import { Pagination } from "@/ui/components/pagination";
 import { SearchBox } from "@/ui/components/searchBox";
 import { Table, type TableColumn } from "@/ui/components/table";
 import { papelService } from "@/application/services/papel.service";
+
+function formatPhone(phone: string) {
+    const digits = phone.replace(/\D/g, "");
+
+    if (digits.length === 11) {
+        return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+    }
+
+    if (digits.length === 10) {
+        return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+    }
+
+    return phone;
+}
 
 export function MembersListPage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -65,9 +80,17 @@ export function MembersListPage() {
             render: (member) => <span className="text-(--strong-foreground-color)">{member.nome} {member.sobrenome}</span>,
         },
         { header: "Papel", accessor: "papeis", render: (member) => <span className="capitalize">{member.papeis?.join(", ")}</span> },
-        { header: "Telefone", accessor: "telefone" },
+        { header: "Telefone", accessor: "telefone", render: (member) => <span className="table-phone">{formatPhone(member.telefone)}</span> },
         { header: "E-Mail", accessor: "email" },
-        { header: "Status", accessor: "status" },
+        {
+            header: "Status",
+            accessor: "status",
+            render: (member) => (
+                <Badge variant={member.status.toUpperCase() === "INATIVO" ? "inactive" : "active"}>
+                    {member.status.toLowerCase()}
+                </Badge>
+            ),
+        },
         {
             header: "Ações",
             width: "w-24",
@@ -147,7 +170,7 @@ export function MembersListPage() {
                                 }}
                             />
 
-                            <div className="flex items-center gap-1 border border-(--light-neutral-color) rounded bg-(--surface-color) p-0.5">
+                            <div className="flex items-center gap-1 border border-(--brand-color)/50 rounded bg-(--surface-color) p-0.5">
                                 <button
                                     onClick={() => { setSortOrder("asc"); setCurrentPage(1); }}
                                     className={`p-1.5 rounded transition-colors ${sortOrder === "asc" ? "bg-(--strong-surface-color) text-(--strong-foreground-color)" : "text-(--neutral-color) hover:bg-(--strong-surface-color)"}`}
