@@ -1,4 +1,5 @@
 import React from "react";
+import "@/ui/styles/table.css";
 
 
 export interface TableColumn<T> {
@@ -18,14 +19,15 @@ interface TableProps<T> {
 
 export function Table<T>({ data, columns, keyExtractor }: TableProps<T>) {
     return (
-        <div className="border border-[var(--light-neutral-color)] rounded-lg bg-[var(--surface-color)] overflow-visible">
-            <table className="w-full text-left border-collapse text-sm">
-                <thead className="bg-[var(--strong-surface-color)] text-[var(--neutral-color)]">
+        <div className="table-container">
+            <table className="data-table">
+                <thead className="data-table__head">
                     <tr>
                         {columns.map((col, index) => (
                             <th 
                                 key={index} 
-                                className={`p-3 border-b border-[var(--light-neutral-color)] font-semibold ${col.width || ""} ${col.align === "center" ? "text-center" : ""}`}
+                                className={`data-table__header ${col.align === "center" ? "data-table__cell--center" : ""} ${col.align === "right" ? "data-table__cell--right" : ""}`}
+                                style={{ width: col.width === "w-24" ? "6rem" : col.width }}
                             >
                                 {col.header}
                             </th>
@@ -36,12 +38,12 @@ export function Table<T>({ data, columns, keyExtractor }: TableProps<T>) {
                     {data.map((item, rowIndex) => (
                         <tr 
                             key={keyExtractor(item)} 
-                            className={`${rowIndex % 2 === 0 ? 'bg-[var(--surface-color)]' : 'bg-[var(--strong-surface-color)]'} hover:bg-[var(--light-neutral-color)] transition-colors relative`}
+                            className={`data-table__row ${rowIndex % 2 === 0 ? "data-table__row--even" : "data-table__row--odd"}`}
                         >
                             {columns.map((col, colIndex) => (
                                 <td 
                                     key={colIndex} 
-                                    className={`p-3 text-[var(--neutral-color)] ${col.align === "center" ? "text-center" : ""}`}
+                                    className={`data-table__cell ${col.align === "center" ? "data-table__cell--center" : ""} ${col.align === "right" ? "data-table__cell--right" : ""}`}
                                 >
                     
                                     {col.render ? col.render(item) : (col.accessor ? String(item[col.accessor]) : null)}

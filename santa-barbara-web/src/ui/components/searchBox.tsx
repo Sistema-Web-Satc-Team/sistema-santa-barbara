@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 import { Input } from "@/ui/components/input";
+import "@/ui/styles/search-box.css";
 
 interface SearchBoxProps {
     value: string;
@@ -7,16 +8,16 @@ interface SearchBoxProps {
     placeholder?: string;
 }
 
-export function SearchBox({ value, onChange, placeholder = "Pesquisar..." }: SearchBoxProps) {
+export function SearchBox({ value, onChange, placeholder = "Placeholder" }: SearchBoxProps) {
     return (
-        <div className="relative w-72">
-            <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-(--light-neutral-color)" />
+        <div className="search-box">
             <Input
                 placeholder={placeholder}
-                className="pl-10 w-full bg-(--surface-color) border-(--light-neutral-color)"
+                className="search-box__input"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
             />
+            <Search className="search-box__icon" size={20} />
         </div>
     );
 }

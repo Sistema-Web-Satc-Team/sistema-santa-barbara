@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { ReactNode } from "react";
 import { MoreVertical } from "lucide-react";
+import "@/ui/styles/dropdown-actions.css";
 
 
 export interface DropdownOption {
@@ -30,16 +31,16 @@ export function DropdownActions({ options }: DropdownActionsProps) {
     }, []);
 
     return (
-        <div className="relative flex justify-center" ref={menuRef}>
+        <div className="dropdown-actions" ref={menuRef}>
             <button 
                 onClick={() => setIsOpen(!isOpen)} 
-                className="p-1 hover:bg-(--strong-surface-color) rounded text-(--neutral-color) transition-colors"
+                className="dropdown-actions__trigger"
             >
-                <MoreVertical className="w-5 h-5" />
+                <MoreVertical size={20} />
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 mt-8 w-44 bg-(--surface-color) border border-(--light-neutral-color) rounded-md shadow-lg z-50 py-1 text-left">
+                <div className="dropdown-actions__menu">
                     {options.map((option, index) => (
                         <button 
                             key={index}
@@ -47,9 +48,7 @@ export function DropdownActions({ options }: DropdownActionsProps) {
                                 option.onClick();
                                 setIsOpen(false); 
                             }}
-                            className={`w-full px-4 py-2 text-xs flex items-center gap-2 hover:bg-(--strong-surface-color) transition-colors
-                                ${option.isDanger ? "text-(--error-color)" : "text-(--neutral-color)"}
-                            `}
+                            className={`dropdown-actions__option ${option.isDanger ? "dropdown-actions__option--danger" : ""}`}
                         >
                             {option.icon} {option.label}
                         </button>
