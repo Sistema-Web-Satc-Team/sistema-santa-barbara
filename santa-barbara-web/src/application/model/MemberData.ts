@@ -3,6 +3,7 @@ export interface MemberData {
     fullName: string;
     role: string;
     phone: string;
+    endereco: string;
     email: string;
     status: string;
 }

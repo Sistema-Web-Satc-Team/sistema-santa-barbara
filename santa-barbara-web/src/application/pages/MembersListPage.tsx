@@ -7,6 +7,7 @@ import { Button } from "@/ui/components/button";
 import { DropdownActions } from "@/ui/components/DropdownActions";
 import { Pagination } from "@/ui/components/pagination";
 import { Table, type TableColumn } from "@/ui/components/table";
+import { EditMemberModal } from "../components/EditMemberModal";
 
 export function MembersListPage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -18,7 +19,10 @@ export function MembersListPage() {
     const [members, setMembers] = useState<MemberData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
+    const [editingMember, setEditingMember] = useState<MemberData | null>(null);
+    const [refreshKey, setRefreshKey] = useState(0);
     const filterRef = useRef<HTMLDivElement>(null);
+
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -46,7 +50,7 @@ export function MembersListPage() {
         };
 
         fetchMembers();
-    }, []);
+    }, [refreshKey]);
 
     const filteredMembers = members.filter((member) => {
         const normalizedSearch = searchTerm.toLowerCase();
@@ -82,7 +86,7 @@ export function MembersListPage() {
             render: (member) => (
                 <div className="flex items-center justify-center gap-2">
                     <button
-                        onClick={() => alert(`Editar ID: ${member.id}`)}
+                        onClick={() => handleEditClick(member)}
                         className="p-1 hover:bg-(--strong-surface-color) rounded text-(--neutral-color) transition-colors"
                         title="Editar"
                     >
@@ -103,6 +107,10 @@ export function MembersListPage() {
     const changeItemsPerPage = (value: number) => {
         setItemsPerPage(value);
         setCurrentPage(1);
+    };
+
+    const handleEditClick = (member: MemberData) => {
+        setEditingMember(member);
     };
 
     return (
@@ -227,6 +235,17 @@ export function MembersListPage() {
                     )}
                 </div>
             </section>
+
+            {editingMember && (
+                <EditMemberModal
+                    member={editingMember}
+                    onClose={() => setEditingMember(null)}
+                    onSuccess={() => {
+                        setEditingMember(null);
+                        setRefreshKey((key) => key + 1);
+                    }}
+                />
+            )}
         </div>
     );
 }

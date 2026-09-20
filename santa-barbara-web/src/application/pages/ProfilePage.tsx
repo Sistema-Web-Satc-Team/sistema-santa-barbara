@@ -47,6 +47,18 @@ export function ProfilePage() {
         })()
     }, [])
 
+    useEffect(() => {
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            if (hasUnsavedChanges) {
+                event.preventDefault();
+                event.returnValue = "Você tem alterações não salvas. Deseja realmente sair?";
+            }
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+    }, [hasUnsavedChanges]);
+
     const handleEditClick = () => {
         setOriginalProfile((prev) => ({ ...prev, ...profile }));
         setFieldErrors({});
@@ -71,12 +83,14 @@ export function ProfilePage() {
             newErrors.email = "E-mail inválido ou obrigatório.";
         }
 
-        if (!profile.telefone.trim() || profile.telefone.replace(/\D/g, "").length < 10) {
-            newErrors.telefone = "Informe um telefone válido com DDD.";
+        const telefoneLimpo = profile.telefone.replace(/\D/g, "");
+        if (profile.telefone.trim().length > 0 && (telefoneLimpo.length < 11 || telefoneLimpo.length > 15)) {
+            newErrors.telefone = "O telefone deve ter pelo menos 11 dígitos.";
         }
 
-        if (!profile.endereco.trim()) {
-            newErrors.endereco = "O endereço não pode estar vazio.";
+        const endereco = profile.endereco.trim();
+        if (endereco.length > 0 && (endereco.length < 2 || endereco.length > 200)) {
+            newErrors.endereco = "O endereço deve ter entre 2 e 200 caracteres.";
         }
 
         if (profile.instrumentos.length < 1) {
@@ -91,7 +105,16 @@ export function ProfilePage() {
         if (!validateForm()) return;
         
         try {
-            await AuthService.updateMe({...profile});
+            const payload: Partial<Pick<ProfileState, "email" | "telefone" | "endereco" | "nomeUsuario">> = {};
+            if (profile.email !== originalProfile.email) payload.email = profile.email;
+            if (profile.telefone !== originalProfile.telefone) payload.telefone = profile.telefone;
+            if (profile.endereco !== originalProfile.endereco) payload.endereco = profile.endereco;
+            if (profile.nomeUsuario !== originalProfile.nomeUsuario) payload.nomeUsuario = profile.nomeUsuario;
+
+            if (Object.keys(payload).length > 0) {
+                await AuthService.updateMe(payload);
+            }
+
             setOriginalProfile(profile);
             setSuccessMessage("Dados atualizados com sucesso!");
             setIsEditing(false);
@@ -158,12 +181,9 @@ export function ProfilePage() {
                         <h2 className="text-4xl font-bold text-(--strong-foreground-color)">
                             {`${profile.nome} ${profile.sobrenome}`}
                         </h2>
-                        {
-                            profile.papeis?.map(
-                                (p: string) => 
-                                    (<span className="text-xl text-(--strong-foreground-color)">{p}</span>)
-                            )
-                        }
+                        {profile.papeis?.map((papel: string) => (
+                            <span key={papel} className="text-xl text-(--strong-foreground-color) block">{papel}</span>
+                        ))}
                     </div>
                 </div>
 
@@ -194,7 +214,7 @@ export function ProfilePage() {
                         <span className="text-2xl font-semibold text-(--strong-foreground-color) mt-1 sm:w-40">Telefone:</span>
                         <div className="flex flex-col flex-1">
                             {!isEditing ? (
-                                <span className="text-(--strong-foreground-color) text-lg mt-1">{profile.telefone}</span>
+                                <span className="text-(--strong-foreground-color) text-lg mt-1">{profile.telefone || "Não informado"}</span>
                             ) : (
                                 <>
                                     <Input
@@ -213,7 +233,7 @@ export function ProfilePage() {
                         <span className="text-2xl font-semibold text-(--strong-foreground-color) mt-1 sm:w-40">Endereço:</span>
                         <div className="flex flex-col flex-1">
                             {!isEditing ? (
-                                <span className="text-(--strong-foreground-color) text-lg mt-1">{profile.endereco}</span>
+                                <span className="text-(--strong-foreground-color) text-lg mt-1">{profile.endereco || "Não informado"}</span>
                             ) : (
                                 <>
                                     <Input
