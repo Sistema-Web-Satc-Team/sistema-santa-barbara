@@ -107,20 +107,20 @@ export function EditMemberModal({ member, onClose, onSuccess }: EditMemberModalP
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-(--strong-foreground-color)/50 p-4" onMouseDown={(event) => event.target === event.currentTarget && handleClose()}>
-            <div className="flex max-h-[90vh] w-full max-w-2xl flex-col gap-6 overflow-y-auto rounded-lg bg-(--surface-color) p-6 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="edit-member-title">
-                <div className="flex items-center justify-between border-b border-(--light-neutral-color) pb-3">
+            <div className="flex max-h-[90vh] w-full max-w-2xl flex-col gap-9 overflow-y-auto rounded-lg bg-(--surface-color) p-9 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="edit-member-title">
+                <div className="flex items-center justify-between border-b border-(--light-neutral-color) pb-4">
                     <div>
                         <h2 id="edit-member-title" className="text-xl font-bold text-(--strong-foreground-color)">Editar Membro</h2>
                     </div>
-                    <button type="button" onClick={handleClose} className="flex h-7 w-7 items-center justify-center rounded-md border border-(--brand-color)/50 bg-(--surface-color) text-(--neutral-color) transition-colors hover:bg-(--strong-surface-color) hover:text-(--strong-foreground-color)" aria-label="Fechar">
-                        <X size={20} />
+                    <button type="button" onClick={handleClose} className="flex h-8 w-8 items-center justify-center rounded-md border border-(--brand-color)/50 bg-(--surface-color) text-(--neutral-color) transition-colors hover:bg-(--strong-surface-color) hover:text-(--strong-foreground-color)" aria-label="Fechar">
+                        <X size={16} strokeWidth={2} />
                     </button>
                 </div>
 
                 <SuccessCard message={successMessage} />
                 <ErrorCard message={errorMessage} />
 
-                <form onSubmit={handleSave} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <form onSubmit={handleSave} className="grid grid-cols-1 gap-10 sm:grid-cols-2">
                         <div className="space-y-1">
                             <span className="block text-sm font-medium text-(--foreground-color)">Membro</span>
                             <div className="flex min-h-10 items-center rounded-md border border-(--light-neutral-color) bg-(--strong-surface-color)/30 px-3 py-2">
@@ -148,7 +148,7 @@ export function EditMemberModal({ member, onClose, onSuccess }: EditMemberModalP
                             {fieldErrors.endereco && <span className="mt-1 block text-sm text-(--error-color)">{fieldErrors.endereco}</span>}
                         </div>
 
-                        <div className="col-span-full flex justify-end gap-3 border-t border-(--light-neutral-color) pt-4">
+                        <div className="col-span-full mt-3 flex justify-end gap-4 border-t border-(--light-neutral-color) pt-7">
                             <Button type="button" variant="outline" onClick={handleClose}>Cancelar</Button>
                             <Button type="submit" variant="normal" disabled={saving || !hasUnsavedChanges}>{saving ? "Salvando..." : "Salvar Alterações"}</Button>
                         </div>
