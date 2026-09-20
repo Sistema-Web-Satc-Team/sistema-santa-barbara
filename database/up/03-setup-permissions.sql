@@ -23,7 +23,7 @@ INSERT INTO permissao (nome, criado_em, atualizado_em) VALUES
 ('MEMBRO:CADASTRAR', NOW(), NOW()),
 ('MEMBRO:VISUALIZAR', NOW(), NOW()),
 ('MEMBRO:ATUALIZAR', NOW(), NOW()),
-('MEMBRO:REMOVER', NOW(), NOW());
+('MEMBRO:REMOVER', NOW(), NOW()),
 
 
 CREATE OR REPLACE PROCEDURE vincular_papel_permissao(
@@ -67,5 +67,4 @@ CALL vincular_papel_permissao('SUPER_ADMIN', 'MEMBRO:VISUALIZAR');
 CALL vincular_papel_permissao('SUPER_ADMIN', 'MEMBRO:CADASTRAR');
 CALL vincular_papel_permissao('SUPER_ADMIN', 'MEMBRO:ATUALIZAR');
 CALL vincular_papel_permissao('SUPER_ADMIN', 'MEMBRO:REMOVER');
-
 

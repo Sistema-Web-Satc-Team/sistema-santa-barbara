@@ -1,17 +1,18 @@
-import { useEffect, useRef, useState } from "react";
-import { AlertCircle, ArrowDownAZ, ArrowUpAZ, Ban, Edit2, Filter, Mail, Plus, Search, Settings2, Shield, UserPlus, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+import { AlertCircle, ArrowDownAZ, ArrowUpAZ, Ban, Edit2, Mail, Plus, Settings2, Shield, UserPlus, Users } from "lucide-react";
 import { memberService } from "@/application/services/member.service";
 import type { MemberData } from "@/application/model/MemberData";
-import { Input } from "@/ui/components/input";
 import { Button } from "@/ui/components/button";
 import { DropdownActions } from "@/ui/components/DropdownActions";
+import { FilterDropdown } from "@/ui/components/Filterdropdown";
 import { Pagination } from "@/ui/components/pagination";
+import { SearchBox } from "@/ui/components/searchBox";
 import { Table, type TableColumn } from "@/ui/components/table";
+import { papelService } from "@/application/services/papel.service";
 
 export function MembersListPage() {
     const [searchTerm, setSearchTerm] = useState("");
-    const [statusFilter, setStatusFilter] = useState("");
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [selectedPapel, setSelectedPapel] = useState<string>("");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -19,19 +20,19 @@ export function MembersListPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
     const [isLastPage, setIsLastPage] = useState(false);
+    const [availableRoles, setAvailableRoles] = useState<string[]>([]);
     
-    const filterRef = useRef<HTMLDivElement>(null);
-
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
-                setIsFilterOpen(false);
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    const fetchRoles = async () => {
+        try {
+            const roles = await papelService.getPapeis();
+            setAvailableRoles(roles);
+        } catch (error) {
+            console.error("Erro ao carregar papéis do sistema:", error);
+        }
+    };
+    fetchRoles();
+}, []);
 
     useEffect(() => {
         const fetchMembers = async () => {
@@ -39,7 +40,8 @@ export function MembersListPage() {
                 setIsLoading(true);
                 const response = await memberService.getMembers({
                     page: currentPage,
-                    limit: itemsPerPage
+                    limit: itemsPerPage,
+                    papel: selectedPapel
                 });
                 
                 setMembers(response.content);
@@ -54,7 +56,7 @@ export function MembersListPage() {
         };
 
         fetchMembers();
-    }, [currentPage, itemsPerPage]);
+    }, [currentPage, itemsPerPage, selectedPapel]);
 
     const membersColumns: TableColumn<MemberData>[] = [
         {
@@ -127,46 +129,23 @@ export function MembersListPage() {
 
                     <div className="flex justify-between items-center gap-4">
                         <div className="flex items-center gap-4 flex-1">
-                            <div className="relative w-72">
-                                <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-(--light-neutral-color)" />
-                                <Input
-                                    placeholder="Pesquisar..."
-                                    className="pl-10 w-full bg-(--surface-color)"
-                                    value={searchTerm}
-                                    onChange={(event) => {
-                                        setSearchTerm(event.target.value);
-                                        setCurrentPage(1);
-                                    }}
-                                />
-                            </div>
+                            <SearchBox
+                                value={searchTerm}
+                                onChange={(value) => {
+                                    setSearchTerm(value);
+                                    setCurrentPage(1);
+                                }}
+                            />
 
-                            <div className="relative" ref={filterRef}>
-                                <Button
-                                    variant="outline"
-                                    className="flex items-center gap-2 bg-(--surface-color) border-(--light-neutral-color)"
-                                    onClick={() => setIsFilterOpen((isOpen) => !isOpen)}
-                                >
-                                    Filtros {statusFilter ? `(${statusFilter})` : ""} <Filter className="w-4 h-4" />
-                                </Button>
-                                {isFilterOpen && (
-                                    <div className="absolute top-full mt-2 left-0 w-48 bg-(--surface-color) border border-(--light-neutral-color) rounded-md shadow-lg z-50 py-1 text-left">
-                                        <div className="px-4 py-2 text-xs font-semibold text-(--neutral-color) border-b border-(--light-neutral-color)">Status</div>
-                                        {["", "ativo", "inativo"].map((status) => (
-                                            <button
-                                                key={status || "todos"}
-                                                onClick={() => {
-                                                    setStatusFilter(status);
-                                                    setIsFilterOpen(false);
-                                                    setCurrentPage(1);
-                                                }}
-                                                className={`w-full px-4 py-2 text-sm text-left ${statusFilter === status ? "bg-(--strong-surface-color) font-semibold text-(--strong-foreground-color)" : "text-(--neutral-color) hover:bg-(--strong-surface-color)"}`}
-                                            >
-                                                {status || "Todos"}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+                            <FilterDropdown
+                                label="Filtros"
+                                options={availableRoles}
+                                selected={selectedPapel}
+                                onSelect={(papel) => {
+                                    setSelectedPapel(papel);
+                                    setCurrentPage(1);
+                                }}
+                            />
 
                             <div className="flex items-center gap-1 border border-(--light-neutral-color) rounded bg-(--surface-color) p-0.5">
                                 <button

@@ -36,9 +36,10 @@ public class MembroController {
     @PreAuthorize("hasAuthority('MEMBRO:VISUALIZAR')")
     public PageResponse<MembroResponse> listarMembros(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String papel
     ) {
-        var dto = new OffsetPaginationRequest(page, size);
+        var dto = new OffsetPaginationRequest(page, size, papel);
         return usecase.listarMembros(dto);
     }
 

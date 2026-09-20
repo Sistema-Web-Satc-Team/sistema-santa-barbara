@@ -5,6 +5,7 @@ import type { MemberData } from "@/application/model/MemberData";
 interface GetMembersParams {
     page: number;
     limit: number;
+    papel?: string;
 }
 
 interface MembersPageResponse {
@@ -12,11 +13,15 @@ interface MembersPageResponse {
 }
 
 export const memberService = {
-    getMembers: async ({ page, limit }: GetMembersParams): Promise<MembersPageResponse> => {
+    getMembers: async ({ page, limit, papel }: GetMembersParams): Promise<MembersPageResponse> => {
         
         const PageIndex = page - 1;
 
-        const endpoint = `${Api.getRooutResource()}membros?page=${PageIndex}&size=${limit}`;
+        let endpoint = `${Api.getRooutResource()}membros?page=${PageIndex}&size=${limit}`;
+
+        if (papel && papel.trim() !== "") {
+            endpoint += `&papel=${encodeURIComponent(papel)}`;
+        }
 
         const response = await axios.get<MembersPageResponse>(endpoint, 
             { withCredentials: true }
