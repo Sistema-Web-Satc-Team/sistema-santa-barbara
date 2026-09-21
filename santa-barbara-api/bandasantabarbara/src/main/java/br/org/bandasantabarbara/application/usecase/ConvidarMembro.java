@@ -6,6 +6,7 @@ import br.org.bandasantabarbara.application.dtos.convite.MembroDestinatarioDTO;
 import br.org.bandasantabarbara.application.events.ConvidarMembroEvento;
 import br.org.bandasantabarbara.exception.NaoEncontradoException;
 import br.org.bandasantabarbara.model.Convite;
+import br.org.bandasantabarbara.model.ConviteStatus;
 import br.org.bandasantabarbara.model.Membro;
 import br.org.bandasantabarbara.repositories.ConviteRepository;
 import br.org.bandasantabarbara.repositories.MembroRepository;
@@ -40,6 +41,9 @@ public class ConvidarMembro {
                 .orElseThrow(() -> new NaoEncontradoException("Membro não encontrado."));
 
         Convite convite = new Convite(membro);
+
+        // Talvez isso não seja o ideal...
+        convite.setStatus(ConviteStatus.ENVIADO);
 
         this.conviteRepository.save(convite);
 
