@@ -63,7 +63,12 @@ public class ConvidarMembro {
             )
         );
 
-        return new ConvidarMembroResponse(convite.getId().toString(), urlConvite);
+        return new ConvidarMembroResponse(
+                convite.getId().toString(),
+                urlConvite,
+                convite.getDataCriacaoConvite(),
+                convite.getDataExpiracaoConvite()
+        );
     }
 
 }

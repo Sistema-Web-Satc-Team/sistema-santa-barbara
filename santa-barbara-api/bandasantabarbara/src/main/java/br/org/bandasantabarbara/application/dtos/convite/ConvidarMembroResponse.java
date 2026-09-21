@@ -1,4 +1,11 @@
 package br.org.bandasantabarbara.application.dtos.convite;
 
-public record ConvidarMembroResponse(String idConvite, String URL) {
+import java.time.Instant;
+
+public record ConvidarMembroResponse(
+        String idConvite,
+        String URL,
+        Instant criadoEm,
+        Instant expiraEm
+) {
 }
