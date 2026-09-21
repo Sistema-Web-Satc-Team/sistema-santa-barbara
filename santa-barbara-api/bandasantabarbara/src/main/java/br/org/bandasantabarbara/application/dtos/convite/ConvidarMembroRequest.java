@@ -1,4 +1,6 @@
 package br.org.bandasantabarbara.application.dtos.convite;
 
-public record ConvidarMembroRequest(String idMembro) {
+import java.util.UUID;
+
+public record ConvidarMembroRequest(UUID idMembro) {
 }
