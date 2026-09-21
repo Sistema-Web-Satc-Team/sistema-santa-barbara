@@ -8,6 +8,11 @@ Sistema de escola de música.
 - Java 25
 - Node.js 22v
 
+
+# ATENÇÃO - MUDANÇA PARA FACILITAR O DESENVOLVIMENTO
+
+Os scripts DDL agora não estão sendo mais escritos manualmente na pasta `database/up`, agora isso serve apenas para criar permissões e vincular aos papeis essas permissões.
+
 # CLI de Desenvolvimento (`dev-cli`)
 
 O orquestrador do ambiente automatiza a subida do banco de dados no Docker (PostgreSQL), compilação e execução do backend (Spring Boot) e servidor de desenvolvimento do frontend (Vite/React).
