@@ -12,7 +12,11 @@ import { AlertCircle, ArrowDownAZ, ArrowUpAZ, Ban, Edit2, Mail, Plus, Settings2,
 import { useEffect, useRef, useState } from "react";
 import { EditMemberModal } from "../components/EditMemberModal";
 
-function formatPhone(phone: string) {
+function formatPhone(phone: string | null) {
+    if (!phone) {
+        return "";
+    }
+
     const digits = phone.replace(/\D/g, "");
 
     if (digits.length === 11) {
@@ -86,7 +90,7 @@ export function MembersListPage() {
     const filteredMembers = members.filter((member) => {
         const normalizedSearch = searchTerm.toLowerCase();
 
-        let nomeCompleto = member.nome.trim() + ' ' + member.sobrenome.trim();
+        let nomeCompleto = member.nome.trim() || "" + ' ' + member.sobrenome.trim() || "";
         const matchesSearch = nomeCompleto.toLowerCase().includes(normalizedSearch)
             || member.email.toLowerCase().includes(normalizedSearch);
         const matchesStatus = !statusFilter || member.status === statusFilter;
@@ -94,8 +98,8 @@ export function MembersListPage() {
     });
 
     const sortedMembers = [...filteredMembers].sort((firstMember, secondMember) => {
-        let nomeCompletoPrimeiroMembro = firstMember.nome.trim() + ' ' + firstMember.sobrenome.trim();
-        let nomeCompletoSegundoMembro = secondMember.nome.trim() + ' ' + secondMember.sobrenome.trim();
+        let nomeCompletoPrimeiroMembro = firstMember.nome.trim() || "" + ' ' + firstMember.sobrenome.trim() || "";
+        let nomeCompletoSegundoMembro = secondMember.nome.trim() || "" + ' ' + secondMember.sobrenome.trim() || "";
         const result = nomeCompletoPrimeiroMembro.localeCompare(nomeCompletoSegundoMembro);
         return sortOrder === "asc" ? result : -result;
     });
