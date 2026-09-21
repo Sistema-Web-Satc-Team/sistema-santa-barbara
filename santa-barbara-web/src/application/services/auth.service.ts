@@ -55,11 +55,11 @@ class AuthService {
             const message = axios.isAxiosError(err)
                 ? err.response?.data?.message || "Falha na autenticação."
                 : "Falha na autenticação.";
-            throw new Error(message);
+            throw new Error(message, { cause: err });
         }
     }
 
-    static async updateMe(newData: ProfileUpdateRequest): Promise<void> {
+    static async updateMe(newData: Partial<ProfileUpdateRequest>): Promise<void> {
         try {
             await axios.patch(
                 Api.getAuthResource() + "me",
@@ -76,7 +76,7 @@ class AuthService {
             const message = axios.isAxiosError(err)
                 ? err.response?.data?.message || "Falha ao atualizar o perfil."
                 : "Falha ao atualizar o perfil.";
-            throw new Error(message);
+            throw new Error(message, { cause: err });
         }
     }
 }

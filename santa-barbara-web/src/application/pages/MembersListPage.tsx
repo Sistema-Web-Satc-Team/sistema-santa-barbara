@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
-import { AlertCircle, ArrowDownAZ, ArrowUpAZ, Ban, Edit2, Mail, Plus, Settings2, Shield, UserPlus, Users } from "lucide-react";
-import { memberService } from "@/application/services/member.service";
 import type { MemberData } from "@/application/model/MemberData";
-import { Button } from "@/ui/components/button";
+import { memberService } from "@/application/services/member.service";
+import { papelService } from "@/application/services/papel.service";
 import { Badge } from "@/ui/components/badge";
+import { Button } from "@/ui/components/button";
 import { DropdownActions } from "@/ui/components/DropdownActions";
 import { FilterDropdown } from "@/ui/components/Filterdropdown";
 import { Pagination } from "@/ui/components/pagination";
 import { SearchBox } from "@/ui/components/searchBox";
 import { Table, type TableColumn } from "@/ui/components/table";
-import { papelService } from "@/application/services/papel.service";
+import { AlertCircle, ArrowDownAZ, ArrowUpAZ, Ban, Edit2, Mail, Plus, Settings2, Shield, UserPlus, Users } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { EditMemberModal } from "../components/EditMemberModal";
 
 function formatPhone(phone: string) {
     const digits = phone.replace(/\D/g, "");
@@ -25,6 +26,8 @@ function formatPhone(phone: string) {
     return phone;
 }
 
+
+
 export function MembersListPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedPapel, setSelectedPapel] = useState<string>("");
@@ -36,7 +39,13 @@ export function MembersListPage() {
     const [hasError, setHasError] = useState(false);
     const [isLastPage, setIsLastPage] = useState(false);
     const [availableRoles, setAvailableRoles] = useState<string[]>([]);
-    
+
+    const [statusFilter, setStatusFilter] = useState<string>();
+
+    const [editingMember, setEditingMember] = useState<MemberData | null>(null);
+    const [refreshKey, setRefreshKey] = useState(0);
+    const filterRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
     const fetchRoles = async () => {
         try {
@@ -71,7 +80,29 @@ export function MembersListPage() {
         };
 
         fetchMembers();
-    }, [currentPage, itemsPerPage, selectedPapel]);
+    }, [currentPage, itemsPerPage, selectedPapel, refreshKey]);
+
+
+    const filteredMembers = members.filter((member) => {
+        const normalizedSearch = searchTerm.toLowerCase();
+
+        let nomeCompleto = member.nome.trim() + ' ' + member.sobrenome.trim();
+        const matchesSearch = nomeCompleto.toLowerCase().includes(normalizedSearch)
+            || member.email.toLowerCase().includes(normalizedSearch);
+        const matchesStatus = !statusFilter || member.status === statusFilter;
+        return matchesSearch && matchesStatus;
+    });
+
+    const sortedMembers = [...filteredMembers].sort((firstMember, secondMember) => {
+        let nomeCompletoPrimeiroMembro = firstMember.nome.trim() + ' ' + firstMember.sobrenome.trim();
+        let nomeCompletoSegundoMembro = secondMember.nome.trim() + ' ' + secondMember.sobrenome.trim();
+        const result = nomeCompletoPrimeiroMembro.localeCompare(nomeCompletoSegundoMembro);
+        return sortOrder === "asc" ? result : -result;
+    });
+
+    const totalPages = Math.max(1, Math.ceil(sortedMembers.length / itemsPerPage));
+    const pageStart = (currentPage - 1) * itemsPerPage;
+    const currentMembers = sortedMembers.slice(pageStart, pageStart + itemsPerPage);
 
     const membersColumns: TableColumn<MemberData>[] = [
         {
@@ -98,7 +129,7 @@ export function MembersListPage() {
             render: (member) => (
                 <div className="flex items-center justify-center gap-2">
                     <button
-                        onClick={() => alert(`Editar ID: ${member.id}`)}
+                        onClick={() => handleEditClick(member)}
                         className="p-1 hover:bg-(--strong-surface-color) rounded text-(--neutral-color) transition-colors"
                         title="Editar"
                     >
@@ -119,6 +150,10 @@ export function MembersListPage() {
     const changeItemsPerPage = (value: number) => {
         setItemsPerPage(value);
         setCurrentPage(1);
+    };
+
+    const handleEditClick = (member: MemberData) => {
+        setEditingMember(member);
     };
 
     return (
@@ -220,6 +255,17 @@ export function MembersListPage() {
                     )}
                 </div>
             </section>
+
+            {editingMember && (
+                <EditMemberModal
+                    member={editingMember}
+                    onClose={() => setEditingMember(null)}
+                    onSuccess={() => {
+                        setEditingMember(null);
+                        setRefreshKey((key) => key + 1);
+                    }}
+                />
+            )}
         </div>
     );
 }
