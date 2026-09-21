@@ -11,7 +11,9 @@ import br.org.bandasantabarbara.repositories.ConviteRepository;
 import br.org.bandasantabarbara.repositories.MembroRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ConvidarMembro {
 
     private final MembroRepository membroRepository;
