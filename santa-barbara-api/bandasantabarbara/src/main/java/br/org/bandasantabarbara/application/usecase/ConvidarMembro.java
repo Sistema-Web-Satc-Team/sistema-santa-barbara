@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.List;
+
 @Service
 public class ConvidarMembro {
 
@@ -39,6 +42,10 @@ public class ConvidarMembro {
         Membro membro = membroRepository
                 .findById(request.idMembro())
                 .orElseThrow(() -> new NaoEncontradoException("Membro não encontrado."));
+
+        if (conviteRepository.existsByMembroAndDataExpiracaoConviteAfter(membro, Instant.now())) {
+            throw new RuntimeException("Já existe um convite válido para este membro.");
+        }
 
         Convite convite = new Convite(membro);
 
