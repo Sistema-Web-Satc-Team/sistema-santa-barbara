@@ -1,5 +1,6 @@
 package br.org.bandasantabarbara.model;
 
+import br.org.bandasantabarbara.exception.DomainException;
 import com.github.f4b6a3.uuid.alt.GUID;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -186,6 +187,30 @@ public class Membro implements Persistable<UUID> {
     * MÉTODOS DE ATUALIZACAO
     *
      */
+
+    public void definirCredenciaisPrimeiroAcesso(
+            String hashSenha,
+            String nomeUsuario
+    ) {
+
+        if (nomeUsuario.isBlank()) {
+            throw new DomainException("Nome de usuário deve ser definido.");
+        }
+
+        if (hashSenha.isBlank()) {
+            throw new DomainException("Senha deve ser definido.");
+        }
+
+
+        if (this.credencial != null && this.credencial.getHashSenha() != null && !this.credencial.getHashSenha().isBlank()) {
+            throw new DomainException("Credenciais de acesso já foram definidas.");
+        }
+
+        this.credencial = new MembroCredencial(hashSenha);
+
+        this.nomeDeUsuario = nomeUsuario;
+        this.atualizadoEm = Instant.now();
+    }
 
     public void atualizarInformacoes(
             String nome,

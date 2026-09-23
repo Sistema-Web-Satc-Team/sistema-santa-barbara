@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
 
 import java.time.Instant;
 import java.util.List;
@@ -23,6 +24,7 @@ public interface ConviteRepository extends Repository<Convite, UUID> {
     @EntityGraph(attributePaths = {"membro"})
     @Query("SELECT c FROM Convite c")
     List<Convite> listarTodosConvites(Pageable pageable);
+
 
     boolean existsByMembroAndDataExpiracaoConviteAfter(Membro membro, Instant dataAtual);
 }

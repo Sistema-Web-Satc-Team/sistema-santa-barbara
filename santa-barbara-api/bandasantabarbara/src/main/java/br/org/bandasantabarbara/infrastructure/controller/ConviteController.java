@@ -1,14 +1,13 @@
 package br.org.bandasantabarbara.infrastructure.controller;
 
+import br.org.bandasantabarbara.application.dtos.DefaultMessageResponse;
 import br.org.bandasantabarbara.application.dtos.OffsetPaginationRequest;
 import br.org.bandasantabarbara.application.dtos.PageResponse;
-import br.org.bandasantabarbara.application.dtos.convite.ConsultarConviteResponse;
-import br.org.bandasantabarbara.application.dtos.convite.ConvidarMembroRequest;
-import br.org.bandasantabarbara.application.dtos.convite.ConvidarMembroResponse;
-import br.org.bandasantabarbara.application.dtos.convite.ReenviarConviteRequest;
+import br.org.bandasantabarbara.application.dtos.convite.*;
 import br.org.bandasantabarbara.application.dtos.membros.ListMembroRequest;
 import br.org.bandasantabarbara.application.dtos.membros.MembroResponse;
 import br.org.bandasantabarbara.application.filters.MembroFilter;
+import br.org.bandasantabarbara.application.usecase.convites.AceitarConvite;
 import br.org.bandasantabarbara.application.usecase.convites.ConsultarConvite;
 import br.org.bandasantabarbara.application.usecase.convites.ConvidarMembro;
 import br.org.bandasantabarbara.application.usecase.convites.ReenviarConvite;
@@ -26,15 +25,18 @@ public class ConviteController {
     private final ConvidarMembro convidarMembroUsecase;
     private final ReenviarConvite reenviarConviteUsecase;
     private final ConsultarConvite consultarConviteUsecase;
+    private final AceitarConvite aceitarConviteUsecase;
 
     public ConviteController(
             ConvidarMembro convidarMembroUsecase,
             ReenviarConvite reenviarConviteUsecase,
-            ConsultarConvite consultarConviteUsecase
+            ConsultarConvite consultarConviteUsecase,
+            AceitarConvite aceitarConviteUsecase
     ) {
         this.convidarMembroUsecase = convidarMembroUsecase;
         this.reenviarConviteUsecase = reenviarConviteUsecase;
         this.consultarConviteUsecase = consultarConviteUsecase;
+        this.aceitarConviteUsecase = aceitarConviteUsecase;
     }
 
 
@@ -54,7 +56,7 @@ public class ConviteController {
         return reenviarConviteUsecase.executar(dto);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('CONVITE:VISUALIZAR')")
     @ResponseStatus(HttpStatus.OK)
     public ConsultarConviteResponse getConvite(@PathVariable("id") UUID idConvite) {
@@ -74,4 +76,19 @@ public class ConviteController {
         return this.consultarConviteUsecase.listar(offsetPaginationRequest);
     }
 
+
+    @GetMapping("/validar/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean isValido(@PathVariable("id") UUID idConvite) {
+        return this.consultarConviteUsecase.isConviteValido(idConvite);
+    }
+
+
+    @PostMapping("/aceitar")
+    @ResponseStatus(HttpStatus.OK)
+    public DefaultMessageResponse aceitarConvite(@RequestBody AceitarConviteRequest request) {
+        this.aceitarConviteUsecase.executar(request);
+
+        return new DefaultMessageResponse("Convite aceito com sucesso!");
+    }
 }

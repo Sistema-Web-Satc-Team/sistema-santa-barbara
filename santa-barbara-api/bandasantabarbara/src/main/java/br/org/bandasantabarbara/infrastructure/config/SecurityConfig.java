@@ -36,7 +36,9 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/setup",
-            "/auth/login"
+            "/auth/login",
+            "/convites/validar/{id}",
+            "/convites/aceitar"
     };
 
     @Bean
@@ -45,6 +47,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.cors(Customizer.withDefaults());
+
 
         http.sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -7,6 +7,7 @@ import br.org.bandasantabarbara.application.dtos.convite.ConvidarMembroResponse;
 import br.org.bandasantabarbara.application.dtos.membros.MembroResumidoResponse;
 import br.org.bandasantabarbara.exception.NaoEncontradoException;
 import br.org.bandasantabarbara.model.Convite;
+import br.org.bandasantabarbara.model.ConviteStatus;
 import br.org.bandasantabarbara.model.Membro;
 import br.org.bandasantabarbara.repositories.ConviteRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -85,6 +87,15 @@ public class ConsultarConvite {
                 dto.size(),
                 dto.page()
         );
+    }
+
+
+    public boolean isConviteValido(UUID idConvite) {
+        return this.conviteRepository.findById(idConvite)
+                .map(convite -> (convite.getStatus() == ConviteStatus.ENVIADO
+                        || convite.getStatus() == ConviteStatus.REENVIADO)
+                        && convite.getDataExpiracaoConvite().isAfter(Instant.now()))
+                .orElse(false);
     }
 
 }
