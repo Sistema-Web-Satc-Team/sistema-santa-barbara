@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application.usecase;
+package br.org.bandasantabarbara.application.usecase.convites;
 
 import br.org.bandasantabarbara.application.events.ConvidarMembroEvento;
 import org.springframework.context.event.EventListener;

@@ -14,7 +14,6 @@ public interface ConviteRepository extends Repository<Convite, UUID> {
     Convite save(Convite convite);
     Optional<Convite> findById(UUID id);
 
-    List<Convite> findByMembro(Membro membro);
 
     boolean existsByMembroAndDataExpiracaoConviteAfter(Membro membro, Instant dataAtual);
 }

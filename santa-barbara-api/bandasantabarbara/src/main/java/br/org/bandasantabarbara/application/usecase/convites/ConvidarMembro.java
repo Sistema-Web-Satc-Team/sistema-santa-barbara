@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application.usecase;
+package br.org.bandasantabarbara.application.usecase.convites;
 
 import br.org.bandasantabarbara.application.dtos.convite.ConvidarMembroRequest;
 import br.org.bandasantabarbara.application.dtos.convite.ConvidarMembroResponse;
@@ -15,7 +15,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.List;
 
 @Service
 public class ConvidarMembro {
