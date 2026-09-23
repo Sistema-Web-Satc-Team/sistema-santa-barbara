@@ -18,7 +18,7 @@ public class Convite {
     private UUID id;
 
     @Getter
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Membro membro;
 
     @Getter

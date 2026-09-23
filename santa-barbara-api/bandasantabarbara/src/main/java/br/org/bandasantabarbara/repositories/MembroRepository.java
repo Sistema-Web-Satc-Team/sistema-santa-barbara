@@ -19,6 +19,7 @@ public interface MembroRepository extends Repository<Membro, UUID> {
 
     Optional<Membro> findById(UUID id);
 
+    @EntityGraph(attributePaths = {"papeis"})
     @Query("""
         SELECT DISTINCT m FROM Membro m 
         LEFT JOIN m.papeis p
