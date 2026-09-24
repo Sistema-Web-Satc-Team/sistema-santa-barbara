@@ -1,13 +1,12 @@
 import { Button } from "@/ui/components/button";
 import { Input } from "@/ui/components/input";
 
+import { useLogin } from "@/application/hook/useLogin";
 import { ErrorCard } from "@/ui/components/error-card";
 import "@/ui/styles/login.css";
-import { useLogin } from "../hook/useLogin";
 
 function Login() {
     const { data, actions, state } = useLogin();
-   
 
     return (
         <form 
@@ -60,6 +59,7 @@ function Login() {
                     name="password" 
                     variant="normal" 
                     placeholder="Senha"
+                    type="password"
                     value={data.senha}
                     onChange={(e) => actions.onChangeCampo("senha", e.target.value)}
                 />

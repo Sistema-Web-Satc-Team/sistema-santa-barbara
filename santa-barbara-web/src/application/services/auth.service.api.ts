@@ -61,14 +61,23 @@ class AuthServiceApi implements AuthService {
 
     async updateMe(newData: Partial<UpdateProfileRequest>): Promise<void> {
         try {
+
+            const payload: Record<string, any> = {};
+            
+            if (newData.email !== undefined && newData.email !== "") {
+                payload.email = newData.email;
+            }
+            if (newData.telefone !== undefined && newData.telefone !== "") {
+                payload.telefone = newData.telefone;
+            }
+            if (newData.endereco !== undefined && newData.endereco !== "") {
+                payload.endereco = newData.endereco;
+            }
+
             await axios.patch(
+                
                 Api.getAuthResource() + "me",
-                {
-                    email: newData.email ?? "",
-                    nomeUsuario: newData.nomeUsuario ?? "",
-                    telefone: newData.telefone ?? "",
-                    endereco: newData.endereco ?? "",
-                },
+                payload,
                 { withCredentials: true }
             );
         } catch (err) {

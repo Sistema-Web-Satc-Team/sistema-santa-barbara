@@ -8,6 +8,7 @@ const inputVariants = cva("input", {
   variants: {
     variant: {
       normal: "input-normal",
+      discreet: "input-discreet",
       disabled: "input--disabled"
     },
   }
