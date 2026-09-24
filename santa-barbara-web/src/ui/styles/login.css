@@ -10,3 +10,8 @@
     font-size: 1rem;
     font-weight: 600;
 }
+
+.login__form-card {
+    border: solid var(--light-neutral-color) 1px;
+    border-radius: 16px;
+}

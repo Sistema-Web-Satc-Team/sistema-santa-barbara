@@ -1,6 +1,7 @@
 import { Button } from "@/ui/components/button";
 import { Input } from "@/ui/components/input";
 
+import { ErrorCard } from "@/ui/components/error-card";
 import "@/ui/styles/login.css";
 import { useLogin } from "../hook/useLogin";
 
@@ -17,18 +18,16 @@ function Login() {
                 }
             }
             className={`
+                login__form-card
+
                 w-[90%]
                 xl:w-[35%]
                 h-fit
-
-                border-1 border-solid border-[var(--light-neutral-color)]
                 
                 2xl:px-[72px] 2xl:pb-[64px] 2xl:pt-[36px]
                 xl:px-[48px] xl:pb-[32px] xl:pt-[18px]
                 px-[32px] pb-[16px] pt-[9px]
-                
-                rounded-[16px]
-                
+  
                 mx-auto
                 my-auto
                 gap-[24px]
@@ -40,11 +39,8 @@ function Login() {
         
             <h1 className="2xl:py-[32px] py-[16px] mx-auto login__title">Login</h1>
 
-            { /* [WARN] CRIAR COMPONENTE ERROR CARD */ }
             {state.hasErro() && (
-                <div className="p-3 text-sm text-red-600 bg-red-100 rounded-lg text-center">
-                    {state.erro}
-                </div>
+                <ErrorCard message={state.erro} />
             )}
 
             <div className="flex flex-col 2xl:gap-[12px] gap-[6px]">
