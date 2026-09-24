@@ -1,11 +1,11 @@
 
 
-interface ProfileUpdateRequest {
+interface UpdateProfileRequest {
     email?: string,
     nomeUsuario?: string,
     telefone?: string,
     endereco?: string
 }
 
-export type { ProfileUpdateRequest };
+export type { UpdateProfileRequest };
 

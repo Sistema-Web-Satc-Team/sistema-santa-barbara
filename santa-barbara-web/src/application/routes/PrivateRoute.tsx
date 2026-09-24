@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router";
-import { AuthService } from "../services/auth.service";
+import { useServices } from "../hook/useServices";
 
 const PrivateRoute = () => {
+    const { authService } = useServices();
+
     const [isAutenticado, setIsAutenticado] = useState<boolean | null>(null);
 
     useEffect(() => {
         (async function () {
-         const autenticado = await AuthService.isAutenticado();
+         const autenticado = await authService.isAutenticado();
             setIsAutenticado(autenticado);
         })()
     }, [])

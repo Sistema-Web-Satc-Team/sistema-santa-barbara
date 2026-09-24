@@ -3,12 +3,12 @@ import { Card } from "@/ui/components/card";
 import { ErrorCard } from "@/ui/components/error-card";
 import { Input } from "@/ui/components/input";
 import { SuccessCard } from "@/ui/components/sucess-card";
-import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { memberService, type UpdateMemberRequest } from "../services/member.service";
 
-export function EditMemberPage() {
+function EditMember() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
@@ -172,4 +172,4 @@ export function EditMemberPage() {
     );
 }
 
-export default EditMemberPage;
+export default EditMember;

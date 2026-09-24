@@ -1,13 +1,13 @@
 import { Api } from "@/application/api/Api";
-import type { LoginRequest } from "@/application/model/LoginRequest";
-import type { ProfileResponseApi } from "@/application/model/ProfileResponseApi";
+import type { GetProfileResponse } from "@/application/model/auth/GetProfileResponse";
+import type { LoginMemberRequest } from "@/application/model/auth/LoginMemberRequest";
+import type { UpdateProfileRequest } from "@/application/model/auth/UpdateProfileRequest";
+import type { AuthService } from "@/application/services/interfaces/auth.service";
 import axios from "axios";
-import type { ProfileUpdateRequest } from "../model/ProfileUpdateRequest";
 
+class AuthServiceApi implements AuthService {
 
-class AuthService {
-
-    static async login(request: LoginRequest): Promise<void> {
+    async login(request: LoginMemberRequest): Promise<void> {
 
         await axios.post(
             Api.getAuthResource() + "login", 
@@ -17,7 +17,7 @@ class AuthService {
 
     }
 
-   static async isAutenticado(): Promise<boolean> {
+   async isAutenticado(): Promise<boolean> {
         try {
             const response = await axios.get(
                 Api.getAuthResource() + "me",
@@ -31,7 +31,7 @@ class AuthService {
     }
 
 
-     static async me(): Promise<ProfileResponseApi> {
+    async me(): Promise<GetProfileResponse> {
         try {
             const response = await axios.get(
                 Api.getAuthResource() + "me",
@@ -49,7 +49,7 @@ class AuthService {
                 endereco: data.endereco ?? "",
                 instrumentos: Array.isArray(data.instrumentos) ? data.instrumentos : [],
                 papeis: Array.isArray(data.papeis) ? data.papeis : []
-            } as ProfileResponseApi
+            } as GetProfileResponse
         } catch (err) {
             console.log(err);
             const message = axios.isAxiosError(err)
@@ -59,7 +59,7 @@ class AuthService {
         }
     }
 
-    static async updateMe(newData: Partial<ProfileUpdateRequest>): Promise<void> {
+    async updateMe(newData: Partial<UpdateProfileRequest>): Promise<void> {
         try {
             await axios.patch(
                 Api.getAuthResource() + "me",
@@ -81,4 +81,4 @@ class AuthService {
     }
 }
 
-export { AuthService };
+export { AuthServiceApi };

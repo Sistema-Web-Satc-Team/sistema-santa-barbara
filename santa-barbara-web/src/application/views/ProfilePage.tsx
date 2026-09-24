@@ -6,8 +6,7 @@ import { Input } from "@/ui/components/input";
 import { SuccessCard } from "@/ui/components/sucess-card";
 import { AlertTriangle, Edit2, Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { AuthService } from "../services/auth.service";
-import type { ProfileResponseApi } from "../model/ProfileResponseApi";
+import type { ProfileResponseApi } from "../model/auth/GetProfileResponse";
 import type { ProfileState } from "../model/ProfileState";
 
 
@@ -22,7 +21,7 @@ const initialProfile: ProfileResponseApi = {
     papeis: []
 }
 
-export function ProfilePage() {
+export function Profile() {
     const [isEditing, setIsEditing] = useState(false);
 
     const [successMessage, setSuccessMessage] = useState("");
@@ -290,4 +289,4 @@ export function ProfilePage() {
     );
 }
 
-export default ProfilePage;
+export default Profile;

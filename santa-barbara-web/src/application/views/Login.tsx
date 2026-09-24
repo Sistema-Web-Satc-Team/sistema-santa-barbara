@@ -2,39 +2,20 @@ import { Button } from "@/ui/components/button";
 import { Input } from "@/ui/components/input";
 
 import "@/ui/styles/login.css";
-import { useState } from "react";
-import { useNavigate } from "react-router";
-import { AuthService } from "../services/auth.service";
+import { useLogin } from "../hook/useLogin";
 
 function Login() {
-
-    const [login, setLogin] = useState("");
-    const [senha, setSenha] = useState("");
-    const [carregando, setCarregando] = useState(false);
-    const [erro, setErro] = useState<string | null>(null);
-
-    const navigate = useNavigate();
-
-    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setErro(null);
-        setCarregando(true);
-
-        try {
-            await AuthService.login({ login, senha });
-            console.log("Login efetuado! O cookie HttpOnly já está gravado no navegador.");
-            navigate("/dashboard/members");
-        } catch (err) {
-            console.error(err);
-            setErro("Credenciais inválidas ou erro ao conectar ao servidor.");
-        } finally {
-            setCarregando(false);
-        }
-    };
+    const { data, actions, state } = useLogin();
+   
 
     return (
         <form 
-            onSubmit={handleSubmit}
+            onSubmit={
+                async (e: React.SubmitEvent<HTMLFormElement>) => {
+                    e.preventDefault();
+                    await actions.onSubmit();
+                }
+            }
             className={`
                 w-[90%]
                 xl:w-[35%]
@@ -60,9 +41,9 @@ function Login() {
             <h1 className="2xl:py-[32px] py-[16px] mx-auto login__title">Login</h1>
 
             { /* [WARN] CRIAR COMPONENTE ERROR CARD */ }
-            {erro && (
+            {state.hasErro() && (
                 <div className="p-3 text-sm text-red-600 bg-red-100 rounded-lg text-center">
-                    {erro}
+                    {state.erro}
                 </div>
             )}
 
@@ -72,8 +53,8 @@ function Login() {
                     name="username" 
                     variant="normal" 
                     placeholder="Email ou Nome de Usuário" 
-                    value={login}
-                    onChange={(e) => setLogin(e.target.value)}
+                    value={data.login}
+                    onChange={(e) => actions.onChangeCampo("login", e.target.value)}
                 />
             </div>
 
@@ -83,14 +64,14 @@ function Login() {
                     name="password" 
                     variant="normal" 
                     placeholder="Senha"
-                    value={senha}
-                    onChange={(e) => setSenha(e.target.value)}
+                    value={data.senha}
+                    onChange={(e) => actions.onChangeCampo("senha", e.target.value)}
                 />
             </div>
 
             <div className="flex flex-row w-[100%] 2xl:pt-[64px] pt-[24px]">
-                <Button type="submit" className="w-[100%]" disabled={carregando}>
-                    {carregando ? "Entrando..." : "Entrar"}
+                <Button type="submit" className="w-[100%]" disabled={state.isCarregando}>
+                    {"Entrar"}
                 </Button>
             </div>
                 

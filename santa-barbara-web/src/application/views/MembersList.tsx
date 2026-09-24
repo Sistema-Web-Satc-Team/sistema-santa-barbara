@@ -10,7 +10,7 @@ import { SearchBox } from "@/ui/components/searchBox";
 import { Table, type TableColumn } from "@/ui/components/table";
 import { AlertCircle, ArrowDownAZ, ArrowUpAZ, Ban, Edit2, Mail, Plus, Settings2, Shield, UserPlus, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { EditMemberModal } from "../components/EditMemberModal";
+import { EditMemberModal } from "./EditMemberModal";
 
 function formatPhone(phone: string | null) {
     if (!phone) {
@@ -32,7 +32,7 @@ function formatPhone(phone: string | null) {
 
 
 
-export function MembersListPage() {
+function MemberList() {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedPapel, setSelectedPapel] = useState<string>("");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -274,4 +274,4 @@ export function MembersListPage() {
     );
 }
 
-export default MembersListPage;
+export default MemberList;

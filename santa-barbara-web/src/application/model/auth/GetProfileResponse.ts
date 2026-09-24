@@ -1,6 +1,6 @@
 
 
-interface ProfileResponseApi {
+interface GetProfileResponse {
     nome: string,
     sobrenome: string,
     email: string,
@@ -11,5 +11,5 @@ interface ProfileResponseApi {
     papeis: string[]
 }
 
-export type { ProfileResponseApi };
+export type { GetProfileResponse };
 
