@@ -2,6 +2,7 @@ package br.org.bandasantabarbara.application.usecase.convites;
 
 import br.org.bandasantabarbara.application.dtos.convite.AceitarConviteRequest;
 import br.org.bandasantabarbara.exception.ApplicationException;
+import br.org.bandasantabarbara.exception.ExpiradoException;
 import br.org.bandasantabarbara.exception.NaoEncontradoException;
 import br.org.bandasantabarbara.model.*;
 import br.org.bandasantabarbara.repositories.ConviteRepository;
@@ -42,13 +43,13 @@ public class AceitarConvite {
                 || convite.getStatus() == ConviteStatus.REENVIADO;
 
         if (!statusPermitido) {
-            throw new ApplicationException("Este convite não está mais disponível para aceite.");
+            throw new ExpiradoException("Este convite não está mais disponível para aceite.");
         }
 
         if (convite.getDataExpiracaoConvite().isBefore(Instant.now())) {
             convite.setStatus(ConviteStatus.EXPIRADO);
             this.conviteRepository.save(convite);
-            throw new ApplicationException("Este convite já expirou.");
+            throw new ExpiradoException("Este convite já expirou.");
         }
 
         Membro membro = convite.getMembro();

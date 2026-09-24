@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application.usecase;
+package br.org.bandasantabarbara.application.usecase.papeis;
 
 import br.org.bandasantabarbara.application.dtos.OffsetPaginationRequest;
 import br.org.bandasantabarbara.application.dtos.PageResponse;

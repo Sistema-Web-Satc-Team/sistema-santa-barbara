@@ -4,6 +4,7 @@ import br.org.bandasantabarbara.application.dtos.convite.ReenviarConviteRequest;
 import br.org.bandasantabarbara.application.dtos.convite.ConvidarMembroResponse;
 import br.org.bandasantabarbara.application.dtos.convite.MembroDestinatarioDTO;
 import br.org.bandasantabarbara.application.events.ConvidarMembroEvento;
+import br.org.bandasantabarbara.exception.ExpiradoException;
 import br.org.bandasantabarbara.exception.NaoEncontradoException;
 import br.org.bandasantabarbara.model.Convite;
 import br.org.bandasantabarbara.model.ConviteStatus;
@@ -45,7 +46,7 @@ public class ReenviarConvite {
                 this.conviteRepository.save(convite);
             }
 
-            throw new RuntimeException("Convite expirado.");
+            throw new ExpiradoException("Convite expirado.");
         }
 
         convite.setStatus(ConviteStatus.REENVIADO);

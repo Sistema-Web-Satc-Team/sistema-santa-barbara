@@ -1,7 +1,9 @@
-package br.org.bandasantabarbara.application.usecase;
+package br.org.bandasantabarbara.application.usecase.papeis;
 
 import br.org.bandasantabarbara.application.dtos.papel.ExcluirPapelRequest;
 import br.org.bandasantabarbara.exception.ApplicationException;
+import br.org.bandasantabarbara.exception.InvalidoException;
+import br.org.bandasantabarbara.exception.NaoEncontradoException;
 import br.org.bandasantabarbara.model.Papel;
 import br.org.bandasantabarbara.repositories.PapelRepository;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,7 @@ public class ExcluirPapel {
         int result = this.papelRepository.excluirSeNaoPossuirMembros(papel.getNome());
 
         if (result == 0) {
-            throw new ApplicationException(
+            throw new InvalidoException(
                     "O papel não existe ou possui membros associados."
             );
         }

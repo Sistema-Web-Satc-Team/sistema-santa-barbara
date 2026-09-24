@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application.usecase;
+package br.org.bandasantabarbara.application.usecase.auth;
 
 import br.org.bandasantabarbara.application.dtos.auth.LoginRequest;
 import br.org.bandasantabarbara.application.dtos.auth.TokenResponse;

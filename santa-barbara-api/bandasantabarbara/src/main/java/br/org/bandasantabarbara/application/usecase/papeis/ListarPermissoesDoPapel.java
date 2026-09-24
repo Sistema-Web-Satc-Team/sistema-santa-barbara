@@ -1,6 +1,7 @@
-package br.org.bandasantabarbara.application.usecase;
+package br.org.bandasantabarbara.application.usecase.papeis;
 
 import br.org.bandasantabarbara.exception.ApplicationException;
+import br.org.bandasantabarbara.exception.NaoEncontradoException;
 import br.org.bandasantabarbara.model.Papel;
 import br.org.bandasantabarbara.model.Permissao;
 import br.org.bandasantabarbara.repositories.PapelRepository;
@@ -26,7 +27,7 @@ public class ListarPermissoesDoPapel {
         var papelEncontrado = papelRepository
                 .findByNomeWithPermissoes(papel.getNome())
                 .orElseThrow(() ->
-                        new ApplicationException("Papel não encontrado.")
+                        new NaoEncontradoException("Papel não encontrado.")
                 );
 
         return papelEncontrado.getPermissoes()

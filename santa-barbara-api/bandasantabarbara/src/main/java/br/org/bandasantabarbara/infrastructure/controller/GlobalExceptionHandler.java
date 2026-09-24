@@ -2,7 +2,7 @@ package br.org.bandasantabarbara.infrastructure.controller;
 
 import br.org.bandasantabarbara.application.dtos.DefaultMessageResponse;
 import br.org.bandasantabarbara.application.dtos.DomainExceptionResponse;
-import br.org.bandasantabarbara.exception.DomainException;
+import br.org.bandasantabarbara.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +19,66 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(org.springframework.web.servlet.NoHandlerFoundException.class)
+    public ResponseEntity<DefaultMessageResponse> handleNotFoundResource(org.springframework.web.servlet.NoHandlerFoundException ex) {
+        log.warn("Rota não encontrada: {}", ex.getRequestURL());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new DefaultMessageResponse("Recurso inexistente.")
+        );
+    }
+
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<DomainExceptionResponse> handleDomainException(DomainException ex) {
         log.warn("Exceção de domínio capturada: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 new DomainExceptionResponse(ex.getMessage(), ex.getErrors())
+        );
+    }
+
+    @ExceptionHandler(NaoEncontradoException.class)
+    public ResponseEntity<DefaultMessageResponse> handleNaoEncontradoException(NaoEncontradoException ex) {
+        log.warn("Não encontrado capturado: {}", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new DefaultMessageResponse(ex.getMessage())
+        );
+    }
+
+    @ExceptionHandler(ConflitoException.class)
+    public ResponseEntity<DefaultMessageResponse> handleConflitoException(ConflitoException ex) {
+        log.warn("Exceção de conflito capturada: {}", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new DefaultMessageResponse(ex.getMessage())
+        );
+    }
+
+    @ExceptionHandler(ExpiradoException.class)
+    public ResponseEntity<DefaultMessageResponse> handleExpiradoException(ExpiradoException ex) {
+        log.warn("Exceção de expiração capturada: {}", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.GONE).body(
+                new DefaultMessageResponse(ex.getMessage())
+        );
+    }
+
+
+    @ExceptionHandler(InvalidoException.class)
+    public ResponseEntity<DefaultMessageResponse> handleInvalidoException(InvalidoException ex) {
+        log.warn("Exceção inválida capturada: {}", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new DefaultMessageResponse(ex.getMessage())
+        );
+    }
+
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<DefaultMessageResponse> handleApplicationException(ApplicationException ex) {
+        log.warn("Erro de aplicação capturado: {}", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new DefaultMessageResponse("Ocorreu um erro inesperado.")
         );
     }
 

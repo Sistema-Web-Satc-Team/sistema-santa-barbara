@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application.usecase;
+package br.org.bandasantabarbara.application.usecase.membros;
 
 import br.org.bandasantabarbara.application.dtos.*;
 import br.org.bandasantabarbara.application.dtos.membros.AtualizarMembroParcialmenteRequest;

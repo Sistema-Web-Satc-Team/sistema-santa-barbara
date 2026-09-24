@@ -4,6 +4,7 @@ import br.org.bandasantabarbara.application.dtos.convite.ConvidarMembroRequest;
 import br.org.bandasantabarbara.application.dtos.convite.ConvidarMembroResponse;
 import br.org.bandasantabarbara.application.dtos.convite.MembroDestinatarioDTO;
 import br.org.bandasantabarbara.application.events.ConvidarMembroEvento;
+import br.org.bandasantabarbara.exception.ConflitoException;
 import br.org.bandasantabarbara.exception.NaoEncontradoException;
 import br.org.bandasantabarbara.model.Convite;
 import br.org.bandasantabarbara.model.ConviteStatus;
@@ -43,7 +44,7 @@ public class ConvidarMembro {
                 .orElseThrow(() -> new NaoEncontradoException("Membro não encontrado."));
 
         if (conviteRepository.existsByMembroAndDataExpiracaoConviteAfter(membro, Instant.now())) {
-            throw new RuntimeException("Já existe um convite válido para este membro.");
+            throw new ConflitoException("Já existe um convite válido para este membro.");
         }
 
         Convite convite = new Convite(membro);

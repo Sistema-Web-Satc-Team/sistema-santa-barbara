@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application.usecase;
+package br.org.bandasantabarbara.application.usecase.init;
 
 import br.org.bandasantabarbara.application.dtos.setup.RegistrarAdminRequest;
 import br.org.bandasantabarbara.model.Membro;

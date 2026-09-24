@@ -6,7 +6,7 @@ import br.org.bandasantabarbara.application.dtos.PageResponse;
 import br.org.bandasantabarbara.application.dtos.papel.AdicionarPapelRequest;
 import br.org.bandasantabarbara.application.dtos.papel.AtribuirPermissaoRequest;
 import br.org.bandasantabarbara.application.dtos.papel.ExcluirPapelRequest;
-import br.org.bandasantabarbara.application.usecase.*;
+import br.org.bandasantabarbara.application.usecase.papeis.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

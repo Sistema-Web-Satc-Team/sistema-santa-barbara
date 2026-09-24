@@ -1,11 +1,9 @@
-package br.org.bandasantabarbara.application.usecase;
+package br.org.bandasantabarbara.application.usecase.papeis;
 
 import br.org.bandasantabarbara.application.dtos.OffsetPaginationRequest;
 import br.org.bandasantabarbara.application.dtos.PageResponse;
 import br.org.bandasantabarbara.model.Papel;
-import br.org.bandasantabarbara.model.Permissao;
 import br.org.bandasantabarbara.repositories.PapelRepository;
-import br.org.bandasantabarbara.repositories.PermissaoRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

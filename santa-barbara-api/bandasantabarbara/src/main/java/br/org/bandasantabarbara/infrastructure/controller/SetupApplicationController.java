@@ -2,7 +2,7 @@ package br.org.bandasantabarbara.infrastructure.controller;
 
 import br.org.bandasantabarbara.application.dtos.DefaultMessageResponse;
 import br.org.bandasantabarbara.application.dtos.setup.RegistrarAdminRequest;
-import br.org.bandasantabarbara.application.usecase.SetupApplicationUsecase;
+import br.org.bandasantabarbara.application.usecase.init.SetupApplicationUsecase;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

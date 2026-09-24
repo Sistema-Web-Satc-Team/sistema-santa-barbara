@@ -2,9 +2,7 @@ package br.org.bandasantabarbara.infrastructure.controller;
 
 import br.org.bandasantabarbara.application.dtos.OffsetPaginationRequest;
 import br.org.bandasantabarbara.application.dtos.PageResponse;
-import br.org.bandasantabarbara.application.usecase.AdicionarPapeis;
-import br.org.bandasantabarbara.application.usecase.AtribuirPermissoesParaPapel;
-import br.org.bandasantabarbara.application.usecase.ListarPermissoes;
+import br.org.bandasantabarbara.application.usecase.papeis.ListarPermissoes;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
