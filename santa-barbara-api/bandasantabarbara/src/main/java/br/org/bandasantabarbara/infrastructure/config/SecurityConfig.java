@@ -1,8 +1,7 @@
 package br.org.bandasantabarbara.infrastructure.config;
 
-import br.org.bandasantabarbara.infrastructure.security.SetupModeFilter;
-import jakarta.servlet.http.Cookie;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -21,7 +20,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
+import br.org.bandasantabarbara.infrastructure.security.SetupModeFilter;
+import jakarta.servlet.http.Cookie;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
@@ -77,7 +78,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         //  { Arrumar configuração hardcoded }
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:3000", "https://santa-barbara-web.vercel.app"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "HEAD", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
 
