@@ -33,15 +33,6 @@ export default function Invite() {
 
   return (
     <div className="min-h-screen w-full bg-white flex flex-col">
-      <header className="w-full border-b-2 border-blue-500 bg-[#ededed]">
-  <div className="h-44 flex items-center px-12 py-3">
-    <img
-      src="/logo.svg"
-      alt="Banda Musical Santa Bárbara"
-      className="h-full w-auto max-h-36 object-contain"
-    />
-  </div>
-</header>
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center px-8 py-12">

@@ -1,11 +1,12 @@
+import { Badge } from '@/ui/components/badge';
 import { InputSearch } from '@/ui/components/input-search';
 import { Shield, UserPlus, Users } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button } from '../../ui/components/button';
-import { Card, StatusBadge } from '../../ui/components/card-inivitation';
-import { Select } from '../../ui/components/select';
 import '../../ui/styles/ConvidarMembros.css';
-import { BAND_ROLES, useInvites } from '../hook/useInvites';
+import { useInvites } from '../hook/useInvites';
+
+
 
 export const ConvidarMembros: React.FC = () => {
   const {
@@ -13,8 +14,8 @@ export const ConvidarMembros: React.FC = () => {
     invites,
     errors,
     loading,
+    availableRoles,
     handleInputChange,
-    handleRoleChange,
     sendInvite,
     deleteInvite,
     resendInvite,
@@ -43,19 +44,6 @@ export const ConvidarMembros: React.FC = () => {
     }, 3500);
   };
 
-  // Fechar menus flutuantes ao clicar fora
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
-        setIsFilterOpen(false);
-      }
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setActiveMenuId(null);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,13 +53,13 @@ export const ConvidarMembros: React.FC = () => {
     }
   };
 
-  const handleResend = (id: string | number, email: string) => {
+  const handleResend = (id: string, email: string) => {
     resendInvite(id);
     setActiveMenuId(null);
     showToast(`Convite reenviado com sucesso para ${email}!`);
   };
 
-  const handleDelete = (id: string | number) => {
+  const handleDelete = (id: string) => {
     deleteInvite(id);
     setActiveMenuId(null);
     showToast('Convite removido.');
@@ -147,7 +135,7 @@ export const ConvidarMembros: React.FC = () => {
         <h1 className="page-section-title">Convidar Novos Membros</h1>
 
         {/* Cartão com o formulário */}
-        <Card className="invite-form-card">
+        <div className="py-8">
           <form onSubmit={handleSubmit} className="invite-form" noValidate>
             <div className="form-group">
               <label>Email do Convidado</label>
@@ -169,25 +157,13 @@ export const ConvidarMembros: React.FC = () => {
 
             </div>
 
-            <div className="form-group">
-              <Select
-                label="Papel / Permissão *"
-                options={BAND_ROLES}
-                value={formData.roles}
-                onChange={handleRoleChange}
-                multiple={true}
-                placeholder="Selecione os papéis..."
-                error={errors.roles}
-              />
-            </div>
-
             <div className="form-actions">
               <Button type="submit" variant="normal" disabled={loading}>
                 {loading ? 'A enviar...' : 'Enviar Convite'}
               </Button>
             </div>
           </form>
-        </Card>
+        </div>
 
         {/* Secção de Convites Recentes */}
         <h2 className="page-section-subtitle">Convites Recentes</h2>
@@ -208,62 +184,62 @@ export const ConvidarMembros: React.FC = () => {
             />
           </div>
 
-          {/* Menu Dropdown de Filtros */}
-          <div className="filter-dropdown-container" ref={filterRef}>
-            <button
-              type="button"
-              className={`btn-filter ${hasActiveFilters ? 'btn-filter-active' : ''}`}
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-              </svg>
-              Filtros {hasActiveFilters && <span className="filter-active-dot">•</span>}
-            </button>
+        {/* Menu Dropdown de Filtros */}
+        <div className="filter-dropdown-container" ref={filterRef}>
+          <button
+            type="button"
+            className={`btn-filter ${hasActiveFilters ? 'btn-filter-active' : ''}`}
+            onClick={() => setIsFilterOpen(!isFilterOpen)}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+            </svg>
+            Filtros {hasActiveFilters && <span className="filter-active-dot">•</span>}
+          </button>
 
-            {isFilterOpen && (
-              <div className="filter-popup-card">
-                <div className="filter-popup-header">
-                  <span>Filtrar Resultados</span>
-                  {hasActiveFilters && (
-                    <button type="button" className="btn-filter-reset" onClick={resetFilters}>
-                      Limpar
-                    </button>
-                  )}
-                </div>
-
-                <div className="filter-popup-group">
-                  <label className="filter-popup-label">Status</label>
-                  <select
-                    value={selectedStatus}
-                    onChange={(e) => setSelectedStatus(e.target.value)}
-                    className="filter-select"
-                  >
-                    <option value="todos">Todos os estados</option>
-                    <option value="pendente">Pendente</option>
-                    <option value="aceito">Aceito</option>
-                    <option value="expirado">Expirado</option>
-                  </select>
-                </div>
-
-                <div className="filter-popup-group">
-                  <label className="filter-popup-label">Papel / Função</label>
-                  <select
-                    value={selectedRole}
-                    onChange={(e) => setSelectedRole(e.target.value)}
-                    className="filter-select"
-                  >
-                    <option value="todos">Todos os papéis</option>
-                    {BAND_ROLES.map((role) => (
-                      <option key={role.value} value={role.label}>
-                        {role.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+          {isFilterOpen && (
+            <div className="filter-popup-card">
+              <div className="filter-popup-header">
+                <span>Filtrar Resultados</span>
+                {hasActiveFilters && (
+                  <button type="button" className="btn-filter-reset" onClick={resetFilters}>
+                    Limpar
+                  </button>
+                )}
               </div>
-            )}
-          </div>
+
+              <div className="filter-popup-group">
+                <label className="filter-popup-label">Status</label>
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="todos">Todos os estados</option>
+                  <option value="pendente">Pendente</option>
+                  <option value="aceito">Aceito</option>
+                  <option value="expirado">Expirado</option>
+                </select>
+              </div>
+
+              <div className="filter-popup-group">
+                <label className="filter-popup-label">Papel / Função</label>
+                <select
+                  value={selectedRole}
+                  onChange={(e) => setSelectedRole(e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="todos">Todos os papéis</option>
+                  {availableRoles.map((role) => (
+                    <option key={role} value={role}>
+                      {role}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+        </div>
 
           {/* Botão de Ordenação */}
           <button
@@ -323,7 +299,9 @@ export const ConvidarMembros: React.FC = () => {
                       </div>
                     </td>
                     <td className="td-status">
-                      <StatusBadge status={invite.status} />
+                      <Badge>
+                        {invite.status}
+                      </Badge>
                     </td>
                     <td className="td-options">
                       <div

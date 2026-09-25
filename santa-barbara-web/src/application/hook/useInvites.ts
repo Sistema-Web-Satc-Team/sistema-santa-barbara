@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Api } from '../api/Api';
+import { papelService } from '../services/papel.service';
 
 export interface SelectOption {
   value: string;
@@ -6,11 +9,11 @@ export interface SelectOption {
 }
 
 export interface Invite {
-  id: string | number;
+  id: string;
   email: string;
   roles: string[];
   date: string;
-  status: 'Pendente' | 'Aceito' | 'Expirado';
+  status: 'ENVIADO' | 'ACEITO' | 'REJEITADO' | 'REENVIADO' | 'FALHA';
 }
 
 export interface FormErrors {
@@ -19,68 +22,88 @@ export interface FormErrors {
   submit?: string;
 }
 
-export const BAND_ROLES: SelectOption[] = [
-  { value: 'aluno', label: 'Aluno' },
-  { value: 'professor', label: 'Professor' },
-  { value: 'vocalista', label: 'Vocalista' },
-  { value: 'guitarra', label: 'Guitarra' },
-  { value: 'baixo', label: 'Baixo' },
-  { value: 'bateria', label: 'Bateria' },
-  { value: 'teclado', label: 'Teclado' },
-  { value: 'percussao', label: 'Percussão' },
-  { value: 'produtor', label: 'Produtor Musical' },
-  { value: 'manager', label: 'Manager' },
-  { value: 'tecnico', label: 'Técnico de Som' },
-  { value: 'admin', label: 'Administrador' }
-];
+export interface DataTempMembros {
+  id: string,
+  nome: string,
+  sobrenome: string,
+  nomeDeUsuario: string,
+  telefone: string,
+  endereco: string,
+  email: string,
+  papeis: string[],
+  idade: 0,
+  dataNascimento: string,
+  status: string
+}
 
 export const useInvites = () => {
-  const [formData, setFormData] = useState<{ email: string; roles: string[] }>({
-    email: '',
-    roles: ['aluno', 'professor']
+  const [formData, setFormData] = useState<{ email: string; }>({
+    email: ''
   });
+  
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState<boolean>(false);
 
   // Dados iniciais correspondentes à tabela do protótipo
-  const [invites, setInvites] = useState<Invite[]>([
-    {
-      id: 1,
-      email: 'joao.madeira@exemplo.com',
-      roles: ['Aluno'],
-      date: '10/10/2025',
-      status: 'Pendente'
-    },
-    {
-      id: 2,
-      email: 'maria.quartzo@exemplo.com',
-      roles: ['Aluno', 'Professor'],
-      date: '28/12/2025',
-      status: 'Aceito'
-    },
-    {
-      id: 3,
-      email: 'gabriel.diamante@exemplo.com',
-      roles: ['Aluno'],
-      date: '12/05/2025',
-      status: 'Expirado'
-    }
-  ]);
+  const [invites, setInvites] = useState<Invite[]>([]);
+
+
+  const [availableRoles, setAvailableRoles] = useState<string[]>([]);
+
+  const [membros, setMembros] = useState<DataTempMembros[]>([])
+
+  useEffect(() => {
+      const fetchRoles = async () => {
+          try {
+              const roles = await papelService.getPapeis();
+              setAvailableRoles(roles);
+          } catch (error) {
+              console.error("Erro ao carregar papéis do sistema:", error);
+          }
+      };
+
+      const fetchMembers = async () => {
+        try {
+          const response = await axios.get(Api.getRooutResource() + "membros?size=100&page=0", { withCredentials: true });
+          const data = response.data ?? [];
+          setMembros(data.content.map((v: any) => v));
+        } catch (error) {
+          console.error("Erro ao carregar membros do sistema:", error);
+        }
+      };
+
+      const fetchMembersAndInvitations = async () => {
+        try {
+          const response = await axios.get(Api.getRooutResource() + "convites", { withCredentials: true });
+          const data = response.data ?? [];
+
+          setInvites(data.content.map((v: any) => {
+              return {
+                id: v.idConvite || v.id,
+                email: v.membro?.email || v.email,
+                roles: v.membro?.papeis || v.roles || [],
+                date: v.expiraEm || v.expiradoEm,
+                status: v.status
+              } as Invite;
+            }
+          ));
+        } catch (error) {
+          console.error("Erro ao carregar os convites dos membros:", error);
+        }
+      };
+
+
+      fetchMembersAndInvitations();
+      fetchMembers();
+      fetchRoles();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors.email) {
       setErrors((prev) => ({ ...prev, email: undefined }));
-    }
-  };
-
-  const handleRoleChange = (roles: string | string[]) => {
-    const rolesArray = Array.isArray(roles) ? roles : [roles];
-    setFormData((prev) => ({ ...prev, roles: rolesArray }));
-    if (errors.roles) {
-      setErrors((prev) => ({ ...prev, roles: undefined }));
     }
   };
 
@@ -92,10 +115,6 @@ export const useInvites = () => {
       newErrors.email = 'O e-mail é obrigatório';
     } else if (!emailRegex.test(formData.email)) {
       newErrors.email = 'Insira um e-mail válido';
-    }
-
-    if (formData.roles.length === 0) {
-      newErrors.roles = 'Selecione pelo menos um papel';
     }
 
     setErrors(newErrors);
@@ -111,21 +130,31 @@ export const useInvites = () => {
 
     try {
       // Simulação de chamada de rede / API
-      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // todo -> buscar membro 
+      // enviar convite
+      // TEMPORARIO REMOVER FUTURAMENTE
+
+      const membro = membros.find((membro) => {
+        membro.email === formData.email
+      });
+
+      const request = await axios.post(Api.getRooutResource() + "convites", { withCredentials: true })
+
+      const response = request.data;
 
       const newInvite: Invite = {
-        id: Date.now(),
+        id: response.idConvite,
         email: formData.email,
-        roles: formData.roles.map(
-          (r) => BAND_ROLES.find((opt) => opt.value === r)?.label || r
-        ),
-        date: new Date().toLocaleDateString('pt-BR'),
-        status: 'Pendente'
+        roles: membro.papeis,
+        date: response.expiradoEm.toLocaleDateString('pt-BR'),
+        status: 'ENVIADO'
       };
 
       setInvites((prev) => [newInvite, ...prev]);
-      setFormData({ email: '', roles: [] });
+      setFormData({ email: ''});
       setErrors({});
+
       return true;
     } catch {
       setErrors({ submit: 'Erro ao enviar convite' });
@@ -139,14 +168,30 @@ export const useInvites = () => {
     setInvites((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const resendInvite = (id: string | number) => {
-    setInvites((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, date: new Date().toLocaleDateString('pt-BR'), status: 'Pendente' }
-          : item
-      )
-    );
+  const resendInvite = async (id: string) => {
+    try {
+      setLoading(true);
+      const response = await axios.put(
+        `${Api.getRooutResource()}convites/${id}`, 
+        {}, 
+        { withCredentials: true }
+      );
+
+      const updatedData = response.data;
+
+      setInvites((prev) =>
+        prev.map((invite) =>
+          invite.id === id
+            ? { ...invite, status: 'REENVIADO', date: updatedData.expiraEm || invite.date }
+            : invite
+        )
+      );
+    } catch (error) {
+      console.error("Erro ao reenviar convite:", error);
+      alert("Não foi possível reenviar o convite.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {
@@ -154,8 +199,8 @@ export const useInvites = () => {
     invites,
     errors,
     loading,
+    availableRoles,
     handleInputChange,
-    handleRoleChange,
     sendInvite,
     deleteInvite,
     resendInvite
