@@ -139,6 +139,10 @@ export const useInvites = () => {
 
       console.log(membro)
 
+      if (!membro) {
+        return false;
+      }
+
       const request = await axios.post(Api.getRooutResource() + "convites", {
         idMembro: membro.id
       }, { withCredentials: true })
