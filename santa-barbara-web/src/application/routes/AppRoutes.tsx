@@ -9,6 +9,9 @@ const Components = lazy(() => import('@/application/views/Components'));
 const ProfilePage = lazy(() => import('@/application/views/ProfilePage'));
 const Login = lazy(() => import('@/application/views/Login'));
 const MembersListPage = lazy(() => import('@/application/views/MembersList'));
+const ConvidarMembros = lazy(() => import('@/application/views/ConvidarMembros'));
+const Papeis = lazy(() => import('@/application/views/Papeis'));
+const Invite = lazy(() => import('@/application/views/Invite'));
 
 
 function AppRoutes() {
@@ -25,6 +28,9 @@ function AppRoutes() {
                                 <Route path="/dev/components" element={<Components/>} />
                                 <Route path="/profile" element={<ProfilePage/>} />
                                 <Route path="/dashboard/members" element={<MembersListPage/>} />
+                                <Route path="/dashboard/membros/convidar" element={<ConvidarMembros />} />
+                                <Route path="/dashboard/papeis" element={<Papeis />} />
+                                <Route path="/dashboard/aceitar/convite" element={<Invite />} />
                             </Route>
                         </Route>
 

@@ -32,4 +32,3 @@ function Input({ variant, className, type, ...props }: InputProps) {
 }
 
 export { Input };
-
