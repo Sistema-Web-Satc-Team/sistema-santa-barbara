@@ -1,34 +1,42 @@
-import "@/ui/styles/input.css";
-import { cn } from "@/ui/utils/cn.ts";
-import { Input as InputPrimitive } from "@base-ui/react/input";
-import { cva, type VariantProps } from "class-variance-authority";
-import * as React from "react";
+import React from 'react';
+import '../styles/input.css';
 
-const inputVariants = cva("input", {
-  variants: {
-    variant: {
-      normal: "input-normal",
-      disabled: "input--disabled"
-    },
-  }
-})
-
-export interface InputProps
-  extends React.ComponentProps<"input">,
-    VariantProps<typeof inputVariants> { 
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  error?: string;
+  icon?: React.ReactNode;
 }
 
+export const Input: React.FC<InputProps> = ({
+  label,
+  error,
+  icon,
+  id,
+  className = '',
+  disabled = false,
+  ...props
+}) => {
+  const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
 
-function Input({ variant, className, type, ...props }: InputProps) {
   return (
-    <InputPrimitive
-      type={type}
-      data-slot="input"
-      className={cn(inputVariants({ variant, className }))}
-      {...props}
-    />
-  )
-}
+    <div className={`input-container ${disabled ? 'input-disabled' : ''} ${className}`}>
+      {label && (
+        <label htmlFor={inputId} className="input-label">
+          {label}
+        </label>
+      )}
+      <div className={`input-wrapper ${error ? 'input-error-border' : ''}`}>
+        <input
+          id={inputId}
+          className="input-field"
+          disabled={disabled}
+          {...props}
+        />
+        {icon && <span className="input-icon">{icon}</span>}
+      </div>
+      {error && <span className="input-error-message">{error}</span>}
+    </div>
+  );
+};
 
-export { Input };
-
+export default Input;

@@ -1,73 +1,81 @@
-/*
-* DEFAULT STYLE
-*/
-.button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: fit-content;
-    width: auto;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font: inherit;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: 150ms;
+/* src/components/Button.css */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
+  text-decoration: none;
 }
 
-.button:disabled,
-.button[data-disabled],
-.button:disabled:hover,
-.button:disabled:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    border: none;
-    background-color: var(--light-neutral-color);
-    color: var(--neutral-color);
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-
-/*
-* NORMAL BUTTON
-*/
-.button-normal {
-    padding: 16px 24px;
-    border-radius: 8px;
-    background-color: var(--brand-color);
-    color: var(--surface-color);
+/* Tamanhos */
+.btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
 }
 
-.button-normal:hover,
-.button-normal--hover {
-    background-color: var(--hover-brand-color);
+.btn-medium {
+  padding: 8px 16px;
+  font-size: 14px;
 }
 
-.button-normal:active,
-.button-normal--pressed {
-    background-color: var(--press-brand-color);
+.btn-large {
+  padding: 12px 24px;
+  font-size: 16px;
 }
 
-
-/*
-* OUTLINE VARIANT
-*/
-.button-outline {
-    padding: 14px 24px;
-    border-radius: 8px;
-    background:  var(--surface-color);
-    border: solid 2px var(--brand-color);
-    color: var(--brand-color);
+/* Variantes */
+.btn-primary {
+  background-color: var(--primary);
+  color: #ffffff;
 }
 
-.button-outline:hover,
-.button-outline--hover {
-    background-color: var(--hover-brand-color);
-    color: var(--surface-color);
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-dark);
 }
 
-.button-outline:active,
-.button-outline--pressed {
-    background-color: var(--press-brand-color);
-    color: var(--surface-color);
+.btn-secondary {
+  background-color: #ffffff;
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #f1f3f5;
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: #ffffff;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: #bd2130;
+}
+
+.btn-success {
+  background-color: var(--success);
+  color: #ffffff;
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.btn-warning {
+  background-color: var(--warning);
+  color: #212529;
+}
+
+.btn-warning:hover:not(:disabled) {
+  background-color: #e0a800;
 }

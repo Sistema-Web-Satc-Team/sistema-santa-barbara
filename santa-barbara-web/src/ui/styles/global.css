@@ -1,27 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-@import "tailwindcss";
-@import "tw-animate-css";
-
+/* src/styles/globals.css */
 :root {
-  --light-neutral-color: #B7B7B7;
-  --neutral-color: #1D1D1D;
-
-  --foreground-color: #0D0D0D;
-  --strong-foreground-color: #000000;
-
-  --strong-surface-color: #E4E4E4;
-  --surface-color: #FFFFFF;
-
-  --brand-color: #011F39;
-  --press-brand-color: #001527;
-  --hover-brand-color: #012748;
+  --primary: #1a3a52;
+  --primary-dark: #142d42;
+  --primary-light: #e8eef3;
+  --success: #28a745;
+  --success-bg: #e6f4ea;
+  --danger: #dc3545;
+  --danger-bg: #fce8e6;
+  --warning: #ffc107;
+  --warning-bg: #fef7e0;
+  --bg-color: #f8f9fa;
+  --card-bg: #ffffff;
+  --text-main: #212529;
+  --text-muted: #6c757d;
+  --border-color: #d1d5db;
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-@layer base {
-  body {
-    font-family: "Inter", sans-serif;
-    color: var(--foreground-color);
-    background-color: var(--surface-color);
-    -webkit-font-smoothing: antialiased;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select {
+  font-family: inherit;
 }

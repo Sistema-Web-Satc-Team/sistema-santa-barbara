@@ -1,72 +1,39 @@
-import "@/ui/styles/button.css";
-import { cn } from "@/ui/utils/cn";
-import { cva, type VariantProps } from "class-variance-authority";
-import { useState } from "react";
+import React from 'react';
+import '../styles/button.css';
 
-const buttonVariants = cva("button", {
-  variants: {
-    variant: {
-      normal: "button-normal",
-      outline: "button-outline",
-    },
-    isPressed: {
-      true: "",
-      false: "",
-    },
-  },
-  compoundVariants: [
-    {
-      variant: "normal",
-      isPressed: true,
-      class: "button-normal--pressed",
-    },
-    {
-      variant: "outline",
-      isPressed: true,
-      class: "button-outline--pressed",
-    },
-  ],
-  defaultVariants: {
-    variant: "normal",
-    isPressed: false,
-  },
-});
+export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'warning';
+export type ButtonSize = 'small' | 'medium' | 'large';
 
-export interface ButtonProps
-  extends React.ComponentProps<"button">,
-    VariantProps<typeof buttonVariants> {
-  onClick?: () => Promise<void> | void;
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  disabled?: boolean;
+  className?: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export function Button({
-  onClick,
-  variant,
+export const Button: React.FC<ButtonProps> = ({
   children,
-  disabled,
-  className,
+  type = 'button',
+  variant = 'primary',
+  size = 'medium',
+  disabled = false,
+  onClick,
+  className = '',
   ...props
-}: ButtonProps) {
-  const [isPressed, setIsPressed] = useState(false);
-
-  async function handleClick() {
-    if (isPressed) return;
-
-    try {
-      setIsPressed(true);
-      if (onClick) await onClick();
-    } finally {
-      setIsPressed(false);
-    }
-  }
-
+}) => {
   return (
     <button
-      onClick={handleClick}
-      className={cn(buttonVariants({ variant, isPressed: isPressed, className }))}
-      disabled={disabled || isPressed}
+      type={type}
+      className={`btn btn-${variant} btn-${size} ${className}`}
+      disabled={disabled}
+      onClick={onClick}
       {...props}
     >
       {children}
     </button>
   );
-}
+};
+
+export default Button;
