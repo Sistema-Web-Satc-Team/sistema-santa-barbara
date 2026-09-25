@@ -1,7 +1,23 @@
 package br.org.bandasantabarbara.infrastructure.controller;
 
 
-import br.org.bandasantabarbara.application.dtos.*;
+import java.util.UUID;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.org.bandasantabarbara.application.dtos.DefaultMessageResponse;
 import br.org.bandasantabarbara.application.dtos.auth.LoginRequest;
 import br.org.bandasantabarbara.application.dtos.auth.TokenResponse;
 import br.org.bandasantabarbara.application.dtos.profile.AtualizarMeParcialmenteRequest;
@@ -9,15 +25,6 @@ import br.org.bandasantabarbara.application.dtos.profile.MeResponse;
 import br.org.bandasantabarbara.application.usecase.auth.AutenticarMembroUseCase;
 import br.org.bandasantabarbara.application.usecase.membros.MembroUsecase;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
@@ -37,10 +44,10 @@ public class AutenticacaoController {
 
         ResponseCookie cookie = ResponseCookie.from("access_token", response.token())
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .path("/")
                 .maxAge(response.expiraEmEmSegundos())
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
         return ResponseEntity.ok()
