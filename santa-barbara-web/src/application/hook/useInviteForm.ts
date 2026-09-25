@@ -21,7 +21,6 @@ export function useInviteForm() {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
 
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {};
@@ -54,7 +53,7 @@ export function useInviteForm() {
       ...prev,
       [name]: value,
     }));
-    // Limpar erro do campo ao digitar
+    
     if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({
         ...prev,
@@ -72,18 +71,8 @@ export function useInviteForm() {
       setIsLoading(true);
       try {
         await onSubmit(formData);
-        setSuccessMessage('Cadastro realizado com sucesso!');
-        // Reset form after success
-        setFormData({
-          username: '',
-          password: '',
-          confirmPassword: '',
-        });
       } catch (error) {
         console.error('Erro ao processar convite:', error);
-        setErrors({
-          username: 'Erro ao processar o convite. Tente novamente.',
-        });
       } finally {
         setIsLoading(false);
       }
@@ -91,24 +80,11 @@ export function useInviteForm() {
     [validateForm, formData]
   );
 
-  const resetForm = useCallback(() => {
-    setFormData({
-      username: '',
-      password: '',
-      confirmPassword: '',
-    });
-    setErrors({});
-    setSuccessMessage('');
-  }, []);
-
   return {
     formData,
     errors,
     isLoading,
-    successMessage,
     handleChange,
     handleSubmit,
-    resetForm,
-    setSuccessMessage,
   };
 }

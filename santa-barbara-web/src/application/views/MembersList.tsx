@@ -8,10 +8,10 @@ import { FilterDropdown } from "@/ui/components/Filterdropdown";
 import { Pagination } from "@/ui/components/pagination";
 import { SearchBox } from "@/ui/components/searchBox";
 import { Table, type TableColumn } from "@/ui/components/table";
-import { AlertCircle, ArrowDownAZ, ArrowUpAZ, Ban, Edit2, Mail, Plus, Settings2, Shield, UserPlus, Users } from "lucide-react";
+import { AlertCircle, ArrowDownAZ, ArrowUpAZ, Ban, Edit2, Mail, Plus, Settings2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { EditMemberModal } from "./EditMemberModal";
 import { CreateMemberModal } from "./CreateMemberModal";
+import { EditMemberModal } from "./EditMemberModal";
 
 function formatPhone(phone: string | null) {
     if (!phone) {
@@ -114,7 +114,7 @@ function MemberList() {
             accessor: "nome",
             render: (member) => <span className="text-(--strong-foreground-color)">{member.nome} {member.sobrenome}</span>,
         },
-        { header: "Papel", accessor: "papeis", render: (member) => <span className="capitalize">{member.papeis?.join(", ")}</span> },
+        { header: "Papel", accessor: "papeis", render: (member) => <span className="capitalize">{member.papeis?.join(", ").toLowerCase()}</span> },
         { header: "Telefone", accessor: "telefone", render: (member) => <span className="table-phone">{formatPhone(member.telefone)}</span> },
         { header: "E-Mail", accessor: "email" },
         {
@@ -161,20 +161,8 @@ function MemberList() {
     };
 
     return (
-        <div className="flex flex-1 w-full bg-(--surface-color) overflow-hidden">
-            <aside className="w-80 bg-(--surface-color) border-r border-(--light-neutral-color) hidden md:flex flex-col">
-                <nav className="flex flex-col">
-                    <button className="flex items-center gap-4 px-6 py-5 bg-(--strong-surface-color) border-b border-(--light-neutral-color) font-semibold text-(--strong-foreground-color)">
-                        <Users className="w-7 h-7" /> Membros
-                    </button>
-                    <button className="flex items-center gap-4 px-6 py-5 text-(--foreground-color) border-b border-(--light-neutral-color) hover:bg-(--strong-surface-color) transition-colors">
-                        <UserPlus className="w-7 h-7" /> Convidar Membros
-                    </button>
-                    <button className="flex items-center gap-4 px-6 py-5 text-(--foreground-color) border-b border-(--light-neutral-color) hover:bg-(--strong-surface-color) transition-colors">
-                        <Shield className="w-7 h-7" /> Papeis
-                    </button>
-                </nav>
-            </aside>
+        <>
+        
 
             <section className="flex-1 p-8 overflow-y-auto">
                 <div className="max-w-6xl mx-auto space-y-6">
@@ -209,26 +197,26 @@ function MemberList() {
                                 }}
                             />
 
-                            <div className="flex items-center gap-1 border border-(--brand-color)/50 rounded bg-(--surface-color) p-0.5">
+                            <div className="flex items-center gap-4 border border-(--brand-color)/50 rounded bg-(--surface-color) px-[12px] py-[13px]">
                                 <button
                                     onClick={() => { setSortOrder("asc"); setCurrentPage(1); }}
-                                    className={`p-1.5 rounded transition-colors ${sortOrder === "asc" ? "bg-(--strong-surface-color) text-(--strong-foreground-color)" : "text-(--neutral-color) hover:bg-(--strong-surface-color)"}`}
+                                    className={`rounded transition-colors ${sortOrder === "asc" ? "bg-(--strong-surface-color) text-(--brand-color)" : "text-(--press-brand-color) hover:bg-(--hover-brand-color)/20"}`}
                                     title="Ordem Crescente (A-Z)"
                                 >
                                     <ArrowDownAZ className="w-5 h-5" />
                                 </button>
                                 <button
                                     onClick={() => { setSortOrder("desc"); setCurrentPage(1); }}
-                                    className={`p-1.5 rounded transition-colors ${sortOrder === "desc" ? "bg-(--strong-surface-color) text-(--strong-foreground-color)" : "text-(--neutral-color) hover:bg-(--strong-surface-color)"}`}
+                                    className={`rounded transition-colors ${sortOrder === "desc" ? "bg-(--strong-surface-color) text-(--brand-color)" : "text-(--press-brand-color) hover:bg-(--hover-brand-color)/20"}`}
                                     title="Ordem Decrescente (Z-A)"
                                 >
                                     <ArrowUpAZ className="w-5 h-5" />
                                 </button>
                             </div>
                         </div>
-                        <Button variant="ghost" className="flex items-center gap-2 text-(--neutral-color) hover:text-(--strong-foreground-color)">
-                            <Settings2 className="w-4 h-4" /> Colunas
-                        </Button>
+                        <button className="flex items-center px-[12px] py-[11px] font-semibold gap-2 text-(--brand-color) border border-(--brand-color)/50 rounded-[4px]">
+                            <Settings2 className="w-4 h-4 text-(--brand-color)" /> <span className="text-(--brand-color)">Colunas</span>
+                        </button>
                     </div>
 
                     {isLoading ? (
@@ -281,7 +269,7 @@ function MemberList() {
                     setRefreshKey((key) => key + 1);
                 }}
             />
-        </div>
+        </>
     );
 }
 

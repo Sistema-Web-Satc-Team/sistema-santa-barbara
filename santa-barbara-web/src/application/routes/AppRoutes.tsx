@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { ServiceProvider } from "../context/service.provider";
+import DashBoardLayout from "../layout/DashBoardLayout";
 import { PrivateRoute } from "./PrivateRoute";
 
 const AppLayout = lazy(() => import('@/application/layout/AppLayout'));
@@ -23,12 +24,16 @@ function AppRoutes() {
                         <Route element={<AppLayout />}>
                             <Route path="/login" element={<Login />} />
 
+                            <Route path="/convidar-membro/:id" element={<Invite />} />
+
                             <Route element={<PrivateRoute />}>
+                                <Route element={<DashBoardLayout />}>
+                                    <Route path="/dashboard/membros" element={<MembersListPage/>} />
+                                    <Route path="/dashboard/membros/convidar" element={<ConvidarMembros />} />
+                                </Route>
+
                                 <Route path="/dev/components" element={<Components/>} />
                                 <Route path="/profile" element={<ProfilePage/>} />
-                                <Route path="/dashboard/members" element={<MembersListPage/>} />
-                                <Route path="/dashboard/membros/convidar" element={<ConvidarMembros />} />
-                                <Route path="/dashboard/aceitar/convite" element={<Invite />} />
                             </Route>
                         </Route>
 

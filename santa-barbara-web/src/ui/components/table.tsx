@@ -1,5 +1,5 @@
-import React from "react";
 import "@/ui/styles/table.css";
+import React from "react";
 
 
 export interface TableColumn<T> {
@@ -35,10 +35,10 @@ export function Table<T>({ data, columns, keyExtractor }: TableProps<T>) {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((item, rowIndex) => (
+                    {data.map((item) => (
                         <tr 
                             key={keyExtractor(item)} 
-                            className={`data-table__row ${rowIndex % 2 === 0 ? "data-table__row--even" : "data-table__row--odd"}`}
+                            className={`data-table__row`}
                         >
                             {columns.map((col, colIndex) => (
                                 <td 

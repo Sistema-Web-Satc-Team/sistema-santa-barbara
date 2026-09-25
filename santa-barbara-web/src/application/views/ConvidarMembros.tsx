@@ -1,6 +1,7 @@
 import { Badge } from '@/ui/components/badge';
 import { InputSearch } from '@/ui/components/input-search';
-import { Shield, UserPlus, Users } from 'lucide-react';
+import { Table } from '@/ui/components/table';
+import { Filter, MoreVertical } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { Button } from '../../ui/components/button';
 import '../../ui/styles/ConvidarMembros.css';
@@ -93,24 +94,10 @@ export const ConvidarMembros: React.FC = () => {
     });
 
   return (
-    <div className='flex flex-row'>
-      
+    <>
+ 
 
-      <aside className="w-80 bg-(--surface-color) border-r border-(--light-neutral-color) hidden md:flex flex-col">
-        <nav className="flex flex-col">
-            <button className="flex items-center gap-4 px-6 py-5 bg-(--strong-surface-color) border-b border-(--light-neutral-color) font-semibold text-(--strong-foreground-color)">
-                <Users className="w-7 h-7" /> Membros
-            </button>
-            <button className="flex items-center gap-4 px-6 py-5 text-(--foreground-color) border-b border-(--light-neutral-color) hover:bg-(--strong-surface-color) transition-colors">
-                <UserPlus className="w-7 h-7" /> Convidar Membros
-            </button>
-            <button className="flex items-center gap-4 px-6 py-5 text-(--foreground-color) border-b border-(--light-neutral-color) hover:bg-(--strong-surface-color) transition-colors">
-                <Shield className="w-7 h-7" /> Papeis
-            </button>
-        </nav>
-      </aside>
-
-      <div className='flex flex-col px-8 py-4 w-[100%]'>
+      <section className='flex-1 p-8 overflow-y-auto mb-10 min-h-[900px]'>
 
 
         {/* Notificação Toast Moderna */}
@@ -139,7 +126,7 @@ export const ConvidarMembros: React.FC = () => {
           <form onSubmit={handleSubmit} className="invite-form" noValidate>
             <div className="form-group">
               <label>Email do Convidado</label>
-              
+
               <InputSearch
                 name="email"
                 type="email"
@@ -147,12 +134,6 @@ export const ConvidarMembros: React.FC = () => {
                 placeholder="exemplo@gmail.com"
                 value={formData.email}
                 onChange={handleInputChange}
-                icon={
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <circle cx="11" cy="11" r="8" />
-                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                  </svg>
-                }
               />
 
             </div>
@@ -175,12 +156,6 @@ export const ConvidarMembros: React.FC = () => {
               placeholder="Pesquisar por e-mail..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              icon={
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-              }
             />
           </div>
 
@@ -191,10 +166,8 @@ export const ConvidarMembros: React.FC = () => {
             className={`btn-filter ${hasActiveFilters ? 'btn-filter-active' : ''}`}
             onClick={() => setIsFilterOpen(!isFilterOpen)}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-            </svg>
-            Filtros {hasActiveFilters && <span className="filter-active-dot">•</span>}
+            <Filter className='w-6 h-6'></Filter>
+            <span>Filtros</span> {hasActiveFilters && <span className="filter-active-dot">•</span>}
           </button>
 
           {isFilterOpen && (
@@ -216,7 +189,10 @@ export const ConvidarMembros: React.FC = () => {
                   className="filter-select"
                 >
                   <option value="todos">Todos os estados</option>
-                  <option value="pendente">Pendente</option>
+                  <option value="enviado">Enviado</option>
+                  <option value="reenviado">Reenviado</option>
+                  <option value="rejeitado">Rejeitado</option>
+                  <option value="falha">Falha</option>
                   <option value="aceito">Aceito</option>
                   <option value="expirado">Expirado</option>
                 </select>
@@ -256,105 +232,95 @@ export const ConvidarMembros: React.FC = () => {
         </div>
 
         {/* Tabela de Convites */}
-        <div className="table-wrapper">
-          <table className="invites-table">
-            <thead>
-              <tr>
-                <th className="th-email">E-mail convidado</th>
-                <th className="th-roles">Papéis</th>
-                <th className="th-date">Data do convite</th>
-                <th className="th-status">Status</th>
-                <th className="th-actions"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredInvites.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="table-empty-row">
-                    Nenhum convite encontrado para os filtros selecionados.
-                  </td>
-                </tr>
-              ) : (
-                filteredInvites.map((invite) => (
-                  <tr key={invite.id}>
-                    <td className="td-email">{invite.email}</td>
-                    <td className="td-roles">
-                      <div className="role-chips-list">
-                        {invite.roles.map((r, i) => (
-                          <span key={i} className="table-role-chip">
-                            {r}
-                          </span>
-                        ))}
-                      </div>
-                    </td>
-                    <td className="td-date">
-                      <div className="date-input-display">
-                        <span>{invite.date}</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                          <line x1="16" y1="2" x2="16" y2="6" />
-                          <line x1="8" y1="2" x2="8" y2="6" />
-                          <line x1="3" y1="10" x2="21" y2="10" />
-                        </svg>
-                      </div>
-                    </td>
-                    <td className="td-status">
-                      <Badge>
-                        {invite.status}
-                      </Badge>
-                    </td>
-                    <td className="td-options">
-                      <div
-                        className="row-action-wrapper"
-                        ref={activeMenuId === invite.id ? menuRef : null}
+        <Table
+          data={filteredInvites}
+          keyExtractor={(invite) => invite.id}
+          columns={[
+            { header: "E-mail convidado", accessor: "email" },
+            { 
+              header: "Papéis", 
+              render: (invite) => (
+                <div className="role-chips-list">
+                  {invite.roles.map((r, i) => (
+                    <span key={i} className="table-role-chip">{r}</span>
+                  ))}
+                </div>
+              ) 
+            },
+            { 
+              header: "Data do convite", 
+              render: (invite) => (
+                <div className="date-input-display">
+                  <span>{invite.date}</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                </div>
+              ) 
+            },
+            { 
+              header: "Status", 
+              render: (invite) => <Badge>{invite.status}</Badge> 
+            },
+            {
+              header: "",
+              align: "right",
+              render: (invite) => (
+                <div
+                  className="row-action-wrapper"
+                  ref={activeMenuId === invite.id ? menuRef : null}
+                >
+                  <button
+                    type="button"
+                    className={`btn-dots ${activeMenuId === invite.id ? 'active' : ''}`}
+                    onClick={() =>
+                      setActiveMenuId(activeMenuId === invite.id ? null : invite.id)
+                    }
+                  >
+                    <MoreVertical size={20} />
+                  </button>
+
+                   {activeMenuId === invite.id && (
+                    <div className="action-popover-menu">
+                      <button
+                        type="button"
+                        className="action-menu-item"
+                        onClick={() => handleResend(invite.id, invite.email)}
                       >
-                        <button
-                          type="button"
-                          className={`btn-dots ${activeMenuId === invite.id ? 'active' : ''}`}
-                          onClick={() =>
-                            setActiveMenuId(activeMenuId === invite.id ? null : invite.id)
-                          }
-                        >
-                          •••
-                        </button>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                        </svg>
+                        Reenviar convite
+                      </button>
 
-                        {activeMenuId === invite.id && (
-                          <div className="action-popover-menu">
-                            <button
-                              type="button"
-                              className="action-menu-item"
-                              onClick={() => handleResend(invite.id, invite.email)}
-                            >
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
-                              </svg>
-                              Reenviar convite
-                            </button>
+                      <button
+                        type="button"
+                        className="action-menu-item item-danger"
+                        onClick={() => handleDelete(invite.id)}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <polyline points="3 6 5 6 21 6" />
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
+                        Excluir convite
+                      </button>
+                    </div>
+                  )}
 
-                            <button
-                              type="button"
-                              className="action-menu-item item-danger"
-                              onClick={() => handleDelete(invite.id)}
-                            >
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <polyline points="3 6 5 6 21 6" />
-                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                              </svg>
-                              Excluir convite
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                 
+                </div>
+              )
+            }
+          ]}
+        />
 
-      </div>
-    </div>
+        
+
+      </section>
+    </>
   );
 };
 

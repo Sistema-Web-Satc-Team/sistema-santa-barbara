@@ -1,5 +1,5 @@
-import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxItem, ComboboxList, ComboboxTrigger, useComboboxAnchor } from "@/ui/components/combobox";
 import { Button } from "@/ui/components/button";
+import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxItem, ComboboxList, ComboboxTrigger, useComboboxAnchor } from "@/ui/components/combobox";
 import { Input } from "@/ui/components/input";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -128,12 +128,12 @@ export function CreateMemberModal({ isOpen, papeisDisponiveis, onClose, onSave }
 						<h3 className="text-xs font-medium uppercase tracking-wider text-(--neutral-color)">Informações básicas</h3>
 						<div>
 							<label htmlFor="create-member-name" className="mb-1 w-full block text-sm font-medium">Nome *</label>
-							<Input id="create-member-name" variant="discreet" className="w-full" placeholder="placeholder" value={formData.nome} onChange={(event) => updateField("nome", event.target.value)} aria-invalid={Boolean(erros.nome)} />
+							<Input id="create-member-name" variant="discreet" className="w-full" placeholder="Nome" value={formData.nome} onChange={(event) => updateField("nome", event.target.value)} aria-invalid={Boolean(erros.nome)} />
 							{erros.nome && <span className="text-xs text-(--error-color)">{erros.nome}</span>}
 						</div>
 						<div>
 							<label htmlFor="create-member-email" className="mb-1 w-full block text-sm font-medium">Email *</label>
-							<Input id="create-member-email" variant="discreet" type="email" className="w-full" placeholder="placeholder" value={formData.email} onChange={(event) => updateField("email", event.target.value)} aria-invalid={Boolean(erros.email)} />
+							<Input id="create-member-email" variant="discreet" type="email" className="w-full" placeholder="Email" value={formData.email} onChange={(event) => updateField("email", event.target.value)} aria-invalid={Boolean(erros.email)} />
 							{erros.email && <span className="text-xs text-(--error-color)">{erros.email}</span>}
 						</div>
 						<div>

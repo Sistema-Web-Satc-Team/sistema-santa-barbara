@@ -15,11 +15,9 @@
 .badge--active {
     color: var(--brand-color);
     background-color: color-mix(in srgb, var(--brand-color) 12%, transparent);
-    border-color: color-mix(in srgb, var(--brand-color) 50%, transparent);
 }
 
 .badge--inactive {
     color: var(--neutral-color);
     background-color: color-mix(in srgb, var(--light-neutral-color) 35%, transparent);
-    border-color: color-mix(in srgb, var(--brand-color) 50%, transparent);
 }

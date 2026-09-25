@@ -135,11 +135,13 @@ export const useInvites = () => {
       // enviar convite
       // TEMPORARIO REMOVER FUTURAMENTE
 
-      const membro = membros.find((membro) => {
-        membro.email === formData.email
-      });
+      const membro = membros.find((m) => m.email === formData.email);
 
-      const request = await axios.post(Api.getRooutResource() + "convites", { withCredentials: true })
+      console.log(membro)
+
+      const request = await axios.post(Api.getRooutResource() + "convites", {
+        idMembro: membro.id
+      }, { withCredentials: true })
 
       const response = request.data;
 
@@ -147,7 +149,7 @@ export const useInvites = () => {
         id: response.idConvite,
         email: formData.email,
         roles: membro.papeis,
-        date: response.expiradoEm.toLocaleDateString('pt-BR'),
+        date: response.expiradoEm ? new Date(response.expiradoEm).toLocaleDateString('pt-BR') : '',
         status: 'ENVIADO'
       };
 

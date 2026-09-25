@@ -1,6 +1,7 @@
-import { useState } from "react";
-import type { LoginMemberRequest } from "@/application/model/auth/LoginMemberRequest";
 import { useServices } from "@/application/hook/useServices";
+import type { LoginMemberRequest } from "@/application/model/auth/LoginMemberRequest";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 
 
 interface LoginData {
@@ -30,6 +31,8 @@ function useLogin():  { data: LoginData, state: LoginState, actions: LoginAction
         senha: ""
     });
 
+    const navigate = useNavigate();
+
     // Controle do Estado
     const [isCarregando, setIsCarregando] = useState<boolean>(false);
     const [erro, setErro] = useState<null | string>(null);
@@ -56,6 +59,8 @@ function useLogin():  { data: LoginData, state: LoginState, actions: LoginAction
                 login: login.login,
                 senha: login.senha
             } as LoginMemberRequest);
+
+            navigate("/dashboard/membros")
 
         } catch {
 

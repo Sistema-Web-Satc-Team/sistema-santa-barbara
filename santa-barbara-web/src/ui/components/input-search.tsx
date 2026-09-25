@@ -1,16 +1,15 @@
+import { Search } from 'lucide-react';
 import React from 'react';
 import '../styles/input-search.css';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
-  icon?: React.ReactNode;
 }
 
 export const InputSearch: React.FC<InputProps> = ({
   label,
   error,
-  icon,
   id,
   className = '',
   disabled = false,
@@ -31,7 +30,7 @@ export const InputSearch: React.FC<InputProps> = ({
           disabled={disabled}
           {...props}
         />
-        {icon && <span className="input-icon">{icon}</span>}
+        <span className="input-icon">{<Search/>}</span>
       </div>
       {error && <span className="input-error-message">{error}</span>}
     </div>
