@@ -62,7 +62,7 @@ class AuthServiceApi implements AuthService {
     async updateMe(newData: Partial<UpdateProfileRequest>): Promise<void> {
         try {
 
-            const payload: Record<string, any> = {};
+            const payload: Record<string, string> = {};
             
             if (newData.email !== undefined && newData.email !== "") {
                 payload.email = newData.email;

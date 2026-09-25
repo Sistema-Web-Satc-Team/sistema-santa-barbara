@@ -1,5 +1,5 @@
 import type { MemberData } from "@/application/model/MemberData";
-import { memberService } from "@/application/services/member.service";
+import { memberService, type CreateMemberRequest } from "@/application/services/member.service";
 import { papelService } from "@/application/services/papel.service";
 import { Badge } from "@/ui/components/badge";
 import { Button } from "@/ui/components/button";
@@ -9,8 +9,9 @@ import { Pagination } from "@/ui/components/pagination";
 import { SearchBox } from "@/ui/components/searchBox";
 import { Table, type TableColumn } from "@/ui/components/table";
 import { AlertCircle, ArrowDownAZ, ArrowUpAZ, Ban, Edit2, Mail, Plus, Settings2, Shield, UserPlus, Users } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { EditMemberModal } from "./EditMemberModal";
+import { CreateMemberModal } from "./CreateMemberModal";
 
 function formatPhone(phone: string | null) {
     if (!phone) {
@@ -44,11 +45,9 @@ function MemberList() {
     const [isLastPage, setIsLastPage] = useState(false);
     const [availableRoles, setAvailableRoles] = useState<string[]>([]);
 
-    const [statusFilter, setStatusFilter] = useState<string>();
-
     const [editingMember, setEditingMember] = useState<MemberData | null>(null);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
-    const filterRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
     const fetchRoles = async () => {
@@ -89,22 +88,23 @@ function MemberList() {
 
     const filteredMembers = members.filter((member) => {
         const normalizedSearch = searchTerm.toLowerCase();
+        const nome = member.nome?.trim() ?? "";
+        const sobrenome = member.sobrenome?.trim() ?? "";
+        const email = member.email?.toLowerCase() ?? "";
 
-        let nomeCompleto = member.nome.trim() || "" + ' ' + member.sobrenome.trim() || "";
+        const nomeCompleto = `${nome} ${sobrenome}`.trim();
         const matchesSearch = nomeCompleto.toLowerCase().includes(normalizedSearch)
-            || member.email.toLowerCase().includes(normalizedSearch);
-        const matchesStatus = !statusFilter || member.status === statusFilter;
-        return matchesSearch && matchesStatus;
+            || email.includes(normalizedSearch);
+        return matchesSearch;
     });
 
     const sortedMembers = [...filteredMembers].sort((firstMember, secondMember) => {
-        let nomeCompletoPrimeiroMembro = firstMember.nome.trim() || "" + ' ' + firstMember.sobrenome.trim() || "";
-        let nomeCompletoSegundoMembro = secondMember.nome.trim() || "" + ' ' + secondMember.sobrenome.trim() || "";
+        const nomeCompletoPrimeiroMembro = `${firstMember.nome?.trim() ?? ""} ${firstMember.sobrenome?.trim() ?? ""}`.trim();
+        const nomeCompletoSegundoMembro = `${secondMember.nome?.trim() ?? ""} ${secondMember.sobrenome?.trim() ?? ""}`.trim();
         const result = nomeCompletoPrimeiroMembro.localeCompare(nomeCompletoSegundoMembro);
         return sortOrder === "asc" ? result : -result;
     });
 
-    const totalPages = Math.max(1, Math.ceil(sortedMembers.length / itemsPerPage));
     const pageStart = (currentPage - 1) * itemsPerPage;
     const currentMembers = sortedMembers.slice(pageStart, pageStart + itemsPerPage);
 
@@ -183,7 +183,7 @@ function MemberList() {
                         <Button
                             variant="outline"
                             className="button-outline--brand-dark flex items-center gap-2 bg-(--strong-surface-color) border-(--light-neutral-color)"
-                            onClick={() => alert("Redirecionando para rota de cadastro ainda não existente.")}
+                            onClick={() => setIsCreateModalOpen(true)}
                         >
                             <Plus className="w-4 h-4" /> Cadastrar Membro
                         </Button>
@@ -247,7 +247,7 @@ function MemberList() {
                         </div>
                     ) : (
                         <>
-                            <Table data={members} columns={membersColumns} keyExtractor={(member) => String(member.id)} />
+                            <Table data={currentMembers} columns={membersColumns} keyExtractor={(member) => String(member.id)} />
                             <Pagination
                                 currentPage={currentPage}
                                 totalPages={isLastPage ? currentPage : currentPage + 1}
@@ -270,6 +270,17 @@ function MemberList() {
                     }}
                 />
             )}
+
+            <CreateMemberModal
+                key={isCreateModalOpen ? "create-open" : "create-closed"}
+                isOpen={isCreateModalOpen}
+                papeisDisponiveis={availableRoles}
+                onClose={() => setIsCreateModalOpen(false)}
+                onSave={async (data: CreateMemberRequest) => {
+                    await memberService.createMember(data);
+                    setRefreshKey((key) => key + 1);
+                }}
+            />
         </div>
     );
 }

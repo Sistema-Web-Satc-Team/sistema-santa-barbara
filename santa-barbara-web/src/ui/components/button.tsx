@@ -1,6 +1,7 @@
 import "@/ui/styles/button.css";
 import { cn } from "@/ui/utils/cn";
 import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 import { useState } from "react";
 
 const buttonVariants = cva("button", {
@@ -42,6 +43,8 @@ export interface ButtonProps
   extends React.ComponentProps<"button">,
     VariantProps<typeof buttonVariants> {
   onClick?: () => Promise<void> | void;
+  size?: "default" | "icon-xs" | "icon-sm";
+  render?: React.ReactElement;
 }
 
 export function Button({
@@ -50,6 +53,8 @@ export function Button({
   children,
   disabled,
   className,
+  size = "default",
+  render,
   ...props
 }: ButtonProps) {
   const [isPressed, setIsPressed] = useState(false);
@@ -65,14 +70,19 @@ export function Button({
     }
   }
 
-  return (
+  const button = (
     <button
       onClick={handleClick}
-      className={cn(buttonVariants({ variant, isPressed: isPressed, className }))}
+      className={cn(buttonVariants({ variant, isPressed: isPressed, className }), {
+        "size-6 p-0": size === "icon-xs",
+        "size-8 p-0": size === "icon-sm",
+      })}
       disabled={disabled || isPressed}
       {...props}
     >
       {children}
     </button>
   );
+
+  return render ? React.cloneElement(render, button.props, children) : button;
 }

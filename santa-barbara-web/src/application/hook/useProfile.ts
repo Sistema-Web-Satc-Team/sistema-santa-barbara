@@ -44,7 +44,7 @@ interface ProfileCache {
 function useProfile(): {data: ProfileData, state: ProfileState, actions: ProfileActions} {
     const { authService } = useServices();
 
-    const [profile, setProfile] = useState({
+    const [profile, setProfile] = useState<ProfileData>({
         nome: "",
         sobrenome: "",
         email: "",
@@ -52,7 +52,7 @@ function useProfile(): {data: ProfileData, state: ProfileState, actions: Profile
         telefone: "",
         endereco: "",
         papeis: []
-    })
+    });
 
     const [dirtyFields, setDirtyFields] = useState<
         Record<
@@ -73,6 +73,12 @@ function useProfile(): {data: ProfileData, state: ProfileState, actions: Profile
         return cacheStr ? JSON.parse(cacheStr) : null;
     });
 
+    const [isInitialized, setIsInitialized] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [errorsFields, setFieldErrors] = useState<Record<string, string>>({});
+
     function isValidCache(currentCache: ProfileCache | null): boolean {
         if (!currentCache) return false;
         return Date.now() - currentCache.cachedAt < CACHE_TTL;
@@ -85,9 +91,12 @@ function useProfile(): {data: ProfileData, state: ProfileState, actions: Profile
                 setIsLoading(true);
 
 
-                let dadosPerfil = cache?.data;
+                let dadosPerfil: GetProfileResponse;
                 
-                if (!isValidCache(cache)) {
+                const cachedProfile = cache;
+                if (cachedProfile && isValidCache(cachedProfile)) {
+                    dadosPerfil = cachedProfile.data;
+                } else {
                     dadosPerfil = await authService.me();
                     
                     const novoCache: ProfileCache = {
@@ -110,7 +119,7 @@ function useProfile(): {data: ProfileData, state: ProfileState, actions: Profile
                 })
                 
                 setIsInitialized(true);
-            } catch (err) {
+            } catch {
                 setIsInitialized(false);
                 setErrorMessage("Ocorreu um erro ao carregar os dados.")
             } finally {
@@ -118,16 +127,6 @@ function useProfile(): {data: ProfileData, state: ProfileState, actions: Profile
             }
         })()
     }, [])
-
-    // States
-
-    const [isInitialized, setIsInitialized] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const [successMessage, setSuccessMessage] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-
-    const [errorsFields, setFieldErrors] = useState<Record<string, string>>({});
 
     function hasSuccess() {
         return successMessage.trim() !== "";
@@ -197,7 +196,7 @@ function useProfile(): {data: ProfileData, state: ProfileState, actions: Profile
         setProfile((prev) => ({...prev, [campo]: valorFormatado}));
         validarCampos(campo, valorFormatado);
 
-        setDirtyFields((v) => ({...v, [campo]: cache.data[campo] !== valorFormatado}));        
+        setDirtyFields((v) => ({...v, [campo]: (cache?.data[campo] ?? "") !== valorFormatado}));
     }
 
     async function save() {
@@ -214,10 +213,10 @@ function useProfile(): {data: ProfileData, state: ProfileState, actions: Profile
             setSuccessMessage("");
 
             await authService.updateMe({
-                email: dirtyFields.email ? profile.email : null,
-                telefone: dirtyFields.telefone ? profile.telefone : null,
-                endereco: dirtyFields.endereco ? profile.endereco : null,
-            })
+                ...(dirtyFields.email ? { email: profile.email } : {}),
+                ...(dirtyFields.telefone ? { telefone: profile.telefone } : {}),
+                ...(dirtyFields.endereco ? { endereco: profile.endereco } : {}),
+            });
 
             const dadosAtualizados = await authService.me();
             const novoCache: ProfileCache = { data: dadosAtualizados, cachedAt: Date.now() };
@@ -248,9 +247,12 @@ function useProfile(): {data: ProfileData, state: ProfileState, actions: Profile
                 endereco: false,
             })
 
-            let dadosPerfil = cache?.data;
+            let dadosPerfil: GetProfileResponse;
 
-            if (!isValidCache(cache)) {
+            const cachedProfile = cache;
+            if (cachedProfile && isValidCache(cachedProfile)) {
+                dadosPerfil = cachedProfile.data;
+            } else {
                 dadosPerfil = await authService.me();
                         
                 const novoCache: ProfileCache = {

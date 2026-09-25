@@ -12,6 +12,15 @@ interface MembersPageResponse {
     content: MemberData[];
 }
 
+export interface CreateMemberRequest {
+    nome: string;
+    email: string;
+    papeis: string[];
+    telefone: string;
+    endereco: string;
+    dataNascimento: string;
+}
+
 export interface UpdateMemberRequest {
     nome?: string;
     sobrenome?: string;
@@ -25,6 +34,14 @@ export interface UpdateMemberRequest {
 
 
 export const memberService = {
+    createMember: async (data: CreateMemberRequest): Promise<void> => {
+        await axios.post(
+            `${Api.getRooutResource()}membros`,
+            data,
+            { withCredentials: true }
+        );
+    },
+
    getMembers: async ({ page, limit, papel }: GetMembersParams): Promise<MembersPageResponse> => {
         
         const PageIndex = page - 1;

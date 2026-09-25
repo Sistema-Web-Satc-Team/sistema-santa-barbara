@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { LoginMemberRequest } from "../model/auth/LoginMemberRequest";
-import { useServices } from "./useServices";
+import type { LoginMemberRequest } from "@/application/model/auth/LoginMemberRequest";
+import { useServices } from "@/application/hook/useServices";
 
 
 interface LoginData {
@@ -57,7 +57,7 @@ function useLogin():  { data: LoginData, state: LoginState, actions: LoginAction
                 senha: login.senha
             } as LoginMemberRequest);
 
-        } catch (err) {
+        } catch {
 
             setErro("Login ou senha inválidos.");
 

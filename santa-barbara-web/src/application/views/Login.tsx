@@ -39,7 +39,7 @@ function Login() {
             <h1 className="2xl:py-[32px] py-[16px] mx-auto login__title">Login</h1>
 
             {state.hasErro() && (
-                <ErrorCard message={state.erro} />
+                <ErrorCard message={state.erro ?? ""} />
             )}
 
             <div className="flex flex-col 2xl:gap-[12px] gap-[6px]">
