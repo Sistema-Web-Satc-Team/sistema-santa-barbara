@@ -1,4 +1,4 @@
 package br.org.bandasantabarbara.application.usecase.auth;
 
-public class BloquearMembroUseCase {
+public class BloquearCredencialUseCase {
 }

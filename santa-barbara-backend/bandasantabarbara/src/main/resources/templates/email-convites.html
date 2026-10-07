@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Convite - Banda Santa Bárbara</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f7;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+        .email-wrapper {
+            width: 100%;
+            background-color: #f4f4f7;
+            padding: 40px 0;
+        }
+        .email-content {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .logo {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 24px;
+        }
+        h1 {
+            font-size: 22px;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #555555;
+            margin-bottom: 30px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #000000;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+        }
+        .footer {
+            font-size: 12px;
+            color: #999999;
+            margin-top: 40px;
+            border-top: 1px solid #eaeaea;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="email-wrapper">
+    <div class="email-content">
+        <img src="cid:logoBanda" alt="Banda Santa Bárbara" class="logo">
+
+        <h1>Banda Santa Bárbara</h1>
+
+        <p>Olá! Você foi convidado para integrar a nossa plataforma. Clique no botão abaixo para aceitar o convite, configurar sua conta e fazer parte da nossa história.</p>
+
+        <a th:href="${urlConvite}" target="_blank" class="btn">Aceitar Convite</a>
+
+        <div class="footer">
+            <p>Se você não esperava este convite, pode ignorar este e-mail com segurança.</p>
+            <p>&copy; 2026 Banda Santa Bárbara. Todos os direitos reservados.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

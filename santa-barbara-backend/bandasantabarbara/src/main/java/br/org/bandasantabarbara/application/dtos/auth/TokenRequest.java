@@ -2,7 +2,7 @@ package br.org.bandasantabarbara.application.dtos.auth;
 
 import java.util.List;
 
-public record GerarTokenRequest (
+public record TokenRequest(
         String id,
         String email,
         String nomeUsuario,

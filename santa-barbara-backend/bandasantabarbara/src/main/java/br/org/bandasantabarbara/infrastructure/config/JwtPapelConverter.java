@@ -10,18 +10,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class JwtPapelConverter implements Converter<Jwt, GrantedAuthority> {
+public class JwtPapelConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
 
     @Override
-    public GrantedAuthority convert(Jwt jwt) {
-        String papel = jwt.getClaimAsString("permissoes");
+    public Collection<GrantedAuthority> convert(Jwt jwt) {
+        Collection<String> papeis = jwt.getClaimAsStringList("papeis");
 
-        if (papel == null || papel.isEmpty()) {
-            return new SimpleGrantedAuthority();
+        if (papeis == null || papeis.isEmpty()) {
+            return Collections.emptyList();
         }
 
-        return permissoes.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return papeis.stream()
+                .map(papel -> (GrantedAuthority) new SimpleGrantedAuthority(papel))
+                .toList();
     }
 }
