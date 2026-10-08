@@ -21,11 +21,13 @@ public class MembroResponsavel {
     @ManyToOne
     @MapsId("idResponsavel")
     @JoinColumn(name = "id_responsavel")
+    @Setter
     private Membro responsavel;
 
     @ManyToOne
     @MapsId("idMembroMenor")
     @JoinColumn(name = "id_membro_menor")
+    @Setter
     private Membro membroMenor;
 
     @Enumerated(EnumType.STRING)

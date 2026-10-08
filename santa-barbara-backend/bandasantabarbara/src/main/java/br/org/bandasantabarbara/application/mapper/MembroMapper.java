@@ -29,6 +29,29 @@ public class MembroMapper {
         return membro;
     }
 
+    public Membro toEntityMenor(MembroRequest request) {
+        var membro = new Membro();
+
+        membro.setNome(request.nome());
+
+        if (request.endereco() != null) {
+            membro.setEndereco(request.endereco());
+        }
+
+        if (request.email() != null) {
+            membro.setEmail(request.email());
+        }
+
+        membro.setSexo(request.sexo());
+        membro.setDataNascimento(request.dataNascimento());
+
+        if (request.telefone() != null) {
+            membro.setTelefone(request.telefone());
+        }
+
+        return membro;
+    }
+
     public Membro toUpdate(MembroRequest request, Membro membro) {
         if (request.nome() != null) {
             membro.setNome(request.nome());

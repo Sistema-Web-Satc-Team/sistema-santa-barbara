@@ -26,4 +26,7 @@ public interface MembroCredencialRepository extends Repository<MembroCredencial,
            OR c.membro.email = :login
     """)
     Optional<MembroCredencial> findByLogin(@Param("login") String login);
+
+
+
 }

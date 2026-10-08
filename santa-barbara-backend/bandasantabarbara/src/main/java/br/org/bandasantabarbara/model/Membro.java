@@ -206,6 +206,11 @@ public class Membro implements Persistable<UUID> {
         vinculos.remove(vinculo);
     }
 
+
+    @OneToMany(mappedBy = "membroMenor", fetch = FetchType.LAZY)
+    @Getter
+    private List<MembroResponsavel> responsaveis;
+
     /*
      *
      * CONSTRUTORES
