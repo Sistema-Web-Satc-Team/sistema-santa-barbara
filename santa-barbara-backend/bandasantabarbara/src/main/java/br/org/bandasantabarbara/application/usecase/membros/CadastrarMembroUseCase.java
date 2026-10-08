@@ -3,7 +3,7 @@ package br.org.bandasantabarbara.application.usecase.membros;
 import br.org.bandasantabarbara.application.dtos.membros.MembroRequest;
 import br.org.bandasantabarbara.application.dtos.membros.MembroResponse;
 import br.org.bandasantabarbara.application.mapper.MembroMapper;
-import br.org.bandasantabarbara.model.Membro;
+import br.org.bandasantabarbara.exception.BadRequestException;
 import br.org.bandasantabarbara.repositories.MembroRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +20,11 @@ public class CadastrarMembroUseCase {
 
     public MembroResponse execute(MembroRequest request) {
        var membro = this.membroMapper.toEntity(request);
+
+       if ( membro.ehMenorDeIdade() ) {
+           throw new BadRequestException("Membro cadastrado não pode ser menor de idade.");
+       }
+
        this.membroRepository.save(membro);
        return  this.membroMapper.toResponse(membro);
     }

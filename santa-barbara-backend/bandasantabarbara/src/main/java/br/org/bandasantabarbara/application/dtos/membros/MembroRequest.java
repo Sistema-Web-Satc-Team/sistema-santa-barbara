@@ -15,7 +15,6 @@ public record MembroRequest(
                 minLength = 2,
                 maxLength = 72
         )
-        @NotBlank(message = "O nome do membro não pode estar em branco.")
         @Size(min = 2, max = 72,
                 message = "O nome do membro deve ter entre 2 e 72 caracteres.")
         String nome,
@@ -24,7 +23,6 @@ public record MembroRequest(
                 description = "E-mail utilizado para contato e identificação do membro.",
                 example = "joao@example.com"
         )
-        @NotBlank(message = "O e-mail é obrigatório")
         @Email(message = "O e-mail deve ser válido")
         String email,
 
@@ -53,7 +51,6 @@ public record MembroRequest(
                 description = "Sexo cadastrado do membro. Valores disponiveis: MASCULINO, FEMININO e NAO_INFORMADO.",
                 example = "MASCULINO"
         )
-        @NotNull(message = "Sexo deve ser informado")
         Membro.MembroSexoEnum sexo,
 
         @Schema(
@@ -62,7 +59,6 @@ public record MembroRequest(
                 type = "string",
                 format = "date"
         )
-        @NotNull(message = "A data de nascimento é obrigatória.")
         @Past(message = "A data de nascimento deve ser uma data no passado")
         @JsonFormat(pattern = "dd/MM/yyyy")
         LocalDate dataNascimento

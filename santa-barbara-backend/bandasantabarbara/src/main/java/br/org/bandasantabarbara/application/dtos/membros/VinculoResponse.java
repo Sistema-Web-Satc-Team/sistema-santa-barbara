@@ -3,21 +3,14 @@ package br.org.bandasantabarbara.application.dtos.membros;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.Instant;
-import java.util.UUID;
 
-public record MembroVinculoResponse(
-
-        @Schema(
-                description = "Identificador único do membro.",
-                example = "0199c5d5-7b6f-7abc-8def-123456789abc"
-        )
-        UUID idMembro,
+public record VinculoResponse(
 
         @Schema(
-                description = "Nome completo do membro.",
-                example = "João da Silva"
+                description = "Identificador único do vínculo.",
+                example = "2"
         )
-        String nome,
+        int id,
 
         @Schema(
                 description = "Data e hora em que o vínculo foi iniciado.",
@@ -35,5 +28,11 @@ public record MembroVinculoResponse(
         @Schema(
                 description = "Função exercida pelo membro durante o vínculo."
         )
-        FuncaoResponse funcao
+        FuncaoResponse funcao,
+
+
+        @Schema(
+                description = "Status atual do vínculo. pode ser ativo ou encerrado."
+        )
+        String status
 ) {}

@@ -202,5 +202,14 @@ public class Membro implements Persistable<UUID> {
         atualizadoEm = Instant.now();
     }
 
+    /*
+    *
+    * Regras de negócio
+    *
+     */
+
+    public boolean ehMenorDeIdade() {
+        return dataNascimento.plusYears(18).isAfter(LocalDate.now());
+    }
 
 }

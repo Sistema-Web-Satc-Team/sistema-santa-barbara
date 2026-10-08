@@ -1,6 +1,6 @@
 package br.org.bandasantabarbara.application.usecase.membros;
 
-import br.org.bandasantabarbara.application.dtos.membros.AtualizarMembroRequest;
+import br.org.bandasantabarbara.application.dtos.membros.MembroRequest;
 import br.org.bandasantabarbara.application.dtos.membros.MembroResponse;
 import br.org.bandasantabarbara.application.mapper.MembroMapper;
 import br.org.bandasantabarbara.exception.BadRequestException;
@@ -28,7 +28,7 @@ public class AtualizarDadosMembroUseCase {
         this.membroCredencialRepository = membroCredencialRepository;
     }
 
-    public MembroResponse execute(UUID membroId, AtualizarMembroRequest request) {
+    public MembroResponse execute(UUID membroId, MembroRequest request) {
 
         var membro = this.membroRepository.findById(membroId)
                 .orElseThrow(
@@ -44,6 +44,8 @@ public class AtualizarDadosMembroUseCase {
         });
 
         this.membroMapper.toUpdate(request, membro);
+
+        if (membro.ehMenorDeIdade())
 
         this.membroRepository.save(membro);
 
