@@ -1,5 +1,6 @@
 package br.org.bandasantabarbara.application.dtos.membros;
 
+import br.org.bandasantabarbara.model.MembroVinculo;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.Instant;
@@ -34,5 +35,5 @@ public record VinculoResponse(
         @Schema(
                 description = "Status atual do vínculo. pode ser ativo ou encerrado."
         )
-        String status
+        MembroVinculo.MembroVinculoStatusEnum status
 ) {}

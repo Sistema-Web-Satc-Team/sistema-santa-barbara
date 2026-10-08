@@ -188,6 +188,23 @@ public class Membro implements Persistable<UUID> {
         this.atualizadoEm = Instant.now();
     }
 
+    /**
+     *
+     * Filhos
+     *
+     */
+
+    @OneToMany(mappedBy = "membro", fetch = FetchType.LAZY)
+    @Getter
+    private List<MembroVinculo> vinculos;
+
+    public void adicionarVinculo(MembroVinculo vinculo) {
+        vinculos.add(vinculo);
+    }
+
+    public void removerVinculo(MembroVinculo vinculo) {
+        vinculos.remove(vinculo);
+    }
 
     /*
      *

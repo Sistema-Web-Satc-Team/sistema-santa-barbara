@@ -1,11 +1,15 @@
 package br.org.bandasantabarbara.model;
 
 import br.org.bandasantabarbara.exception.BadRequestException;
+import br.org.bandasantabarbara.exception.EnumBadRequestException;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.text.Normalizer;
 import java.time.Instant;
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 //
@@ -42,6 +46,12 @@ public class MembroVinculo {
     @Getter
     private Instant dataTermino;
 
+    public enum MembroVinculoStatusEnum {
+            ATIVO,
+            ENCERADO;
+
+    }
+
     // Construtores
 
     protected  MembroVinculo() { }
@@ -72,6 +82,13 @@ public class MembroVinculo {
 
     public boolean estaAtivo() {
         return dataTermino == null;
+    }
+
+    public MembroVinculo.MembroVinculoStatusEnum getStatus() {
+
+        if (this.estaAtivo()) { return MembroVinculoStatusEnum.ATIVO; }
+
+        return MembroVinculoStatusEnum.ENCERADO;
     }
 
 }

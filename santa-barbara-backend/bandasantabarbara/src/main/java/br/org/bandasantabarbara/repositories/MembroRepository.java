@@ -1,7 +1,9 @@
 package br.org.bandasantabarbara.repositories;
 
 import br.org.bandasantabarbara.model.Membro;
+import jakarta.persistence.Entity;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
@@ -31,5 +33,8 @@ public interface MembroRepository extends Repository<Membro, UUID> {
             @Param("email") String email,
             Pageable page
     );
+
+
+
 
 }
