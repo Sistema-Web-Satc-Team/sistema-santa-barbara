@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application.dtos.membros;
+package br.org.bandasantabarbara.application.dtos.membros.vinculos;
 
 import java.util.List;
 

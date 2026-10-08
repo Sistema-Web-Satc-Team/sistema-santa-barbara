@@ -2,12 +2,16 @@ package br.org.bandasantabarbara.controller;
 
 import br.org.bandasantabarbara.application.dtos.*;
 import br.org.bandasantabarbara.application.dtos.membros.*;
+import br.org.bandasantabarbara.application.dtos.membros.vinculos.MembroVinculosResponse;
+import br.org.bandasantabarbara.application.dtos.membros.vinculos.VincularMembroRequest;
+import br.org.bandasantabarbara.application.dtos.membros.vinculos.VinculoResponse;
+import br.org.bandasantabarbara.application.dtos.membros.vinculos.VinculosResponse;
 import br.org.bandasantabarbara.application.usecase.membros.AtualizarDadosMembroUseCase;
 import br.org.bandasantabarbara.application.usecase.membros.CadastrarMembroUseCase;
 import br.org.bandasantabarbara.application.usecase.membros.ConsultarMembrosUseCase;
+import br.org.bandasantabarbara.application.usecase.membros.VincularFuncaoUseCase;
 import br.org.bandasantabarbara.model.Membro;
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -26,15 +30,18 @@ public class MembroController {
     private final CadastrarMembroUseCase cadastrarMembroUseCase;
     private final ConsultarMembrosUseCase consultarMembrosUseCase;
     private final AtualizarDadosMembroUseCase atualizarDadosMembroUseCase;
+    private final VincularFuncaoUseCase vincularFuncaoUseCase;
 
     public MembroController(
             CadastrarMembroUseCase cadastrarMembroUseCase,
             ConsultarMembrosUseCase consultarMembrosUseCase,
-            AtualizarDadosMembroUseCase atualizarDadosMembroUseCase
+            AtualizarDadosMembroUseCase atualizarDadosMembroUseCase,
+            VincularFuncaoUseCase vincularFuncaoUseCase
     ) {
         this.cadastrarMembroUseCase = cadastrarMembroUseCase;
         this.consultarMembrosUseCase = consultarMembrosUseCase;
         this.atualizarDadosMembroUseCase = atualizarDadosMembroUseCase;
+        this.vincularFuncaoUseCase = vincularFuncaoUseCase;
     }
 
     @PostMapping
@@ -122,15 +129,13 @@ public class MembroController {
 
 
     @PostMapping("/{id}/vinculos")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    public void criarVinculoMembro(
+    public VinculoResponse criarVinculoMembro(
             @RequestBody VincularMembroRequest dto,
             @PathVariable UUID id
     ) {
-
-        // Must to be implemented
-
+        return vincularFuncaoUseCase.execute(dto, id);
     }
 
 
@@ -156,26 +161,13 @@ public class MembroController {
 
 
     @PostMapping("/menores")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public MembroResponse criarMembroMenor(
             @RequestBody RegistrarMembroMenorRequest dto
     ) {
-
-        // Must to be implemented
-
-        return new MembroResponse(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
+       return this.cadastrarMembroUseCase.cadastrarMenorIdade(dto);
     }
-
-
 
     @PutMapping("/{idMembro}/responsaveis/{idResponsavel}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
