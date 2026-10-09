@@ -6,10 +6,7 @@ import br.org.bandasantabarbara.application.dtos.membros.vinculos.MembroVinculos
 import br.org.bandasantabarbara.application.dtos.membros.vinculos.VincularMembroRequest;
 import br.org.bandasantabarbara.application.dtos.membros.vinculos.VinculoResponse;
 import br.org.bandasantabarbara.application.dtos.membros.vinculos.VinculosResponse;
-import br.org.bandasantabarbara.application.usecase.membros.AtualizarDadosMembroUseCase;
-import br.org.bandasantabarbara.application.usecase.membros.CadastrarMembroUseCase;
-import br.org.bandasantabarbara.application.usecase.membros.ConsultarMembrosUseCase;
-import br.org.bandasantabarbara.application.usecase.membros.VincularFuncaoUseCase;
+import br.org.bandasantabarbara.application.usecase.membros.*;
 import br.org.bandasantabarbara.model.Membro;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -32,16 +29,23 @@ public class MembroController {
     private final AtualizarDadosMembroUseCase atualizarDadosMembroUseCase;
     private final VincularFuncaoUseCase vincularFuncaoUseCase;
 
+    private final ConsultarVinculosUseCase consultarVinculosUseCase;
+    private final EncerrarVinculoUseCase encerrarVinculoUseCase;
+
     public MembroController(
             CadastrarMembroUseCase cadastrarMembroUseCase,
             ConsultarMembrosUseCase consultarMembrosUseCase,
             AtualizarDadosMembroUseCase atualizarDadosMembroUseCase,
-            VincularFuncaoUseCase vincularFuncaoUseCase
+            VincularFuncaoUseCase vincularFuncaoUseCase,
+            ConsultarVinculosUseCase consultarVinculosUseCase,
+            EncerrarVinculoUseCase encerrarVinculoUseCase
     ) {
         this.cadastrarMembroUseCase = cadastrarMembroUseCase;
         this.consultarMembrosUseCase = consultarMembrosUseCase;
         this.atualizarDadosMembroUseCase = atualizarDadosMembroUseCase;
         this.vincularFuncaoUseCase = vincularFuncaoUseCase;
+        this.consultarVinculosUseCase = consultarVinculosUseCase;
+        this.encerrarVinculoUseCase = encerrarVinculoUseCase;
     }
 
     @PostMapping
@@ -66,12 +70,7 @@ public class MembroController {
             Pageable pageable,
             @RequestParam(required = false) String search
     ) {
-
-        if (search != null && !search.isBlank()) {
-            return  consultarMembrosUseCase.buscarPorNomeOuEmail(pageable, search, search);
-        }
-
-        return consultarMembrosUseCase.listarTudo(pageable);
+        return consultarMembrosUseCase.listarMembros(search, pageable);
     }
 
 
@@ -107,24 +106,7 @@ public class MembroController {
             @PathVariable UUID id,
             @RequestParam(defaultValue = "false") boolean withEncerrados
     ) {
-
-        // Must to be implemented
-
-        return new MembroVinculosResponse(
-                new MembroResponse(
-                        null,
-                        "teste",
-                        "48999999999",
-                        "Rua teste, 123",
-                        "teste@gmail.com",
-                        LocalDate.now().minusYears(18),
-                        Membro.MembroSexoEnum.MASCULINO
-                        ),
-                new VinculosResponse(
-                        new ArrayList<>(),
-                        new ArrayList<>()
-                )
-        );
+        return this.consultarVinculosUseCase.execute(id);
     }
 
 
@@ -144,11 +126,9 @@ public class MembroController {
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public void encerrarVinculoMembro(
             @PathVariable UUID idMembro,
-            @PathVariable UUID idVinculo
+            @PathVariable int idVinculo
     ) {
-
-        // Must to be implemented
-
+        this.encerrarVinculoUseCase.execute(idMembro, idVinculo);
     }
 
     /*
@@ -156,8 +136,6 @@ public class MembroController {
     * MEMBROS DE MENORES
     *
      */
-
-
 
 
     @PostMapping("/menores")

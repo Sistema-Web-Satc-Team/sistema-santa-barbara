@@ -52,7 +52,7 @@ public class AutenticarMembroUseCase {
         }
 
         if (!membroCredencial.isAtivo()) {
-            throw new ForbiddenException("Você esta inativo. Entre em contato com a organização para reativar.");
+            throw new ForbiddenException("Você esta suspenso. Entre em contato com a organização para reativar.");
         }
 
 

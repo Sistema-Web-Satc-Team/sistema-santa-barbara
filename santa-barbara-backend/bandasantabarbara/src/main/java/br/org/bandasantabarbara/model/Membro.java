@@ -12,6 +12,7 @@ import org.springframework.data.domain.Persistable;
 import java.text.Normalizer;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -25,6 +26,7 @@ import java.util.regex.Pattern;
 // Contém informações pessoais
 //
 
+// I
 @Entity
 @Table(name = "membro")
 public class Membro implements Persistable<UUID> {
@@ -62,6 +64,7 @@ public class Membro implements Persistable<UUID> {
         }
     }
 
+    // H
     @Id
     private UUID id;
 
@@ -118,7 +121,7 @@ public class Membro implements Persistable<UUID> {
     @Column(name = "sexo", nullable = false, columnDefinition = "tipo_sexo_pessoa")
     private MembroSexoEnum sexo;
 
-
+    // A
     public void setNome(String nome) {
 
         if (nome == null || nome.isBlank() ) {
@@ -154,6 +157,7 @@ public class Membro implements Persistable<UUID> {
         this.dataNascimento = dataNascimento;
     }
 
+    // T
     public void setEmail(String email) {
 
         if (email == null || email.isBlank()) {
@@ -194,6 +198,7 @@ public class Membro implements Persistable<UUID> {
      *
      */
 
+    // E
     @OneToMany(mappedBy = "membro", fetch = FetchType.LAZY)
     @Getter
     private List<MembroVinculo> vinculos;
@@ -210,6 +215,13 @@ public class Membro implements Persistable<UUID> {
     @OneToMany(mappedBy = "membroMenor", fetch = FetchType.LAZY)
     @Getter
     private List<MembroResponsavel> responsaveis;
+
+    // T
+    @OneToOne(mappedBy = "membro", fetch = FetchType.EAGER)
+    @Getter
+    private MembroCredencial credencial;
+
+
 
     /*
      *
@@ -230,8 +242,38 @@ public class Membro implements Persistable<UUID> {
     *
      */
 
+    // Importante para evitar problemas
     public boolean ehMenorDeIdade() {
         return dataNascimento.plusYears(18).isAfter(LocalDate.now());
     }
 
+
+    // Ele verifica se tem vínculos apenas.
+    // Se você buscar apenas os vínculos ativos pode utilizar como verificação
+    public boolean hasVinculos() {
+        return this.vinculos != null && !this.vinculos.isEmpty();
+    }
+
+    //  H
+    // Status para Credencial
+    public String getStatusCredencial() {
+
+        if (this.getCredencial() != null) {
+            return this.getCredencial().getStatus().name();
+        }
+
+        return "SEM_ACESSO";
+    }
+
+    // I
+    public int getIdade() {
+        if (this.dataNascimento == null) {
+            throw new RuntimeException("Data de nascimento não definida.");
+        }
+        return Period.between(this.dataNascimento, LocalDate.now()).getYears();
+    }
+
+
+
 }
+// S

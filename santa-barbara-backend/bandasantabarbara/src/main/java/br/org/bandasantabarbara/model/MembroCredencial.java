@@ -22,7 +22,7 @@ public class MembroCredencial {
 
     public enum MembroCredencialStatus {
         ATIVO,
-        INATIVO,
+        SUSPENSO,
         BLOQUEADO
     }
 

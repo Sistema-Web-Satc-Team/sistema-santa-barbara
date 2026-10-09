@@ -4,9 +4,12 @@ import br.org.bandasantabarbara.application.dtos.PageResponse;
 import br.org.bandasantabarbara.application.dtos.membros.MembroResponse;
 import br.org.bandasantabarbara.application.mapper.MembroMapper;
 import br.org.bandasantabarbara.application.mapper.PageMapper;
+import br.org.bandasantabarbara.model.Membro;
 import br.org.bandasantabarbara.repositories.MembroRepository;
+import br.org.bandasantabarbara.repositories.MembroSpecs;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,25 +30,15 @@ public class ConsultarMembrosUseCase {
     }
 
 
-    public PageResponse<MembroResponse> listarTudo(Pageable pageable) {
-        Page<MembroResponse> page = membroRepository
-                .findAll(pageable)
-                .map(membroMapper::toResponse);
+    public PageResponse<MembroResponse> listarMembros(String busca, Pageable pageable) {
+        Specification<Membro> spec = Specification.where(MembroSpecs.porNomeOuEmail(busca))
+                .and(MembroSpecs.comFiltroVinculos(true, true));
 
-        return pageMapper.toResponse(page);
+        Page<Membro> membrosPage = membroRepository.findAll(spec, pageable);
+
+        return this.pageMapper.toResponse(membrosPage.map(
+                this.membroMapper::toResponse
+        ));
     }
-    public PageResponse<MembroResponse> buscarPorNomeOuEmail(
-            Pageable pageable,
-            String nome,
-            String email
-    ) {
-        Page<MembroResponse> page = membroRepository
-                .findByNomeOrEmail(nome, email, pageable)
-                .map(membroMapper::toResponse);
-
-        return pageMapper.toResponse(page);
-    }
-
-
 
 }

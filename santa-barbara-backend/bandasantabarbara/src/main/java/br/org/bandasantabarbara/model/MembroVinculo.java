@@ -23,10 +23,13 @@ import java.util.List;
 @Table(name = "membro_vinculo")
 public class MembroVinculo {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
-    private int id;
+    @EmbeddedId
+    private MembroVinculoId id = new MembroVinculoId();
+
+    public int getVinculoId() {
+        return this.id.getId();
+    }
+
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_funcao", nullable = false)
@@ -35,6 +38,7 @@ public class MembroVinculo {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_membro", nullable = false)
+    @MapsId("idMembro")
     @Getter
     private Membro membro;
 

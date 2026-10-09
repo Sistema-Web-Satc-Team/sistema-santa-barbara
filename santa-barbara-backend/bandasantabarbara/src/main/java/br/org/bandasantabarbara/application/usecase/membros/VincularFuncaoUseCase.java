@@ -58,7 +58,7 @@ public class VincularFuncaoUseCase {
         this.membroVinculoRepository.save(vinculo);
 
         return new VinculoResponse(
-                vinculo.getId(),
+                vinculo.getVinculoId(),
                 vinculo.getDataInicio(),
                 vinculo.getDataTermino(),
                 new FuncaoResponse(

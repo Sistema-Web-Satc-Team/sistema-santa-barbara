@@ -49,5 +49,29 @@ public record MembroResponse(
                 description = "Sexo do membro.",
                 example = "MASCULINO"
         )
-        Membro.MembroSexoEnum sexo
+        Membro.MembroSexoEnum sexo,
+
+        @Schema(
+                description = "Idade do membro.",
+                example = "22"
+        )
+        int idade,
+
+        @Schema(
+                description = "Indica se o membro possui vínculos cadastrados.",
+                example = "true"
+        )
+        boolean hasVinculos,
+
+        @Schema(
+                description = "Indica se o membro é menor de idade.",
+                example = "false"
+        )
+        boolean menorDeIdade,
+
+        @Schema(
+                description = "Status de acesso da credencial do membro ou 'SEM_ACESSO' caso não possua.",
+                example = "ATIVO"
+        )
+        String statusCredencialAcesso
 ) {}

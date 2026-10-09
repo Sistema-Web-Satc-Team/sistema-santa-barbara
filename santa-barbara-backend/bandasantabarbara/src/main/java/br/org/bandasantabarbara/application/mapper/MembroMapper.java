@@ -88,7 +88,11 @@ public class MembroMapper {
           membro.getEndereco(),
           membro.getEmail(),
           membro.getDataNascimento(),
-          membro.getSexo()
+          membro.getSexo(),
+          membro.getIdade(),
+          membro.hasVinculos(),
+          membro.ehMenorDeIdade(),
+          membro.getStatusCredencial()
         );
     }
 }
