@@ -20,4 +20,13 @@ public interface MembroRepository extends JpaRepository<Membro, UUID>, JpaSpecif
     @Query("SELECT m FROM Membro m WHERE m.id IN :ids")
     Collection<Membro> findAllByIds(@Param("ids") Set<UUID> ids);
 
+    @Query("""
+        SELECT DISTINCT m
+        FROM Membro m
+        LEFT JOIN FETCH m.vinculos v
+            ON v.dataTermino IS NULL
+        LEFT JOIN FETCH v.funcao
+        WHERE m.id = :id
+    """)
+    Optional<Membro> findByIdWithVinculosAtivos(@Param("id") UUID id);
 }

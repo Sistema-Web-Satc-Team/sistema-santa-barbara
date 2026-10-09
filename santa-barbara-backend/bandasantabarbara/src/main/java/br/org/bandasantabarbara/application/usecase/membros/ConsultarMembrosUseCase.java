@@ -32,7 +32,7 @@ public class ConsultarMembrosUseCase {
 
     public PageResponse<MembroResponse> listarMembros(String busca, Pageable pageable) {
         Specification<Membro> spec = Specification.where(MembroSpecs.porNomeOuEmail(busca))
-                .and(MembroSpecs.comFiltroVinculos(true, true));
+                .and(MembroSpecs.comVinculoAtivo(null));
 
         Page<Membro> membrosPage = membroRepository.findAll(spec, pageable);
 

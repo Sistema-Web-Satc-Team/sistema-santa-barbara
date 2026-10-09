@@ -204,6 +204,39 @@ public class Membro implements Persistable<UUID> {
     private List<MembroVinculo> vinculos;
 
     public void adicionarVinculo(MembroVinculo vinculo) {
+
+        if (this.hasVinculoAtivo()) {
+
+            for (var vinculoAtivo : this.vinculos) {
+                if (vinculoAtivo.getFuncao().getCode()
+                        .equals(vinculo.getFuncao().getCode())
+                ) {
+                    throw new BadRequestException(
+                            "O membro já possui um vínculo incompatível."
+                    );
+                }
+
+                if (vinculoAtivo.getFuncao().getCode().equals("PROFESSOR")
+                    &&
+                    vinculo.getFuncao().getCode().equals("ALUNO")
+                ) {
+                    throw new BadRequestException(
+                            "Um professor não pode ser aluno."
+                    );
+                }
+
+                if (vinculoAtivo.getFuncao().getCode().equals("MAESTRO")
+                     &&
+                    vinculo.getFuncao().getCode().equals("ALUNO")
+                ) {
+                    throw new BadRequestException(
+                            "Um maestro não pode ser aluno."
+                    );
+                }
+            }
+        }
+
+
         vinculos.add(vinculo);
     }
 
@@ -253,6 +286,18 @@ public class Membro implements Persistable<UUID> {
     public boolean hasVinculos() {
         return this.vinculos != null && !this.vinculos.isEmpty();
     }
+
+
+    // TRADE OFF PROPOSITAL:
+    // sim sei que pode ser um problema de n+1 mas como o negócio é pequeno
+    // por enquanto funciona
+    public boolean hasVinculoAtivo() {
+        if (!hasVinculos()) return false;
+
+        return this.vinculos.stream().anyMatch(MembroVinculo::estaAtivo);
+    }
+
+
 
     //  H
     // Status para Credencial

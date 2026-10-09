@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 
@@ -59,6 +60,7 @@ public class MembroCredencial {
     @Column(name = "atualizado_em", nullable = false)
     private Instant atualizadoEm;
 
+    protected MembroCredencial() {}
 
     public void setNomeUsuario(String nomeUsuario) {
         if (nomeUsuario == null || nomeUsuario.isBlank()) {
@@ -90,5 +92,6 @@ public class MembroCredencial {
     public boolean isAtivo() {
         return this.status == MembroCredencialStatus.ATIVO;
     }
+
 
 }

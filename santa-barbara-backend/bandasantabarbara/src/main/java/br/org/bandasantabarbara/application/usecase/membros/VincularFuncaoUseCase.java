@@ -10,7 +10,9 @@ import br.org.bandasantabarbara.model.Membro;
 import br.org.bandasantabarbara.model.MembroVinculo;
 import br.org.bandasantabarbara.repositories.FuncaoRepository;
 import br.org.bandasantabarbara.repositories.MembroRepository;
+import br.org.bandasantabarbara.repositories.MembroSpecs;
 import br.org.bandasantabarbara.repositories.MembroVinculoRepository;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -39,7 +41,8 @@ public class VincularFuncaoUseCase {
             UUID membroId
     ) {
 
-        Membro membro = this.membroRepository.findById(
+
+        Membro membro = this.membroRepository.findByIdWithVinculosAtivos(
                 membroId
         ).orElseThrow(
                 ( ) -> new NotFoundException("Membro não encontrado.")
@@ -57,6 +60,7 @@ public class VincularFuncaoUseCase {
                 funcao
         );
 
+        membro.adicionarVinculo(vinculo);
 
         this.membroVinculoRepository.save(vinculo);
 

@@ -100,8 +100,8 @@ public class GlobalExceptionHandler {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(badRequestEx.getMessage()));
         }
 
-        List<DtoInspector.CampoContrato> contrato = DtoInspector.extrairContrato(br.org.bandasantabarbara.application.dtos.setup.RegistrarAdminRequest.class);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(contrato);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new MessageResponse("O corpo da requisição (JSON) está inválido, mal formatado ou ausente."));
     }
 
     @ExceptionHandler(Exception.class)

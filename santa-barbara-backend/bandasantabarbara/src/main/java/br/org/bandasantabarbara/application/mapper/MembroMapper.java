@@ -90,7 +90,7 @@ public class MembroMapper {
           membro.getDataNascimento(),
           membro.getSexo(),
           membro.getIdade(),
-          membro.hasVinculos(),
+          membro.hasVinculoAtivo(),
           membro.ehMenorDeIdade(),
           membro.getStatusCredencial()
         );
