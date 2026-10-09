@@ -1,0 +1,4 @@
+
+ALTER TABLE instrumento ADD COLUMN file_id VARCHAR(256) NULL;
+ALTER TABLE instrumento ADD COLUMN tipo VARCHAR(50) NOT NULL;
+ALTER TABLE instrumento ADD COLUMN descricao TEXT NULL;
