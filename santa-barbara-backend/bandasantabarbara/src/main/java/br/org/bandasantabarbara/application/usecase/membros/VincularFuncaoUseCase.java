@@ -11,9 +11,12 @@ import br.org.bandasantabarbara.model.MembroVinculo;
 import br.org.bandasantabarbara.repositories.FuncaoRepository;
 import br.org.bandasantabarbara.repositories.MembroRepository;
 import br.org.bandasantabarbara.repositories.MembroVinculoRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+
+@Service
 public class VincularFuncaoUseCase {
 
     private final MembroRepository membroRepository;

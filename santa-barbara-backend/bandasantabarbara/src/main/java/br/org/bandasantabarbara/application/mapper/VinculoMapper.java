@@ -2,7 +2,10 @@ package br.org.bandasantabarbara.application.mapper;
 
 import br.org.bandasantabarbara.application.dtos.membros.vinculos.VinculoResponse;
 import br.org.bandasantabarbara.model.MembroVinculo;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class VinculoMapper {
 
     private final FuncaoMapper funcaoMapper;
@@ -13,7 +16,7 @@ public class VinculoMapper {
 
     public VinculoResponse toResponse(MembroVinculo vinculo) {
         return new VinculoResponse(
-          vinculo.getId(),
+          vinculo.getVinculoId(),
           vinculo.getDataInicio(),
           vinculo.getDataTermino(),
           this.funcaoMapper.toResponse(vinculo.getFuncao()),
