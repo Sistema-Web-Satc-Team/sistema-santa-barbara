@@ -16,24 +16,12 @@ public interface MembroVinculoRepository extends Repository<MembroVinculo, Integ
 
     MembroVinculo save(MembroVinculo membroVinculo);
 
-    Optional<MembroVinculo> findById(Integer id);
-
     @Query("select v from MembroVinculo v where v.id = :idVinculo and v.membro.id = :idMembro")
     Optional<MembroVinculo> findByIdAndMembroId(@Param("idVinculo") Integer idVinculo,
                                                 @Param("idMembro") UUID idMembro);
 
-    Page<MembroVinculo> findAll(Pageable page);
-
-    Page<MembroVinculo> findByMembroId(UUID idMembro, Pageable page);
-
-    Page<MembroVinculo> findByFuncaoId(long idFuncao, Pageable page);
-
     @EntityGraph(attributePaths = "funcao")
-    List<MembroVinculo> findByMembroIdAndDataTerminoIsNullOrderByDataInicioDesc(UUID membroId);
-
-    @EntityGraph(attributePaths = "funcao")
-    List<MembroVinculo> findByMembroIdAndDataTerminoIsNotNullOrderByDataInicioDesc(UUID membroId);
-
+    List<MembroVinculo> findByMembroId(UUID idMembro);
 
     boolean existsByFuncaoCodeAndDataTerminoIsNull(String code);
 }

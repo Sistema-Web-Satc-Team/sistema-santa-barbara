@@ -56,20 +56,17 @@ public class AutenticarMembroUseCase {
         }
 
 
-        // Invariante interna em MembroVinculo e Funcao garante que nunca teremos mais vínculos que o número
-        // de funções máximo que o sistema suporta.
-        List<MembroVinculo> vinculos = membroVinculoRepository
-            .findByMembroIdAndDataTerminoIsNullOrderByDataInicioDesc(
-                membroCredencial.getMembro().getId()
-            );
 
+        List<MembroVinculo> vinculos = membroVinculoRepository.findByMembroId(membroCredencial.getMembro().getId());
 
-        if (vinculos.isEmpty()) {
+        var vinculosAtivos = vinculos.stream().filter(MembroVinculo::estaAtivo).toList();
+
+        if (vinculosAtivos.isEmpty()) {
             throw new BadRequestException("Você não tem nenhum vinculo ativo!");
         }
 
 
-        List<String> papeis = vinculos.stream()
+        List<String> papeis = vinculosAtivos.stream()
                 .map(vinculo -> vinculo.getFuncao().getCode())
                 .toList();
 

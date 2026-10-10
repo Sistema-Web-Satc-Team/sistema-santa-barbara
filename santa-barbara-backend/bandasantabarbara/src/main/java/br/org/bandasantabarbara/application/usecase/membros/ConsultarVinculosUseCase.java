@@ -5,6 +5,7 @@ import br.org.bandasantabarbara.application.dtos.membros.vinculos.VinculosRespon
 import br.org.bandasantabarbara.application.mapper.VinculoMapper;
 import br.org.bandasantabarbara.exception.NotFoundException;
 import br.org.bandasantabarbara.model.Membro;
+import br.org.bandasantabarbara.model.MembroVinculo;
 import br.org.bandasantabarbara.repositories.MembroRepository;
 import br.org.bandasantabarbara.repositories.MembroVinculoRepository;
 import org.springframework.stereotype.Service;
@@ -32,12 +33,17 @@ public class ConsultarVinculosUseCase {
         Membro membro = this.membroRepository.findById(membroId)
                 .orElseThrow(() -> new NotFoundException("Membro não encontado."));
 
-        var vinculosAtuais = this.membroVinculoRepository.findByMembroIdAndDataTerminoIsNullOrderByDataInicioDesc(membroId);
-        var vinculosEncerrados = this.membroVinculoRepository.findByMembroIdAndDataTerminoIsNotNullOrderByDataInicioDesc(membroId);
+        var vinculos = this.membroVinculoRepository.findByMembroId(membro.getId());
 
-        var vinculos = new VinculosResponse(
+        var vinculosAtuais = vinculos.stream().filter((v) -> v.estaAgendado() || v.estaAtivo()).toList();
+        var vinculosCancelados = vinculos.stream().filter(MembroVinculo::estaCancelado).toList();
+        var vinculosEncerrados = vinculos.stream().filter(MembroVinculo::estaEncerrado).toList();
+
+
+        var vinculosResponse = new VinculosResponse(
                 vinculosAtuais.stream().map(vinculoMapper::toResponse).toList(),
-                vinculosEncerrados.stream().map(vinculoMapper::toResponse).toList()
+                vinculosEncerrados.stream().map(vinculoMapper::toResponse).toList(),
+                vinculosCancelados.stream().map(vinculoMapper::toResponse).toList()
         );
 
         return new MembroVinculosResponse(
@@ -46,7 +52,7 @@ public class ConsultarVinculosUseCase {
                 membro.getDataNascimento(),
                 membro.getIdade(),
                 membro.getSexo(),
-                vinculos
+                vinculosResponse
         );
     }
 }

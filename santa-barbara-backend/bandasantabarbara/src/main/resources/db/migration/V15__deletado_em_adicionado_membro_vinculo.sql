@@ -1,0 +1,1 @@
+ALTER TABLE membro_vinculo ADD COLUMN deletado_em TIMESTAMPTZ;

@@ -262,9 +262,6 @@ public class Membro implements Persistable<UUID> {
     }
 
 
-    // TRADE OFF PROPOSITAL:
-    // sim sei que pode ser um problema de n+1 mas como o negócio é pequeno
-    // por enquanto funciona
     public boolean hasVinculoAtivo() {
         if (!hasVinculos()) return false;
 

@@ -31,6 +31,7 @@ public class MembroController {
 
     private final ConsultarVinculosUseCase consultarVinculosUseCase;
     private final EncerrarVinculoUseCase encerrarVinculoUseCase;
+    private final CancelarVinculoUseCase cancelarVinculoUseCase;
 
     public MembroController(
             CadastrarMembroUseCase cadastrarMembroUseCase,
@@ -38,7 +39,8 @@ public class MembroController {
             AtualizarDadosMembroUseCase atualizarDadosMembroUseCase,
             VincularFuncaoUseCase vincularFuncaoUseCase,
             ConsultarVinculosUseCase consultarVinculosUseCase,
-            EncerrarVinculoUseCase encerrarVinculoUseCase
+            EncerrarVinculoUseCase encerrarVinculoUseCase,
+            CancelarVinculoUseCase cancelarVinculoUseCase
     ) {
         this.cadastrarMembroUseCase = cadastrarMembroUseCase;
         this.consultarMembrosUseCase = consultarMembrosUseCase;
@@ -46,6 +48,7 @@ public class MembroController {
         this.vincularFuncaoUseCase = vincularFuncaoUseCase;
         this.consultarVinculosUseCase = consultarVinculosUseCase;
         this.encerrarVinculoUseCase = encerrarVinculoUseCase;
+        this.cancelarVinculoUseCase = cancelarVinculoUseCase;
     }
 
     @PostMapping
@@ -129,6 +132,16 @@ public class MembroController {
             @PathVariable int idVinculo
     ) {
         this.encerrarVinculoUseCase.execute(idMembro, idVinculo);
+    }
+
+    @DeleteMapping("/{idMembro}/vinculos/{idVinculo}/cancelar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    public void cancelarVinculoMembro(
+            @PathVariable UUID idMembro,
+            @PathVariable int idVinculo
+    ) {
+        this.cancelarVinculoUseCase.cancelar(idMembro, idVinculo);
     }
 
     /*

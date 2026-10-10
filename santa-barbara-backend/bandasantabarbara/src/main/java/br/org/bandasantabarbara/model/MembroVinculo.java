@@ -55,10 +55,15 @@ public class MembroVinculo {
     @Getter
     private Instant atualizadoEm;
 
+    @Column(name = "deletado_em")
+    @Getter
+    private Instant deletadoEm;
+
 
     public enum MembroVinculoStatusEnum {
             ATIVO,
             AGENDADO,
+            CANCELADO,
             ENCERADO;
 
     }
@@ -74,13 +79,33 @@ public class MembroVinculo {
         this.criadoEm = Instant.now();
     }
 
+    public void cancelar() {
+        if (deletadoEm != null) {
+            throw new BadRequestException("O vínculo já está cancelado.");
+        }
+
+        if (!this.estaAgendado()) {
+            throw new BadRequestException("Apenas vínculos com status AGENDADO podem ser cancelados. Vínculos ativos ou encerrados devem ser encerrados por data.");
+        }
+
+        this.deletadoEm = Instant.now();
+    }
+
     public void encerrar() {
-        if (dataTermino != null) {
+
+        if (this.estaCancelado()) {
+            throw new BadRequestException("Um vínculo cancelado não pode ser encerrado.");
+        }
+
+        if (this.estaAgendado()) {
+            throw new BadRequestException("Vínculos com status AGENDADO não podem ser encerrados. Use a rota de cancelamento.");
+        }
+
+        if (this.dataTermino != null) {
             throw new BadRequestException("O vínculo já está encerrado.");
         }
 
         this.dataTermino = LocalDate.now();
-
         this.atualizadoEm = Instant.now();
     }
 
@@ -88,20 +113,30 @@ public class MembroVinculo {
     public boolean estaAtivo() {
         LocalDate hoje = LocalDate.now();
 
-        return !this.dataInicio.isAfter(hoje) && (this.dataTermino == null || !this.dataTermino.isBefore(hoje));
+        return !this.dataInicio.isAfter(hoje) && (this.dataTermino == null || this.dataTermino.isAfter(hoje));
     }
 
     public boolean estaAgendado() {
+        if (this.estaCancelado()) return false;
+
         LocalDate hoje = LocalDate.now();
 
         return this.dataInicio.isAfter(hoje) && this.dataTermino == null;
     }
 
     public boolean estaEncerrado() {
-        return dataTermino != null;
+        LocalDate hoje = LocalDate.now();
+
+        return this.dataTermino != null && !this.dataTermino.isAfter(hoje);
+    }
+
+    public boolean estaCancelado() {
+        return this.deletadoEm != null;
     }
 
     public MembroVinculo.MembroVinculoStatusEnum getStatus() {
+
+        if (this.estaCancelado()) {return MembroVinculoStatusEnum.CANCELADO; }
 
         if (this.estaAtivo()) { return MembroVinculoStatusEnum.ATIVO; }
 
