@@ -13,7 +13,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import tools.jackson.databind.exc.InvalidFormatException;
 
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Slf4j
@@ -93,11 +95,28 @@ public class GlobalExceptionHandler {
             ));
         }
 
-        if (cause instanceof BadRequestException badRequestEx) {
+        if (cause instanceof BadRequestException badRequestEx ) {
             if (badRequestEx.getErrors() != null && !badRequestEx.getErrors().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(badRequestEx.getErrors());
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(badRequestEx.getMessage()));
+        }
+
+        if (cause instanceof  MethodArgumentNotValidException methodArgumentNotValidException) {
+            List<DadosErroValidacao> erros = methodArgumentNotValidException.getFieldErrors().stream()
+                    .map(DadosErroValidacao::new)
+                    .toList();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erros);
+        }
+
+        if (cause instanceof DateTimeParseException dataTimeParseException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new MessageResponse("Formato da data informa é inválido. Use a seguinte formatação: dd/MM/yyyy.")
+            );
+        }
+
+        if (cause instanceof InvalidFormatException invalidFormatException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(invalidFormatException.getMessage()));
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

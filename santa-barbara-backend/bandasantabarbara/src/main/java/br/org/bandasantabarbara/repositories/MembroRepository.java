@@ -24,9 +24,8 @@ public interface MembroRepository extends JpaRepository<Membro, UUID>, JpaSpecif
         SELECT DISTINCT m
         FROM Membro m
         LEFT JOIN FETCH m.vinculos v
-            ON v.dataTermino IS NULL
         LEFT JOIN FETCH v.funcao
         WHERE m.id = :id
     """)
-    Optional<Membro> findByIdWithVinculosAtivos(@Param("id") UUID id);
+    Optional<Membro> findByIdWithVinculos(@Param("id") UUID id);
 }

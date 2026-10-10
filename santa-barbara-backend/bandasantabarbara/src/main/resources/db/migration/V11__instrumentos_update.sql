@@ -1,0 +1,8 @@
+ALTER TABLE instrumento ADD COLUMN file_id VARCHAR(256) NULL;
+ALTER TABLE instrumento ADD COLUMN descricao TEXT NULL;
+
+ALTER TABLE instrumento ADD COLUMN tipo VARCHAR(50);
+
+UPDATE instrumento SET tipo = 'TECLA' WHERE tipo IS NULL;
+
+ALTER TABLE instrumento ALTER COLUMN tipo SET NOT NULL;

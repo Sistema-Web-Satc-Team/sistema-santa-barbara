@@ -114,7 +114,7 @@ public class MembroController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public VinculoResponse criarVinculoMembro(
-            @RequestBody VincularMembroRequest dto,
+            @RequestBody @Valid VincularMembroRequest dto,
             @PathVariable UUID id
     ) {
         return vincularFuncaoUseCase.execute(dto, id);
@@ -142,7 +142,7 @@ public class MembroController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public MembroResponse criarMembroMenor(
-            @RequestBody RegistrarMembroMenorRequest dto
+            @RequestBody @Valid RegistrarMembroMenorRequest dto
     ) {
        return this.cadastrarMembroUseCase.cadastrarMenorIdade(dto);
     }
@@ -151,7 +151,7 @@ public class MembroController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public void atribuirResponsavel(
-            @RequestBody MembroRelacaoRequest dto,
+            @RequestBody @Valid MembroRelacaoRequest dto,
             @PathVariable UUID idMembro,
             @PathVariable UUID idResponsavel
     ) {

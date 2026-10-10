@@ -5,6 +5,7 @@ import br.org.bandasantabarbara.model.MembroVinculo;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 public record VinculoResponse(
 
@@ -16,16 +17,16 @@ public record VinculoResponse(
 
         @Schema(
                 description = "Data e hora em que o vínculo foi iniciado.",
-                example = "2026-10-06T14:30:00Z"
+                example = "2026-10-06"
         )
-        Instant dataInicio,
+        LocalDate dataInicio,
 
         @Schema(
                 description = "Data e hora em que o vínculo foi encerrado. Será nulo enquanto o vínculo estiver ativo.",
-                example = "2027-03-15T18:45:00Z",
+                example = "2027-03-15",
                 nullable = true
         )
-        Instant dataTermino,
+        LocalDate dataTermino,
 
         @Schema(
                 description = "Função exercida pelo membro durante o vínculo."

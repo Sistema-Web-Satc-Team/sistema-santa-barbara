@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 public class SetupApplicationUsecase {
 
@@ -61,7 +63,7 @@ public class SetupApplicationUsecase {
                 () -> new NotFoundException("Função de administração não definida no sistema.")
         );
 
-        var vinculo = new MembroVinculo(membro, funcao);
+        var vinculo = new MembroVinculo(membro, funcao, LocalDate.now());
 
 
         membroRepository.save(membro);

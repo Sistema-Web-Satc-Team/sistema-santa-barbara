@@ -1,8 +1,6 @@
 package br.org.bandasantabarbara.repositories;
 
-import br.org.bandasantabarbara.model.Membro;
 import br.org.bandasantabarbara.model.MembroVinculo;
-import br.org.bandasantabarbara.model.MembroVinculoId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -14,11 +12,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface MembroVinculoRepository extends Repository<MembroVinculo, MembroVinculoId> {
+public interface MembroVinculoRepository extends Repository<MembroVinculo, Integer> {
 
     MembroVinculo save(MembroVinculo membroVinculo);
 
-    Optional<MembroVinculo> findById(MembroVinculoId id);
+    Optional<MembroVinculo> findById(Integer id);
+
+    @Query("select v from MembroVinculo v where v.id = :idVinculo and v.membro.id = :idMembro")
+    Optional<MembroVinculo> findByIdAndMembroId(@Param("idVinculo") Integer idVinculo,
+                                                @Param("idMembro") UUID idMembro);
 
     Page<MembroVinculo> findAll(Pageable page);
 

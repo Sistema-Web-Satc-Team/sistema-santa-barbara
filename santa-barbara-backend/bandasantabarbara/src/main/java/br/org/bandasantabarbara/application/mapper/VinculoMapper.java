@@ -16,7 +16,7 @@ public class VinculoMapper {
 
     public VinculoResponse toResponse(MembroVinculo vinculo) {
         return new VinculoResponse(
-          vinculo.getVinculoId(),
+          vinculo.getId(),
           vinculo.getDataInicio(),
           vinculo.getDataTermino(),
           this.funcaoMapper.toResponse(vinculo.getFuncao()),

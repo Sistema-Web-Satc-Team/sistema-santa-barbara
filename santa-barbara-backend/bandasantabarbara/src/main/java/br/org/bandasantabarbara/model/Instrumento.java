@@ -13,6 +13,7 @@ public class Instrumento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private int id;
 
 
@@ -29,11 +30,13 @@ public class Instrumento {
 
 
     @Column(name = "tipo", nullable = false)
+    @Enumerated(EnumType.STRING)
     @Getter
     private TipoInstrumentoEnum tipo;
 
 
     @Column(name = "descricao")
+    @Getter
     private String descricao;
 
 

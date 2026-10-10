@@ -1,16 +1,11 @@
 package br.org.bandasantabarbara.model;
 
 import br.org.bandasantabarbara.exception.BadRequestException;
-import br.org.bandasantabarbara.exception.EnumBadRequestException;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.text.Normalizer;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 
 //
@@ -24,11 +19,13 @@ import java.util.List;
 @Table(name = "membro_vinculo")
 public class MembroVinculo {
 
-    @EmbeddedId
-    private MembroVinculoId id = new MembroVinculoId();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    public int getVinculoId() {
-        return this.id.getId();
+
+    public int getId() {
+        return this.id;
     }
 
 
@@ -39,20 +36,29 @@ public class MembroVinculo {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_membro", nullable = false)
-    @MapsId("idMembro")
     @Getter
     private Membro membro;
 
     @Column(name = "data_inicio", nullable = false)
     @Getter
-    private Instant dataInicio;
+    private LocalDate dataInicio;
 
     @Column(name = "data_termino")
     @Getter
-    private Instant dataTermino;
+    private LocalDate dataTermino;
+
+    @Column(name = "criado_em")
+    @Getter
+    private Instant criadoEm;
+
+    @Column(name = "atualizado_em")
+    @Getter
+    private Instant atualizadoEm;
+
 
     public enum MembroVinculoStatusEnum {
             ATIVO,
+            AGENDADO,
             ENCERADO;
 
     }
@@ -61,37 +67,45 @@ public class MembroVinculo {
 
     protected  MembroVinculo() { }
 
-    public MembroVinculo(Membro membro, Funcao funcao) {
+    public MembroVinculo(Membro membro, Funcao funcao, LocalDate dataInicio) {
         this.membro = membro;
         this.funcao = funcao;
-        dataInicio = Instant.now();
+        this.dataInicio = dataInicio;
+        this.criadoEm = Instant.now();
     }
 
     public void encerrar() {
-
         if (dataTermino != null) {
             throw new BadRequestException("O vínculo já está encerrado.");
         }
 
-        this.dataTermino = Instant.now();
-    }
+        this.dataTermino = LocalDate.now();
 
-    public void corrigirEncerramento() {
-        if (dataTermino == null) {
-            throw new BadRequestException("O vínculo não está encerrado.");
-        }
-
-        dataTermino = null;
+        this.atualizadoEm = Instant.now();
     }
 
 
     public boolean estaAtivo() {
-        return dataTermino == null;
+        LocalDate hoje = LocalDate.now();
+
+        return !this.dataInicio.isAfter(hoje) && (this.dataTermino == null || !this.dataTermino.isBefore(hoje));
+    }
+
+    public boolean estaAgendado() {
+        LocalDate hoje = LocalDate.now();
+
+        return this.dataInicio.isAfter(hoje) && this.dataTermino == null;
+    }
+
+    public boolean estaEncerrado() {
+        return dataTermino != null;
     }
 
     public MembroVinculo.MembroVinculoStatusEnum getStatus() {
 
         if (this.estaAtivo()) { return MembroVinculoStatusEnum.ATIVO; }
+
+        if (this.estaAgendado()) { return MembroVinculoStatusEnum.AGENDADO; }
 
         return MembroVinculoStatusEnum.ENCERADO;
     }

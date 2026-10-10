@@ -194,7 +194,7 @@ public class Membro implements Persistable<UUID> {
 
     /**
      *
-     * Filhos
+     * Filhos - Apenas para getters
      *
      */
 
@@ -202,47 +202,6 @@ public class Membro implements Persistable<UUID> {
     @OneToMany(mappedBy = "membro", fetch = FetchType.LAZY)
     @Getter
     private List<MembroVinculo> vinculos;
-
-    public void adicionarVinculo(MembroVinculo vinculo) {
-
-        if (this.hasVinculoAtivo()) {
-
-            for (var vinculoAtivo : this.vinculos) {
-                if (vinculoAtivo.getFuncao().getCode()
-                        .equals(vinculo.getFuncao().getCode())
-                ) {
-                    throw new BadRequestException(
-                            "O membro já possui um vínculo incompatível."
-                    );
-                }
-
-                if (vinculoAtivo.getFuncao().getCode().equals("PROFESSOR")
-                    &&
-                    vinculo.getFuncao().getCode().equals("ALUNO")
-                ) {
-                    throw new BadRequestException(
-                            "Um professor não pode ser aluno."
-                    );
-                }
-
-                if (vinculoAtivo.getFuncao().getCode().equals("MAESTRO")
-                     &&
-                    vinculo.getFuncao().getCode().equals("ALUNO")
-                ) {
-                    throw new BadRequestException(
-                            "Um maestro não pode ser aluno."
-                    );
-                }
-            }
-        }
-
-
-        vinculos.add(vinculo);
-    }
-
-    public void removerVinculo(MembroVinculo vinculo) {
-        vinculos.remove(vinculo);
-    }
 
 
     @OneToMany(mappedBy = "membroMenor", fetch = FetchType.LAZY)
@@ -254,6 +213,21 @@ public class Membro implements Persistable<UUID> {
     @Getter
     private MembroCredencial credencial;
 
+    /*
+    *
+    * Getters personalizados
+    *
+     */
+
+    public List<MembroVinculo> getVinculosAtivos() {
+        return this.vinculos.stream().filter(MembroVinculo::estaAtivo).toList();
+    }
+
+
+    // Membro
+    public List<MembroVinculo> getVinculosAbertos() {
+        return vinculos.stream().filter(v -> !v.estaEncerrado()).toList();
+    }
 
 
     /*
