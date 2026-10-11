@@ -106,8 +106,7 @@ public class MembroController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public MembroVinculosResponse listarVinculosMembro(
-            @PathVariable UUID id,
-            @RequestParam(defaultValue = "false") boolean withEncerrados
+            @PathVariable UUID id
     ) {
         return this.consultarVinculosUseCase.execute(id);
     }

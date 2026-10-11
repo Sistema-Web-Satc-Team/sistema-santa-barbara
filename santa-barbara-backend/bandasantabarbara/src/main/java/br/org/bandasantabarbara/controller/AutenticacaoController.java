@@ -7,6 +7,7 @@ import br.org.bandasantabarbara.application.dtos.auth.TokenResponse;
 import br.org.bandasantabarbara.application.dtos.profile.PerfilRequest;
 import br.org.bandasantabarbara.application.dtos.profile.PerfilResponse;
 import br.org.bandasantabarbara.application.usecase.auth.AutenticarMembroUseCase;
+import br.org.bandasantabarbara.application.usecase.auth.PerfilService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,9 +25,11 @@ import java.util.UUID;
 public class AutenticacaoController {
 
     private final AutenticarMembroUseCase autenticarMembroUseCase;
+    private final PerfilService perfilService;
 
-    public AutenticacaoController(AutenticarMembroUseCase autenticarMembroUseCase) {
+    public AutenticacaoController(AutenticarMembroUseCase autenticarMembroUseCase, PerfilService perfilService) {
         this.autenticarMembroUseCase = autenticarMembroUseCase;
+        this.perfilService = perfilService;
     }
 
     @PostMapping("/login")
@@ -60,14 +64,23 @@ public class AutenticacaoController {
                 .body(new MessageResponse("Logout realizado com sucesso!"));
     }
 
-    /*@GetMapping("/me")
+    @GetMapping("/me")
     public ResponseEntity<PerfilResponse> obterDadosDoMembroAutenticado(@AuthenticationPrincipal Jwt jwt) {
         UUID membroId = UUID.fromString(jwt.getSubject());
+        String nomeUsuario = jwt.getClaimAsString("nomeUsuario");
+        List<String> papeis = jwt.getClaim("papeis");
 
-        PerfilResponse perfilCompleto = membroUsecase.obterPerfilDoMembroAutenticado(membroId);
+        PerfilResponse perfilCompleto = perfilService.buscarComClaims(membroId, nomeUsuario, papeis);
 
         return ResponseEntity.ok(perfilCompleto);
     }
+
+    @GetMapping("/me/verificar")
+    public boolean verificar(@AuthenticationPrincipal Jwt jwt) {
+
+        return jwt.getSubject() != null;
+    }
+
 
     @PatchMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -76,6 +89,8 @@ public class AutenticacaoController {
             @RequestBody @Valid PerfilRequest dto
     ) {
         UUID membroId = UUID.fromString(jwt.getSubject());
-        membroUsecase.atualizarPerfilParcialmente(membroId, dto);
-    }*/
+
+        perfilService.atualizar(membroId, dto);
+
+    }
 }

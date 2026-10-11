@@ -1,5 +1,6 @@
 package br.org.bandasantabarbara.application.dtos.profile;
 
+import br.org.bandasantabarbara.model.Membro;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
@@ -19,7 +20,6 @@ public record PerfilResponse(
                 example = "João da Silva"
         )
         String nome,
-
         @Schema(
                 description = "Nome de usuário utilizado para autenticação.",
                 example = "joao.silva"
@@ -45,22 +45,36 @@ public record PerfilResponse(
         String endereco,
 
         @Schema(
-                description = "Funções atualmente vinculadas ao usuário.",
-                example = "[\"MAESTRO\", \"MUSICO_BANDA\"]"
-        )
-        List<String> funcoes,
-
-        @Schema(
                 description = "Data de nascimento do usuário.",
                 example = "15/08/2007"
         )
         LocalDate dataNascimento,
 
         @Schema(
-                description = "Identificador do arquivo utilizado como avatar do usuário.",
+                description = "Sexo do membro.",
+                example = "MASCULINO"
+        )
+        Membro.MembroSexoEnum sexo,
+
+        @Schema(
+                description = "Idade do membro.",
+                example = "22"
+        )
+        int idade,
+
+
+        @Schema(
+                description = "Funções atualmente vinculadas ao usuário.",
+                example = "[\"MAESTRO\", \"MUSICO_BANDA\"]"
+        )
+        List<String> funcoes,
+
+
+        @Schema(
+                description = "Url do avatar do membro.",
                 example = "0199c5d5-7b6f-7abc-8def-123456789abc",
                 nullable = true
         )
-        UUID avatarFileId
+        String avatarURL
 
 ) {}
