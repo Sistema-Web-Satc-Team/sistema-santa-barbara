@@ -6,74 +6,73 @@ import { useForm } from '@tanstack/react-form';
 import { createFileRoute, Navigate, useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import z from 'zod';
-
-import { Avatar, AvatarFallback, AvatarImage } from '#/components/ui/avatar';
+import { ProfileAvatarEditor } from '#/components/business/profile-avatar-editor';
 import { CardDescription, CardTitle } from '#/components/ui/card';
 import { Field, FieldError, FieldLabel } from '#/components/ui/field';
 import { Input } from '#/components/ui/input';
 
 export const Route = createFileRoute('/profile/')({
-  component: Profile,
+    component: Profile,
 })
 
 function Profile() {
-    const { data, state, actions } = useAuth();
+    const { state, actions } = useAuth();
     const navigate = useNavigate();
+    const profile = state.profile;
 
-    const displayName = data?.nome || data?.nomeUsuario || data?.email || "Usuário";
+    const displayName = profile?.nome || profile?.nomeUsuario || profile?.email || "Usuário";
     const userInitials = displayName.slice(0, 2).toUpperCase();
 
     const formSchema = z.object({
         email: z.email().nonempty(),
         endereco: z
-                  .string()
-                  .min(6, "O endereço muito pequeno.")
-                  .max(256, "Endereço muito grande.")
-                  .nonoptional(),
+            .string()
+            .min(6, "O endereço muito pequeno.")
+            .max(256, "Endereço muito grande.")
+            .nonoptional(),
         telefone: z.string()
             .min(11, "Telefone precisa ter no minimo 11 caracteres.")
             .max(20, "Telefone com muitos caracteres")
             .nonoptional()
-      })
-    
-      const form = useForm({
+    })
+
+    const form = useForm({
         defaultValues: {
-          email: data.email,
-          endereco: data.endereco,
-          telefone: data.telefone
+            email: profile?.email,
+            endereco: profile?.endereco,
+            telefone: profile?.telefone
         },
         validators: {
-          onSubmit: formSchema
+            onSubmit: formSchema
         },
-        onSubmit: async ({value}) => {
-          try {
-            await actions.updateProfile({
-                email: value.email.toString(),
-                endereco: value.endereco,
-                telefone: value.telefone
-            })
-    
-            toast.success("Dados atualizados com sucesso.")
-    
-    
-          } catch (err: any) {
-            toast.error(err.message || "Erro ao atualizar os dados.");
-          }
+        onSubmit: async ({ value }) => {
+            try {
+                await actions.updateProfile({
+                    endereco: value.endereco,
+                    telefone: value.telefone
+                })
+
+                toast.success("Dados atualizados com sucesso.")
+
+
+            } catch (err: any) {
+                toast.error(err.message || "Erro ao atualizar os dados.");
+            }
         }
-      })
+    })
 
 
-  
+
     if (state.isLoading) {
-      return (
-        <div className="w-full flex items-center justify-center min-h-screen">
-          <Spinner />
-        </div>
-      )
+        return (
+            <div className="w-full flex items-center justify-center min-h-screen">
+                <Spinner />
+            </div>
+        )
     }
-  
-    if (!data?.id || data?.id == "") {
-      return <Navigate to="/login" replace />
+
+    if (!profile?.id) {
+        return <Navigate to="/login" replace />
     }
 
 
@@ -81,17 +80,14 @@ function Profile() {
         <div className="flex items-center justify-center w-screen h-screen">
             <Card className='min-w-xl'>
                 <CardHeader className="flex flex-row items-center gap-4 space-y-0">
-                    <Avatar className='w-16 h-16'>
-                        <AvatarImage src={data.urlAvatar ?? ""} alt={data.nome} />
-                        <AvatarFallback>
-                            {userInitials}
-                        </AvatarFallback>
-                    </Avatar>
                     <div className="flex flex-col">
                         <CardTitle className="text-2xl">{displayName}</CardTitle>
                         <CardDescription>Gerencie suas informações pessoais e de contato.</CardDescription>
                     </div>
                 </CardHeader>
+                <CardContent className="pb-0">
+                    <ProfileAvatarEditor />
+                </CardContent>
 
                 <form onSubmit={(e) => {
                     e.preventDefault();

@@ -2,8 +2,8 @@ import { api } from "#/lib/axios";
 import type { UUID } from "node:crypto";
 
 export interface LoginRequest {
-    login: string;
-    senha: string;
+  login: string;
+  senha: string;
 }
 
 export interface MeUpdateRequest {
@@ -22,7 +22,7 @@ export interface MeProfileResponse {
   sexo: string,
   idade: number,
   funcoes: string[],
-  avatarUrl: string
+  avatarURL: string
 }
 
 
@@ -67,3 +67,22 @@ export async function uploadUserAvatar(file: File): Promise<string> {
   return data.url;
 }
 */
+
+export async function saveProfilePhoto(
+  photo: Blob,
+  replace: boolean,
+): Promise<void> {
+  const formData = new FormData()
+  formData.append('file', photo, 'foto-perfil.jpg')
+
+  await api.request({
+    method: replace ? 'PUT' : 'POST',
+    url: '/api/v1/auth/me/foto-perfil',
+    data: formData,
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+}
+
+export async function deleteProfilePhoto(): Promise<void> {
+  await api.delete('/api/v1/auth/me/foto-perfil')
+}
