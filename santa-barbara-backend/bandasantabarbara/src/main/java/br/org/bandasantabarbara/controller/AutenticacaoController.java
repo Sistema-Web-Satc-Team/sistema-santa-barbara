@@ -9,6 +9,7 @@ import br.org.bandasantabarbara.application.dtos.profile.PerfilResponse;
 import br.org.bandasantabarbara.application.usecase.auth.AtribuirFotoPerfilUseCase;
 import br.org.bandasantabarbara.application.usecase.auth.AutenticarMembroUseCase;
 import br.org.bandasantabarbara.application.usecase.auth.PerfilService;
+import br.org.bandasantabarbara.application.usecase.auth.RemoverFotoPerfilUseCase;
 import jakarta.validation.Valid;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,11 +27,13 @@ public class AutenticacaoController {
     private final AutenticarMembroUseCase autenticarMembroUseCase;
     private final PerfilService perfilService;
     private final AtribuirFotoPerfilUseCase atribuirFotoPerfilUseCase;
+    private final RemoverFotoPerfilUseCase removerFotoPerfilUseCase;
 
-    public AutenticacaoController(AutenticarMembroUseCase autenticarMembroUseCase, PerfilService perfilService, AtribuirFotoPerfilUseCase atribuirFotoPerfilUseCase) {
+    public AutenticacaoController(AutenticarMembroUseCase autenticarMembroUseCase, PerfilService perfilService, AtribuirFotoPerfilUseCase atribuirFotoPerfilUseCase, RemoverFotoPerfilUseCase removerFotoPerfilUseCase) {
         this.autenticarMembroUseCase = autenticarMembroUseCase;
         this.perfilService = perfilService;
         this.atribuirFotoPerfilUseCase = atribuirFotoPerfilUseCase;
+        this.removerFotoPerfilUseCase = removerFotoPerfilUseCase;
     }
 
     @PostMapping("/login")
@@ -76,11 +79,18 @@ public class AutenticacaoController {
         return ResponseEntity.ok(perfilCompleto);
     }
 
-    @PostMapping(name = "/me/foto-perfil", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/me/foto-perfil", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void adicionarFotoPerfil(@AuthenticationPrincipal Jwt jwt, @RequestParam("file") MultipartFile file) {
         UUID membroId = UUID.fromString(jwt.getSubject());
         this.atribuirFotoPerfilUseCase.execute(membroId, file);
+    }
+
+    @DeleteMapping("/me/foto-perfil")
+    public ResponseEntity<Void> removerAvatar(@AuthenticationPrincipal Jwt jwt) {
+        UUID membroId = UUID.fromString(jwt.getSubject());
+        removerFotoPerfilUseCase.execute(membroId);
+        return ResponseEntity.noContent().build();   // 204
     }
 
     @GetMapping("/me/verificar")
