@@ -1,6 +1,6 @@
 import { api } from '#/lib/axios'
 
-// As 4 categorias fixas. `value` é o que o frontend envia ao backend.
+
 export const INSTRUMENT_TYPES = [
   { value: 'sopro', label: 'Sopro' },
   { value: 'teclas', label: 'Teclas' },
@@ -10,10 +10,7 @@ export const INSTRUMENT_TYPES = [
 
 export type InstrumentType = (typeof INSTRUMENT_TYPES)[number]['value']
 
-/**
- * Aceita variações do que o backend pode devolver ("TECLAS", "tecla",
- * "Percussão") e converte para uma das 4 categorias. null = desconhecido.
- */
+
 export function normalizeInstrumentType(raw: string): InstrumentType | null {
   const value = raw
     .normalize('NFD')
