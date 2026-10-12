@@ -33,6 +33,9 @@ public class MembroController {
     private final EncerrarVinculoUseCase encerrarVinculoUseCase;
     private final CancelarVinculoUseCase cancelarVinculoUseCase;
 
+    private final AdicionarResponsavelUseCase adicionarResponsavelUseCase;
+    private final RemoverResponsavelUseCase removerResponsavelUseCase;
+
     public MembroController(
             CadastrarMembroUseCase cadastrarMembroUseCase,
             ConsultarMembrosUseCase consultarMembrosUseCase,
@@ -40,7 +43,9 @@ public class MembroController {
             VincularFuncaoUseCase vincularFuncaoUseCase,
             ConsultarVinculosUseCase consultarVinculosUseCase,
             EncerrarVinculoUseCase encerrarVinculoUseCase,
-            CancelarVinculoUseCase cancelarVinculoUseCase
+            CancelarVinculoUseCase cancelarVinculoUseCase,
+            AdicionarResponsavelUseCase adicionarResponsavelUseCase,
+            RemoverResponsavelUseCase removerResponsavelUseCase
     ) {
         this.cadastrarMembroUseCase = cadastrarMembroUseCase;
         this.consultarMembrosUseCase = consultarMembrosUseCase;
@@ -49,6 +54,8 @@ public class MembroController {
         this.consultarVinculosUseCase = consultarVinculosUseCase;
         this.encerrarVinculoUseCase = encerrarVinculoUseCase;
         this.cancelarVinculoUseCase = cancelarVinculoUseCase;
+        this.adicionarResponsavelUseCase = adicionarResponsavelUseCase;
+        this.removerResponsavelUseCase = removerResponsavelUseCase;
     }
 
     @PostMapping
@@ -167,9 +174,7 @@ public class MembroController {
             @PathVariable UUID idMembro,
             @PathVariable UUID idResponsavel
     ) {
-
-        // Must to be implemented
-
+        this.adicionarResponsavelUseCase.execute(idResponsavel, idMembro, dto);
     }
 
 
@@ -180,16 +185,8 @@ public class MembroController {
             @PathVariable UUID idMembro,
             @PathVariable UUID idResponsavel
     ) {
-
-        // Must to be implemented
-
+       this.removerResponsavelUseCase.execute(idResponsavel, idMembro);
     }
-
-
-
-
-
-
 
 
 }

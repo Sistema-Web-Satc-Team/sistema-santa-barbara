@@ -52,6 +52,8 @@ public class AtualizarDadosMembroUseCase {
 
         this.membroMapper.toUpdate(request, membro);
 
+        // Em termos lógico:
+        // ¬A ∧ B = B ∧ ¬A
         if (membro.ehMenorDeIdade() && !wasMenorIdade) {
             var responsaveis = this.membroResponsavelRepository.findByMembroMenorId(membroId);
 

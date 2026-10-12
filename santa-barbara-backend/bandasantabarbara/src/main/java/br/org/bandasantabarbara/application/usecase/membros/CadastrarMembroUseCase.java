@@ -11,6 +11,7 @@ import br.org.bandasantabarbara.model.MembroResponsavel;
 import br.org.bandasantabarbara.repositories.MembroRepository;
 import br.org.bandasantabarbara.repositories.MembroResponsavelRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CadastrarMembroUseCase {
@@ -40,27 +41,35 @@ public class CadastrarMembroUseCase {
     }
 
 
-    public MembroResponse cadastrarMenorIdade(RegistrarMembroMenorRequest request) {
-
-        Membro responsavel = this.membroRepository.findById(request.idResponsavel())
-                .orElseThrow(() -> new NotFoundException("Responsável não encontrado.")
+    @Transactional
+    public MembroResponse cadastrarMenorIdade(
+            RegistrarMembroMenorRequest request
+    ) {
+        Membro responsavel = membroRepository
+                .findById(request.idResponsavel())
+                .orElseThrow(() ->
+                        new NotFoundException("Responsável não encontrado.")
                 );
 
-        Membro menor = this.membroMapper.toEntityMenor(request.menor());
+        Membro menor = membroMapper.toEntityMenor(request.menor());
 
         if (!menor.ehMenorDeIdade()) {
-            throw new BadRequestException("Membro informado não é menor de idade.");
+            throw new BadRequestException(
+                    "Membro informado não é menor de idade."
+            );
         }
 
-        MembroResponsavel relacao = new MembroResponsavel();
 
+        menor = membroRepository.save(menor);
+
+
+        MembroResponsavel relacao = new MembroResponsavel();
         relacao.setResponsavel(responsavel);
         relacao.setMembroMenor(menor);
         relacao.setTipoRelacao(request.grauRelacao());
 
-        this.membroResponsavelRepository.save(relacao);
+        membroResponsavelRepository.save(relacao);
 
-        return this.membroMapper.toResponse(menor);
+        return membroMapper.toResponse(menor);
     }
-
 }

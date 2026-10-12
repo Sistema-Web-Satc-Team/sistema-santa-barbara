@@ -18,16 +18,16 @@ public class MembroResponsavel {
     @EmbeddedId
     private MembroResponsavelId id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("idResponsavel")
     @JoinColumn(name = "id_responsavel")
-    @Setter
+    @Setter @Getter
     private Membro responsavel;
 
     @ManyToOne
     @MapsId("idMembroMenor")
     @JoinColumn(name = "id_membro_menor")
-    @Setter
+    @Setter @Getter
     private Membro membroMenor;
 
     @Enumerated(EnumType.STRING)
