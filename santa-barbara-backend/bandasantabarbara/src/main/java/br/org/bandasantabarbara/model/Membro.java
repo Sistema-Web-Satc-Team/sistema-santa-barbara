@@ -121,6 +121,12 @@ public class Membro implements Persistable<UUID> {
     @Column(name = "sexo", nullable = false, columnDefinition = "tipo_sexo_pessoa")
     private MembroSexoEnum sexo;
 
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "avatar_file_id", unique = true)
+    @Setter @Getter
+    private StoredFile avatarFile;
+
     // A
     public void setNome(String nome) {
 

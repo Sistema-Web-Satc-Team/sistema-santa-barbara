@@ -2,12 +2,19 @@ package br.org.bandasantabarbara.application.mapper;
 
 import br.org.bandasantabarbara.application.dtos.membros.MembroRequest;
 import br.org.bandasantabarbara.application.dtos.membros.MembroResponse;
+import br.org.bandasantabarbara.application.services.storage.FileService;
 import br.org.bandasantabarbara.model.Membro;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class MembroMapper {
+
+    private final FileService fileService;
+
+    public MembroMapper(FileService fileService) {
+        this.fileService = fileService;
+    }
 
     public Membro toEntity(MembroRequest request) {
         var membro = new Membro();
@@ -92,7 +99,8 @@ public class MembroMapper {
           membro.getIdade(),
           membro.hasVinculoAtivo(),
           membro.ehMenorDeIdade(),
-          membro.getStatusCredencial()
+          membro.getStatusCredencial(),
+          this.fileService.urlFor(membro.getAvatarFile())
         );
     }
 }

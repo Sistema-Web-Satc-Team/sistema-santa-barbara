@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -79,5 +80,18 @@ public class FileService {
         if (name == null || name.isBlank()) return "arquivo";
         String clean = Path.of(name).getFileName().toString();
         return clean.length() > 128 ? clean.substring(clean.length() - 128) : clean;
+    }
+
+
+    public String urlFor(UUID fileId) {
+        if (fileId == null) return null;
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/files/{id}")
+                .buildAndExpand(fileId)
+                .toUriString();
+    }
+
+    public String urlFor(StoredFile file) {
+        return file == null ? null : urlFor(file.getId());
     }
 }

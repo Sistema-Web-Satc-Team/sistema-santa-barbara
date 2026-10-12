@@ -6,16 +6,15 @@ import br.org.bandasantabarbara.application.dtos.auth.LoginRequest;
 import br.org.bandasantabarbara.application.dtos.auth.TokenResponse;
 import br.org.bandasantabarbara.application.dtos.profile.PerfilRequest;
 import br.org.bandasantabarbara.application.dtos.profile.PerfilResponse;
+import br.org.bandasantabarbara.application.usecase.auth.AtribuirFotoPerfilUseCase;
 import br.org.bandasantabarbara.application.usecase.auth.AutenticarMembroUseCase;
 import br.org.bandasantabarbara.application.usecase.auth.PerfilService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,10 +25,12 @@ public class AutenticacaoController {
 
     private final AutenticarMembroUseCase autenticarMembroUseCase;
     private final PerfilService perfilService;
+    private final AtribuirFotoPerfilUseCase atribuirFotoPerfilUseCase;
 
-    public AutenticacaoController(AutenticarMembroUseCase autenticarMembroUseCase, PerfilService perfilService) {
+    public AutenticacaoController(AutenticarMembroUseCase autenticarMembroUseCase, PerfilService perfilService, AtribuirFotoPerfilUseCase atribuirFotoPerfilUseCase) {
         this.autenticarMembroUseCase = autenticarMembroUseCase;
         this.perfilService = perfilService;
+        this.atribuirFotoPerfilUseCase = atribuirFotoPerfilUseCase;
     }
 
     @PostMapping("/login")
@@ -73,6 +74,13 @@ public class AutenticacaoController {
         PerfilResponse perfilCompleto = perfilService.buscarComClaims(membroId, nomeUsuario, papeis);
 
         return ResponseEntity.ok(perfilCompleto);
+    }
+
+    @PostMapping(name = "/me/foto-perfil", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void adicionarFotoPerfil(@AuthenticationPrincipal Jwt jwt, @RequestParam("file") MultipartFile file) {
+        UUID membroId = UUID.fromString(jwt.getSubject());
+        this.atribuirFotoPerfilUseCase.execute(membroId, file);
     }
 
     @GetMapping("/me/verificar")

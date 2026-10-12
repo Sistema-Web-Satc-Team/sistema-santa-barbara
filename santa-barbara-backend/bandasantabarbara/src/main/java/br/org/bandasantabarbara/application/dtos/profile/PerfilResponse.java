@@ -72,7 +72,7 @@ public record PerfilResponse(
 
         @Schema(
                 description = "Url do avatar do membro.",
-                example = "0199c5d5-7b6f-7abc-8def-123456789abc",
+                example = "example.com/api/v1/files/0199c5d5-7b6f-7abc-8def-123456789abc",
                 nullable = true
         )
         String avatarURL

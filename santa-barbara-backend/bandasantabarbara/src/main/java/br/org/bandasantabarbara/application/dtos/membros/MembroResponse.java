@@ -73,5 +73,12 @@ public record MembroResponse(
                 description = "Status de acesso da credencial do membro ou 'SEM_ACESSO' caso não possua.",
                 example = "ATIVO"
         )
-        String statusCredencialAcesso
+        String statusCredencialAcesso,
+
+
+        @Schema(
+                description = "Foto do membro.",
+                example = "example.com/api/v1/files/nome-foto"
+        )
+        String avatarUrl
 ) {}
