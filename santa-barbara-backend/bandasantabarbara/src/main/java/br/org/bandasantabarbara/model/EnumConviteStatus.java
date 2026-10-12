@@ -6,5 +6,6 @@ public enum EnumConviteStatus {
     ACEITO,
     EXPIRADO,
     FALHA_ENVIO,
-    FALHA_REENVIO
+    FALHA_REENVIO,
+    PENDENTE
 }

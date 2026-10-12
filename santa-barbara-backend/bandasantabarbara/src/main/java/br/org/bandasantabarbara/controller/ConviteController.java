@@ -64,7 +64,7 @@ public class ConviteController {
     public PageResponse<ConsultarConviteResponse> listar(
             @PageableDefault(
                     size = 20,
-                    sort = "nome",
+                    sort = "status",
                     direction = Sort.Direction.ASC
             )
             Pageable pageable
