@@ -42,15 +42,15 @@ public class InstrumentoController {
     }
 
 
-    /*@GetMapping
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    public InstrumentoResponse listarInstrumentos(
-        @ParamPath int id
+    public InstrumentoResponse pegarInstrumentoPorId(
+        @PathParam("id") int id
     ) {
-        return this.instrumentoService.pegarPorId();
+        return this.instrumentoService.pegarPorId(id);
     }
-    */
+
 
 
     @PatchMapping("/{id}")

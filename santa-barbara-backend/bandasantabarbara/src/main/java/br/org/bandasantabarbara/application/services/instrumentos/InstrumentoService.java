@@ -21,6 +21,10 @@ public class InstrumentoService {
         this.instrumentoMapper = instrumentoMapper;
     }
 
+    public InstrumentoResponse pegarPorId(int id) {
+        return this.instrumentoMapper.toResponse(this.instrumentoRepository.findById(id).orElseThrow(() -> new NotFoundException("Instrumento não encontrado.")));
+    }
+
 
     public List<InstrumentoResponse> listarInstrumentos() {
         return this.instrumentoRepository.findAll().stream().map(this.instrumentoMapper::toResponse).toList();
