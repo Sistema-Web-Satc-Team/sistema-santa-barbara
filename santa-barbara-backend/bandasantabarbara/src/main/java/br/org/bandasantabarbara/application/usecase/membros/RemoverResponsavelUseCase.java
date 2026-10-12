@@ -1,6 +1,5 @@
 package br.org.bandasantabarbara.application.usecase.membros;
 
-import br.org.bandasantabarbara.application.dtos.membros.MembroRelacaoRequest;
 import br.org.bandasantabarbara.exception.BadRequestException;
 import br.org.bandasantabarbara.exception.NotFoundException;
 import br.org.bandasantabarbara.model.Membro;

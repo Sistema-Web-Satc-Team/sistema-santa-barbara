@@ -1,6 +1,5 @@
 package br.org.bandasantabarbara.application.dtos.alunos;
 
-import br.org.bandasantabarbara.application.dtos.membros.ResponsavelResponse;
 import br.org.bandasantabarbara.model.Membro;
 
 import java.util.List;

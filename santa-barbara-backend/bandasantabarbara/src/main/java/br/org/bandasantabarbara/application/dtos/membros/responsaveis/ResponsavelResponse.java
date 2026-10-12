@@ -1,6 +1,5 @@
-package br.org.bandasantabarbara.application.dtos.membros;
+package br.org.bandasantabarbara.application.dtos.membros.responsaveis;
 
-import br.org.bandasantabarbara.model.Membro;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 

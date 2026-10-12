@@ -11,6 +11,7 @@ import java.util.UUID;
 
 public interface MembroResponsavelRepository extends JpaRepository<MembroResponsavel, MembroResponsavelId> {
 
+    @EntityGraph(attributePaths = "responsavel")
     List<MembroResponsavel> findByMembroMenorId(UUID idMembroMenor);
 
     boolean existsByResponsavel_Id(UUID idResponsavel);

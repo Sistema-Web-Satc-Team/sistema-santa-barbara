@@ -4,8 +4,8 @@ import br.org.bandasantabarbara.application.dtos.PageResponse;
 import br.org.bandasantabarbara.application.dtos.alunos.AlunoResponsavelResponse;
 import br.org.bandasantabarbara.application.dtos.alunos.AlunoResponse;
 import br.org.bandasantabarbara.application.dtos.alunos.InstrumentoAlunoResponse;
+import br.org.bandasantabarbara.application.mapper.GrauRelacaoMapper;
 import br.org.bandasantabarbara.application.mapper.PageMapper;
-import br.org.bandasantabarbara.model.Instrumento;
 import br.org.bandasantabarbara.model.Membro;
 import br.org.bandasantabarbara.model.MembroResponsavel;
 import br.org.bandasantabarbara.repositories.AlunoProjection;
@@ -27,15 +27,18 @@ public class ConsultarAlunosUseCase {
     private final AlunoRepository alunoRepository;
     private final MembroResponsavelRepository membroResponsavelRepository;
     private final PageMapper pageMapper;
+    private final GrauRelacaoMapper grauRelacaoMapper;
 
     public ConsultarAlunosUseCase(
             AlunoRepository alunoRepository,
             MembroResponsavelRepository membroResponsavelRepository,
-            PageMapper pageMapper
+            PageMapper pageMapper,
+            GrauRelacaoMapper grauRelacaoMapper
     ) {
         this.alunoRepository = alunoRepository;
         this.membroResponsavelRepository = membroResponsavelRepository;
         this.pageMapper = pageMapper;
+        this.grauRelacaoMapper = grauRelacaoMapper;
     }
 
     @Transactional(readOnly = true)
@@ -69,7 +72,7 @@ public class ConsultarAlunosUseCase {
                             responsavel.getResponsavel().getNome(),
                             responsavel.getResponsavel().getEmail(),
                             responsavel.getResponsavel().getTelefone(),
-                            mapearRelacao(
+                            this.grauRelacaoMapper.toResponse(
                                     responsavel.getResponsavel().getSexo(),
                                     responsavel.getTipoRelacao()
                             )
@@ -97,34 +100,5 @@ public class ConsultarAlunosUseCase {
         return pageMapper.toResponse(resultado);
     }
 
-    private String mapearRelacao(
-            Membro.MembroSexoEnum sexo,
-            MembroResponsavel.TipoRelacaoResponsavel relacao
-    ) {
-        if (relacao == MembroResponsavel.TipoRelacaoResponsavel.RESPONSAVEL_LEGAL) {
-            return "Responsável Legal";
-        }
 
-        if (sexo == Membro.MembroSexoEnum.MASCULINO) {
-            return switch (relacao) {
-                case PROGENITORES -> "Pai";
-                case AVO -> "Avô";
-                case PADRINHO -> "Padrinho";
-                case TIO -> "Tio";
-                default -> "Responsável Legal";
-            };
-        }
-
-        if (sexo == Membro.MembroSexoEnum.FEMININO) {
-            return switch (relacao) {
-                case PROGENITORES -> "Mãe";
-                case AVO -> "Avó";
-                case PADRINHO -> "Madrinha";
-                case TIO -> "Tia";
-                default -> "Responsável Legal";
-            };
-        }
-
-        return "Responsável Legal";
-    }
 }

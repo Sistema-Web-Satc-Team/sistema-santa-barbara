@@ -1,4 +1,4 @@
-package br.org.bandasantabarbara.application.dtos.membros;
+package br.org.bandasantabarbara.application.dtos.membros.responsaveis;
 
 import br.org.bandasantabarbara.model.MembroResponsavel;
 

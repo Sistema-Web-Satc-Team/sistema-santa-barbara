@@ -2,12 +2,12 @@ package br.org.bandasantabarbara.controller;
 
 import br.org.bandasantabarbara.application.dtos.*;
 import br.org.bandasantabarbara.application.dtos.membros.*;
+import br.org.bandasantabarbara.application.dtos.membros.responsaveis.MembroRelacaoRequest;
+import br.org.bandasantabarbara.application.dtos.membros.responsaveis.MembroResponsaveisResponse;
 import br.org.bandasantabarbara.application.dtos.membros.vinculos.MembroVinculosResponse;
 import br.org.bandasantabarbara.application.dtos.membros.vinculos.VincularMembroRequest;
 import br.org.bandasantabarbara.application.dtos.membros.vinculos.VinculoResponse;
-import br.org.bandasantabarbara.application.dtos.membros.vinculos.VinculosResponse;
 import br.org.bandasantabarbara.application.usecase.membros.*;
-import br.org.bandasantabarbara.model.Membro;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,8 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.UUID;
 
 @RestController
@@ -35,6 +33,7 @@ public class MembroController {
 
     private final AdicionarResponsavelUseCase adicionarResponsavelUseCase;
     private final RemoverResponsavelUseCase removerResponsavelUseCase;
+    private final ConsultarResponsaveisDependente consultarResponsaveisDependente;
 
     public MembroController(
             CadastrarMembroUseCase cadastrarMembroUseCase,
@@ -45,7 +44,8 @@ public class MembroController {
             EncerrarVinculoUseCase encerrarVinculoUseCase,
             CancelarVinculoUseCase cancelarVinculoUseCase,
             AdicionarResponsavelUseCase adicionarResponsavelUseCase,
-            RemoverResponsavelUseCase removerResponsavelUseCase
+            RemoverResponsavelUseCase removerResponsavelUseCase,
+            ConsultarResponsaveisDependente consultarResponsaveisDependente
     ) {
         this.cadastrarMembroUseCase = cadastrarMembroUseCase;
         this.consultarMembrosUseCase = consultarMembrosUseCase;
@@ -56,6 +56,7 @@ public class MembroController {
         this.cancelarVinculoUseCase = cancelarVinculoUseCase;
         this.adicionarResponsavelUseCase = adicionarResponsavelUseCase;
         this.removerResponsavelUseCase = removerResponsavelUseCase;
+        this.consultarResponsaveisDependente = consultarResponsaveisDependente;
     }
 
     @PostMapping
@@ -186,6 +187,16 @@ public class MembroController {
             @PathVariable UUID idResponsavel
     ) {
        this.removerResponsavelUseCase.execute(idResponsavel, idMembro);
+    }
+
+
+    @GetMapping("/{idMembro}/responsaveis")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    public MembroResponsaveisResponse listarResponsaveisDependente(
+            @PathVariable UUID idMembro
+    ) {
+        return this.consultarResponsaveisDependente.execute(idMembro);
     }
 
 
