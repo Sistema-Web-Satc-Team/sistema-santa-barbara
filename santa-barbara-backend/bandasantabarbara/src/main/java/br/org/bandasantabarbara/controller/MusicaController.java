@@ -4,15 +4,26 @@ package br.org.bandasantabarbara.controller;
 import br.org.bandasantabarbara.application.dtos.PageResponse;
 import br.org.bandasantabarbara.application.dtos.musicas.MusicaRequest;
 import br.org.bandasantabarbara.application.dtos.musicas.MusicaResponse;
+import br.org.bandasantabarbara.application.dtos.partituras.PartituraRequest;
+import br.org.bandasantabarbara.application.dtos.partituras.PartituraResponse;
 import br.org.bandasantabarbara.application.usecase.musica.*;
+import br.org.bandasantabarbara.application.usecase.partitura.AdicionarPartituraMusicaUseCase;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Encoding;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Encoding;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,17 +38,22 @@ public class MusicaController {
     private final AtualizarMusicaUseCase atualizarMusicaUseCase;
     private final RemoverMusicaUseCase removerMusicaUseCase;
 
+    private final AdicionarPartituraMusicaUseCase adicionarPartituraMusicaUseCase;
+
+
     public MusicaController(
             CadastrarMusicaUseCase cadastrarMusicaUseCase,
             SugerirGeneroUseCase sugerirGeneroUseCase,
             ConsultarMusicaUseCase consultarMusicaUseCase,
             AtualizarMusicaUseCase atualizarMusicaUseCase,
-            RemoverMusicaUseCase removerMusicaUseCase) {
+            RemoverMusicaUseCase removerMusicaUseCase,
+            AdicionarPartituraMusicaUseCase adicionarPartituraMusicaUseCase) {
         this.cadastrarMusicaUseCase = cadastrarMusicaUseCase;
         this.sugerirGeneroUseCase = sugerirGeneroUseCase;
         this.consultarMusicaUseCase = consultarMusicaUseCase;
         this.removerMusicaUseCase = removerMusicaUseCase;
         this.atualizarMusicaUseCase = atualizarMusicaUseCase;
+        this.adicionarPartituraMusicaUseCase = adicionarPartituraMusicaUseCase;
     }
 
     @PostMapping
@@ -88,4 +104,20 @@ public class MusicaController {
         this.removerMusicaUseCase.executar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping(value = "/{musicaId}/partituras", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    public PartituraResponse cadastrarPartituras(
+            @PathVariable UUID musicaId,
+            @RequestPart("file") MultipartFile file,
+            @RequestParam("request") String requestJson,
+            ObjectMapper objectMapper
+    ) {
+        PartituraRequest partituraRequest = objectMapper.readValue(requestJson, PartituraRequest.class);
+        return this.adicionarPartituraMusicaUseCase.adicionar(musicaId, file, partituraRequest);
+    }
+
+
+
 }

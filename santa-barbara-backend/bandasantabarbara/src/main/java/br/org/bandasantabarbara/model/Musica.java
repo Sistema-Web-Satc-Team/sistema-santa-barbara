@@ -5,6 +5,7 @@ import com.github.f4b6a3.uuid.alt.GUID;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.domain.Persistable;
+import org.springframework.web.bind.annotation.Mapping;
 
 import java.time.Instant;
 import java.util.*;
@@ -68,6 +69,10 @@ public class Musica implements Persistable<UUID> {
     )
     @Getter
     private Set<Genero> generos = new HashSet<>();
+
+    @OneToMany(mappedBy = "musica")
+    @Getter
+    private List<Partitura> partituras = new ArrayList<>();
 
 
     /*

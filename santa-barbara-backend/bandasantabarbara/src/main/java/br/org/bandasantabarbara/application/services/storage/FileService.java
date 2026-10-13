@@ -91,6 +91,18 @@ public class FileService {
                 .toUriString();
     }
 
+    public String urlForByResource(String resource, UUID fileId) {
+        if (fileId == null) return null;
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(resource + "/files/{id}")
+                .buildAndExpand(fileId)
+                .toUriString();
+    }
+
+    public String urlForByResource(String resource, StoredFile file) {
+        return file == null ? null : urlForByResource(resource, file.getId());
+    }
+
     public String urlFor(StoredFile file) {
         return file == null ? null : urlFor(file.getId());
     }
