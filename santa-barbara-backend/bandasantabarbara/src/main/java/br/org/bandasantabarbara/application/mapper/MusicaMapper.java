@@ -36,4 +36,22 @@ public class MusicaMapper {
             musica.getGeneros().stream().map(Genero::getNome).collect(Collectors.toSet())
         );
     }
+
+    public void toUpdate(Musica musica, MusicaRequest request) {
+
+        if (request.titulo() != null) {
+            musica.setTitulo(request.titulo());
+        }
+
+        if (request.compositor() != null) {
+            musica.setCompositor(request.compositor());
+        }
+
+        if (request.generos() != null) {
+            var generos = request.generos().stream().map(Genero::new).collect(Collectors.toSet());
+            musica.setGeneros(generos);
+        }
+    }
+
+
 }

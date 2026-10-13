@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import java.util.Set;
 
 public record MusicaRequest (
-        @NotBlank
+
         @Schema(
                 description = "Título da música",
                 example = "Evidências",
