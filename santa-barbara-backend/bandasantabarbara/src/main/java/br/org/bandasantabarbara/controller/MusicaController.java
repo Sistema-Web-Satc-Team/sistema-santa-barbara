@@ -8,6 +8,7 @@ import br.org.bandasantabarbara.application.dtos.partituras.PartituraRequest;
 import br.org.bandasantabarbara.application.dtos.partituras.PartituraResponse;
 import br.org.bandasantabarbara.application.usecase.musica.*;
 import br.org.bandasantabarbara.application.usecase.partitura.AdicionarPartituraMusicaUseCase;
+import br.org.bandasantabarbara.application.usecase.partitura.AtualizarPartituraUseCase;
 import br.org.bandasantabarbara.application.usecase.partitura.ListarPartiturasMusicaUseCase;
 import br.org.bandasantabarbara.application.usecase.partitura.RemoverPartituraUseCase;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,9 +23,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Encoding;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
@@ -43,6 +42,7 @@ public class MusicaController {
     private final AdicionarPartituraMusicaUseCase adicionarPartituraMusicaUseCase;
     private final ListarPartiturasMusicaUseCase listarPartiturasMusicaUseCase;
     private final RemoverPartituraUseCase removerPartituraUseCase;
+    private final AtualizarPartituraUseCase atualizarPartituraUseCase;
 
 
     public MusicaController(
@@ -53,7 +53,8 @@ public class MusicaController {
             RemoverMusicaUseCase removerMusicaUseCase,
             AdicionarPartituraMusicaUseCase adicionarPartituraMusicaUseCase,
             ListarPartiturasMusicaUseCase listarPartiturasMusicaUseCase,
-            RemoverPartituraUseCase removerPartituraUseCase) {
+            RemoverPartituraUseCase removerPartituraUseCase,
+            AtualizarPartituraUseCase atualizarPartituraUseCase) {
         this.cadastrarMusicaUseCase = cadastrarMusicaUseCase;
         this.sugerirGeneroUseCase = sugerirGeneroUseCase;
         this.consultarMusicaUseCase = consultarMusicaUseCase;
@@ -62,6 +63,7 @@ public class MusicaController {
         this.adicionarPartituraMusicaUseCase = adicionarPartituraMusicaUseCase;
         this.listarPartiturasMusicaUseCase = listarPartiturasMusicaUseCase;
         this.removerPartituraUseCase = removerPartituraUseCase;
+        this.atualizarPartituraUseCase = atualizarPartituraUseCase;
     }
 
     @PostMapping
@@ -146,6 +148,17 @@ public class MusicaController {
     public ResponseEntity<Void> removerPartitura(@PathVariable UUID id) {
         this.removerPartituraUseCase.executar(id);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @PutMapping("/partituras/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    public PartituraResponse atualizarPartitura(
+            @PathVariable UUID id,
+            @RequestBody @Valid PartituraRequest request
+    ) {
+        return this.atualizarPartituraUseCase.executar(id, request);
     }
 
 
