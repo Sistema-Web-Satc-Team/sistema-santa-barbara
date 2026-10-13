@@ -17,6 +17,9 @@ public interface PartituraRepository extends JpaRepository<Partitura, UUID> {
     @Query("SELECT p FROM Partitura p JOIN FETCH p.file WHERE p.file.id = :fileId")
     Optional<Partitura> findByFileIdWithFile(@Param("fileId") UUID fileId);
 
+    @Query("SELECT p FROM Partitura p LEFT JOIN FETCH p.file WHERE p.id = :id")
+    Optional<Partitura> findByIdWithFile(@Param("id") UUID id);
+
 
     List<Partitura> findByMusicaId(UUID musicaId);
 }

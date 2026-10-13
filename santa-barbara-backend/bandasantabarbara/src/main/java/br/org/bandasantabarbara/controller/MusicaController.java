@@ -9,6 +9,7 @@ import br.org.bandasantabarbara.application.dtos.partituras.PartituraResponse;
 import br.org.bandasantabarbara.application.usecase.musica.*;
 import br.org.bandasantabarbara.application.usecase.partitura.AdicionarPartituraMusicaUseCase;
 import br.org.bandasantabarbara.application.usecase.partitura.ListarPartiturasMusicaUseCase;
+import br.org.bandasantabarbara.application.usecase.partitura.RemoverPartituraUseCase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Encoding;
@@ -41,6 +42,7 @@ public class MusicaController {
 
     private final AdicionarPartituraMusicaUseCase adicionarPartituraMusicaUseCase;
     private final ListarPartiturasMusicaUseCase listarPartiturasMusicaUseCase;
+    private final RemoverPartituraUseCase removerPartituraUseCase;
 
 
     public MusicaController(
@@ -50,7 +52,8 @@ public class MusicaController {
             AtualizarMusicaUseCase atualizarMusicaUseCase,
             RemoverMusicaUseCase removerMusicaUseCase,
             AdicionarPartituraMusicaUseCase adicionarPartituraMusicaUseCase,
-            ListarPartiturasMusicaUseCase listarPartiturasMusicaUseCase) {
+            ListarPartiturasMusicaUseCase listarPartiturasMusicaUseCase,
+            RemoverPartituraUseCase removerPartituraUseCase) {
         this.cadastrarMusicaUseCase = cadastrarMusicaUseCase;
         this.sugerirGeneroUseCase = sugerirGeneroUseCase;
         this.consultarMusicaUseCase = consultarMusicaUseCase;
@@ -58,6 +61,7 @@ public class MusicaController {
         this.atualizarMusicaUseCase = atualizarMusicaUseCase;
         this.adicionarPartituraMusicaUseCase = adicionarPartituraMusicaUseCase;
         this.listarPartiturasMusicaUseCase = listarPartiturasMusicaUseCase;
+        this.removerPartituraUseCase = removerPartituraUseCase;
     }
 
     @PostMapping
@@ -134,6 +138,14 @@ public class MusicaController {
             @PathVariable UUID musicaId
     ) {
         return this.listarPartiturasMusicaUseCase.executar(musicaId);
+    }
+
+    @DeleteMapping("/partituras/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    public ResponseEntity<Void> removerPartitura(@PathVariable UUID id) {
+        this.removerPartituraUseCase.executar(id);
+        return ResponseEntity.noContent().build();
     }
 
 

@@ -76,6 +76,12 @@ public class FileService {
         storage.delete(file.getStorageKey());
     }
 
+    @Transactional
+    public void delete(StoredFile file) {
+        repository.delete(file);
+        storage.delete(file.getStorageKey());
+    }
+
     private String sanitize(String name) {
         if (name == null || name.isBlank()) return "arquivo";
         String clean = Path.of(name).getFileName().toString();
