@@ -4,6 +4,9 @@ import br.org.bandasantabarbara.exception.BadRequestException;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+
 @Entity
 @Table(name = "genero")
 public class Genero {
@@ -41,7 +44,15 @@ public class Genero {
                 .replaceAll("\\s+", " ")
                 .strip();
 
-        this.slug = this.nome.replace(" ", "-");
+
+
+        String nomeComAcentosDecompostos = Normalizer.normalize(this.nome, Normalizer.Form.NFD);
+
+        String nomeSemAcentos = DIACRITICS.matcher(nomeComAcentosDecompostos).replaceAll("");
+
+        this.slug = nomeSemAcentos.replace(" ", "-");
 
     }
+
+    private static final Pattern DIACRITICS = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
 }
