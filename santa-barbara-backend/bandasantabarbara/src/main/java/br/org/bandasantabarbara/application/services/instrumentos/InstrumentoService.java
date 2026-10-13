@@ -6,6 +6,7 @@ import br.org.bandasantabarbara.application.mapper.InstrumentoMapper;
 import br.org.bandasantabarbara.exception.NotFoundException;
 import br.org.bandasantabarbara.repositories.InstrumentoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,10 +37,12 @@ public class InstrumentoService {
         ));
     }
 
+    @Transactional
     public InstrumentoResponse atualizarInstrumento(int id, InstrumentoRequest request) {
         var instrumento = this.instrumentoRepository.findById(id).orElseThrow(() -> new NotFoundException("Instrumento não foi encontrado."));
 
         this.instrumentoMapper.toUpdate(request, instrumento);
+        this.instrumentoRepository.save(instrumento);
 
         return this.instrumentoMapper.toResponse(instrumento);
     }

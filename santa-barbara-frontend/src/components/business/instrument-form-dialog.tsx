@@ -26,7 +26,7 @@ import z from 'zod'
 
 const formSchema = z.object({
   nome: z.string().trim().min(2, 'O nome deve ter pelo menos 2 caracteres.'),
-  descricao: z.string().trim(),
+  descricao: z.string().trim().min(1, 'Informe a descrição do instrumento.'),
   tipo: z
     .string()
     .refine(
@@ -38,13 +38,12 @@ const formSchema = z.object({
 interface InstrumentFormDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  /** Se vier preenchido, o diálogo edita este instrumento; senão cadastra um novo. */
+
   instrumento: Instrumento | null
   onSubmit: (values: InstrumentoInput) => Promise<void>
 }
 
-// Quem usa deve passar `key={instrumento?.id ?? 'novo'}` para o formulário
-// recomeçar com os valores certos a cada instrumento.
+
 export function InstrumentFormDialog({
   open,
   onOpenChange,
@@ -74,7 +73,7 @@ export function InstrumentFormDialog({
         })
         handleOpenChange(false)
       } catch {
-        // O toast de erro já foi exibido pela mutation; o diálogo continua aberto.
+
       }
     },
   })
@@ -156,20 +155,28 @@ export function InstrumentFormDialog({
           </form.Field>
 
           <form.Field name="descricao">
-            {(field) => (
-              <Field className="text-foreground">
-                <FieldLabel htmlFor={field.name}>Descrição</FieldLabel>
-                <Textarea
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Fale um pouco sobre o instrumento"
-                  rows={4}
-                />
-              </Field>
-            )}
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && field.state.meta.errors.length > 0
+              return (
+                <Field data-invalid={isInvalid} className="text-foreground">
+                  <FieldLabel htmlFor={field.name}>Descrição*</FieldLabel>
+                  <Textarea
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    aria-invalid={isInvalid}
+                    placeholder="Fale um pouco sobre o instrumento"
+                    rows={4}
+                  />
+                  {isInvalid && (
+                    <FieldError errors={field.state.meta.errors} className="-mt-1" />
+                  )}
+                </Field>
+              )
+            }}
           </form.Field>
 
           <DialogFooter>

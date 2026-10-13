@@ -6,7 +6,6 @@ interface InstrumentBadgeProps {
   tipo: string
 }
 
-/** [ (ícone) nome do instrumento ] */
 export function InstrumentBadge({ nome, tipo }: InstrumentBadgeProps) {
   return (
     <Badge variant="secondary" className="gap-1.5">

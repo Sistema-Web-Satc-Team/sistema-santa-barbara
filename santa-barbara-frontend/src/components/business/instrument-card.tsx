@@ -6,7 +6,7 @@ import type { ReactNode } from 'react'
 
 interface InstrumentCardProps {
   instrumento: Pick<Instrumento, 'nome' | 'descricao' | 'tipo'>
-  /** Slot opcional para botões (editar, remover...). Fica no canto do card. */
+
   actions?: ReactNode
 }
 

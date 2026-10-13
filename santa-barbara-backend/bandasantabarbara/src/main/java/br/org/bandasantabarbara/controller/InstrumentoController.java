@@ -3,7 +3,6 @@ package br.org.bandasantabarbara.controller;
 import br.org.bandasantabarbara.application.dtos.instrumentos.InstrumentoRequest;
 import br.org.bandasantabarbara.application.dtos.instrumentos.InstrumentoResponse;
 import br.org.bandasantabarbara.application.services.instrumentos.InstrumentoService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +45,7 @@ public class InstrumentoController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public InstrumentoResponse pegarInstrumentoPorId(
-        @PathParam("id") int id
+        @PathVariable int id
     ) {
         return this.instrumentoService.pegarPorId(id);
     }
@@ -57,7 +56,7 @@ public class InstrumentoController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public InstrumentoResponse atualizarInstrumentos(
-            @PathParam("id") int id,
+            @PathVariable int id,
             @RequestBody InstrumentoRequest body
     ) {
         return this.instrumentoService.atualizarInstrumento(id, body);
@@ -68,7 +67,7 @@ public class InstrumentoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public void removerInstrumentos(
-            @PathParam("id") int id
+            @PathVariable int id
     ) {
         this.instrumentoService.removerInstrumento(id);
     }
@@ -80,4 +79,3 @@ public class InstrumentoController {
 
 
 }
-
