@@ -7,6 +7,7 @@ export interface AuthContextProps {
         isLoading: boolean;
         error: Error | null;
         isUpdating: boolean;
+        loggedIn: () => boolean;
     },
     actions: {
         updateProfile: (newData: MeUpdateRequest) => Promise<void>;

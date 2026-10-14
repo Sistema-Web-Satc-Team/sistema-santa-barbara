@@ -47,7 +47,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             profile: user ?? null,
             isLoading,
             error: error as Error | null,
-            isUpdating: updateMutation.isPending
+            isUpdating: updateMutation.isPending,
+            loggedIn: () => { return user != null; }
         },
         actions: {
             updateProfile: (newData: MeUpdateRequest) => updateMutation.mutateAsync(newData),
@@ -70,6 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     throw new Error("Ocorreu um erro interno.");
                 }
             }
+           
         }
     }
 

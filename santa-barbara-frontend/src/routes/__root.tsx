@@ -11,6 +11,7 @@ import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
 
 import { AuthProvider } from '#/context/auth-provider'
+import { fetchProfile } from '#/lib/profile'
 import type { QueryClient } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
 
@@ -20,6 +21,15 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  beforeLoad: async ({ context }) => {
+    const profile = await context.queryClient.query({
+      queryKey: ['user-profile'],
+      queryFn: fetchProfile,  
+      staleTime: 1000 * 60 * 5,
+    })
+
+    return { profile }           
+  },
   head: () => ({
     meta: [
       {

@@ -6,11 +6,10 @@ import {
   FieldLabel
 } from "@/components/ui/field"
 import { useForm } from "@tanstack/react-form"
-import { createFileRoute, Navigate, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { toast } from "sonner"
 import * as z from "zod"
 
-import { Spinner } from "#/components/ui/spinner"
 import { useAuth } from "#/hooks/use-auth"
 import { Input } from "@/components/ui/input"
 
@@ -24,14 +23,17 @@ import {
 } from "@/components/ui/input-group"
 */
 
-export const Route = createFileRoute('/login/')({
+export const Route = createFileRoute('/login')({
+  beforeLoad: ({ context }) => {
+    if (context.profile) throw redirect({ to: '/' })
+  },
   component: Login,
 })
 
 
 function Login() {
   const navigate = useNavigate();
-  const { state, actions } = useAuth();
+  const { actions } = useAuth();
 
   const formSchema = z.object({
     email: z.email(),
@@ -59,7 +61,7 @@ function Login() {
         toast.success("Login efetuado com sucesso.")
 
         await navigate({
-          to: "/dashboard/membros"
+          to: "/"
         })
 
       } catch (err: any) {
@@ -67,19 +69,6 @@ function Login() {
       }
     }
   })
-
-
-  if (state.isLoading) {
-    return (
-      <div className="w-full flex items-center justify-center min-h-screen">
-        <Spinner />
-      </div>
-    )
-  }
-
-  if (state.profile?.id) {
-    return <Navigate to="/dashboard/membros" replace />
-  }
 
 
 

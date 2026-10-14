@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/dashboard/_layout/convites/')({
+export const Route = createFileRoute('/_auth/dashboard/_layout/convites/')({
   component: ConvitarMembro,
 })
 

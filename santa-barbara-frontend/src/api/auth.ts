@@ -53,21 +53,6 @@ export async function updateUserProfile(data: MeUpdateRequest) {
   await api.patch('/api/v1/auth/me', data);
 }
 
-/*
-export async function uploadUserAvatar(file: File): Promise<string> {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  const { data } = await api.post<{ url: string }>('/api/v1/auth/?', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-
-  return data.url;
-}
-*/
-
 export async function saveProfilePhoto(
   photo: Blob,
   replace: boolean,

@@ -22,7 +22,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react'
 import { useRef, useState } from 'react'
 
-export const Route = createFileRoute('/dashboard/_layout/instrumentos/')({
+export const Route = createFileRoute('/_auth/dashboard/_layout/instrumentos/')({
   component: Instrumentos,
 })
 

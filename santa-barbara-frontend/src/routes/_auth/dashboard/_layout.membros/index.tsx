@@ -8,7 +8,7 @@ import { useMembers } from "#/hooks/use-members";
 import { createFileRoute } from '@tanstack/react-router';
 import { useRef } from "react";
 
-export const Route = createFileRoute('/dashboard/_layout/membros/')({
+export const Route = createFileRoute('/_auth/dashboard/_layout/membros/')({
   component: Membros,
 })
 

@@ -9,141 +9,136 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as DashboardLayoutRouteImport } from './routes/dashboard/_layout'
-import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthIndexRouteImport } from './routes/_auth/index'
 import { Route as ProfileIndexRouteImport } from './routes/profile/index'
-import { Route as DashboardLayoutAlunosIndexRouteImport } from './routes/dashboard/_layout.alunos/index'
-import { Route as DashboardLayoutConvitesIndexRouteImport } from './routes/dashboard/_layout.convites/index'
-import { Route as DashboardLayoutFuncionariosIndexRouteImport } from './routes/dashboard/_layout.funcionarios/index'
-import { Route as DashboardLayoutInstrumentosIndexRouteImport } from './routes/dashboard/_layout.instrumentos/index'
-import { Route as DashboardLayoutMembrosIndexRouteImport } from './routes/dashboard/_layout.membros/index'
-import { Route as DashboardLayoutMusicosIndexRouteImport } from './routes/dashboard/_layout.musicos/index'
-import { Route as DashboardLayoutPapeisIndexRouteImport } from './routes/dashboard/_layout.papeis/index'
-import { Route as DashboardLayoutProfessoresIndexRouteImport } from './routes/dashboard/_layout.professores/index'
+import { Route as AuthDashboardLayoutRouteImport } from './routes/_auth/dashboard/_layout'
+import { Route as AuthDashboardLayoutAlunosIndexRouteImport } from './routes/_auth/dashboard/_layout.alunos/index'
+import { Route as AuthDashboardLayoutConvitesIndexRouteImport } from './routes/_auth/dashboard/_layout.convites/index'
+import { Route as AuthDashboardLayoutInstrumentosIndexRouteImport } from './routes/_auth/dashboard/_layout.instrumentos/index'
+import { Route as AuthDashboardLayoutMembrosIndexRouteImport } from './routes/_auth/dashboard/_layout.membros/index'
+import { Route as AuthDashboardLayoutMusicosIndexRouteImport } from './routes/_auth/dashboard/_layout.musicos/index'
+import { Route as AuthDashboardLayoutPapeisIndexRouteImport } from './routes/_auth/dashboard/_layout.papeis/index'
+import { Route as AuthDashboardLayoutProfessoresIndexRouteImport } from './routes/_auth/dashboard/_layout.professores/index'
 
-const IndexRoute = IndexRouteImport.update({
+const AuthRoute = AuthRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardLayoutRoute = DashboardLayoutRouteImport.update({
-  id: '/dashboard/_layout',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginIndexRoute = LoginIndexRouteImport.update({
-  id: '/login/',
-  path: '/login/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthRoute,
 } as any)
 const ProfileIndexRoute = ProfileIndexRouteImport.update({
   id: '/profile/',
   path: '/profile/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardLayoutAlunosIndexRoute =
-  DashboardLayoutAlunosIndexRouteImport.update({
+const AuthDashboardLayoutRoute = AuthDashboardLayoutRouteImport.update({
+  id: '/dashboard/_layout',
+  path: '/dashboard',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthDashboardLayoutAlunosIndexRoute =
+  AuthDashboardLayoutAlunosIndexRouteImport.update({
     id: '/alunos/',
     path: '/alunos/',
-    getParentRoute: () => DashboardLayoutRoute,
+    getParentRoute: () => AuthDashboardLayoutRoute,
   } as any)
-const DashboardLayoutConvitesIndexRoute =
-  DashboardLayoutConvitesIndexRouteImport.update({
+const AuthDashboardLayoutConvitesIndexRoute =
+  AuthDashboardLayoutConvitesIndexRouteImport.update({
     id: '/convites/',
     path: '/convites/',
-    getParentRoute: () => DashboardLayoutRoute,
+    getParentRoute: () => AuthDashboardLayoutRoute,
   } as any)
-const DashboardLayoutFuncionariosIndexRoute =
-  DashboardLayoutFuncionariosIndexRouteImport.update({
-    id: '/funcionarios/',
-    path: '/funcionarios/',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
-const DashboardLayoutInstrumentosIndexRoute =
-  DashboardLayoutInstrumentosIndexRouteImport.update({
+const AuthDashboardLayoutInstrumentosIndexRoute =
+  AuthDashboardLayoutInstrumentosIndexRouteImport.update({
     id: '/instrumentos/',
     path: '/instrumentos/',
-    getParentRoute: () => DashboardLayoutRoute,
+    getParentRoute: () => AuthDashboardLayoutRoute,
   } as any)
-const DashboardLayoutMembrosIndexRoute =
-  DashboardLayoutMembrosIndexRouteImport.update({
+const AuthDashboardLayoutMembrosIndexRoute =
+  AuthDashboardLayoutMembrosIndexRouteImport.update({
     id: '/membros/',
     path: '/membros/',
-    getParentRoute: () => DashboardLayoutRoute,
+    getParentRoute: () => AuthDashboardLayoutRoute,
   } as any)
-const DashboardLayoutMusicosIndexRoute =
-  DashboardLayoutMusicosIndexRouteImport.update({
+const AuthDashboardLayoutMusicosIndexRoute =
+  AuthDashboardLayoutMusicosIndexRouteImport.update({
     id: '/musicos/',
     path: '/musicos/',
-    getParentRoute: () => DashboardLayoutRoute,
+    getParentRoute: () => AuthDashboardLayoutRoute,
   } as any)
-const DashboardLayoutPapeisIndexRoute =
-  DashboardLayoutPapeisIndexRouteImport.update({
+const AuthDashboardLayoutPapeisIndexRoute =
+  AuthDashboardLayoutPapeisIndexRouteImport.update({
     id: '/papeis/',
     path: '/papeis/',
-    getParentRoute: () => DashboardLayoutRoute,
+    getParentRoute: () => AuthDashboardLayoutRoute,
   } as any)
-const DashboardLayoutProfessoresIndexRoute =
-  DashboardLayoutProfessoresIndexRouteImport.update({
+const AuthDashboardLayoutProfessoresIndexRoute =
+  AuthDashboardLayoutProfessoresIndexRouteImport.update({
     id: '/professores/',
     path: '/professores/',
-    getParentRoute: () => DashboardLayoutRoute,
+    getParentRoute: () => AuthDashboardLayoutRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardLayoutRouteWithChildren
-  '/login/': typeof LoginIndexRoute
+  '/': typeof AuthIndexRoute
+  '/login': typeof LoginRoute
   '/profile/': typeof ProfileIndexRoute
-  '/dashboard/alunos/': typeof DashboardLayoutAlunosIndexRoute
-  '/dashboard/convites/': typeof DashboardLayoutConvitesIndexRoute
-  '/dashboard/funcionarios/': typeof DashboardLayoutFuncionariosIndexRoute
-  '/dashboard/instrumentos/': typeof DashboardLayoutInstrumentosIndexRoute
-  '/dashboard/membros/': typeof DashboardLayoutMembrosIndexRoute
-  '/dashboard/musicos/': typeof DashboardLayoutMusicosIndexRoute
-  '/dashboard/papeis/': typeof DashboardLayoutPapeisIndexRoute
-  '/dashboard/professores/': typeof DashboardLayoutProfessoresIndexRoute
+  '/dashboard': typeof AuthDashboardLayoutRouteWithChildren
+  '/dashboard/alunos/': typeof AuthDashboardLayoutAlunosIndexRoute
+  '/dashboard/convites/': typeof AuthDashboardLayoutConvitesIndexRoute
+  '/dashboard/instrumentos/': typeof AuthDashboardLayoutInstrumentosIndexRoute
+  '/dashboard/membros/': typeof AuthDashboardLayoutMembrosIndexRoute
+  '/dashboard/musicos/': typeof AuthDashboardLayoutMusicosIndexRoute
+  '/dashboard/papeis/': typeof AuthDashboardLayoutPapeisIndexRoute
+  '/dashboard/professores/': typeof AuthDashboardLayoutProfessoresIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardLayoutRouteWithChildren
-  '/login': typeof LoginIndexRoute
+  '/login': typeof LoginRoute
+  '/': typeof AuthIndexRoute
   '/profile': typeof ProfileIndexRoute
-  '/dashboard/alunos': typeof DashboardLayoutAlunosIndexRoute
-  '/dashboard/convites': typeof DashboardLayoutConvitesIndexRoute
-  '/dashboard/funcionarios': typeof DashboardLayoutFuncionariosIndexRoute
-  '/dashboard/instrumentos': typeof DashboardLayoutInstrumentosIndexRoute
-  '/dashboard/membros': typeof DashboardLayoutMembrosIndexRoute
-  '/dashboard/musicos': typeof DashboardLayoutMusicosIndexRoute
-  '/dashboard/papeis': typeof DashboardLayoutPapeisIndexRoute
-  '/dashboard/professores': typeof DashboardLayoutProfessoresIndexRoute
+  '/dashboard': typeof AuthDashboardLayoutRouteWithChildren
+  '/dashboard/alunos': typeof AuthDashboardLayoutAlunosIndexRoute
+  '/dashboard/convites': typeof AuthDashboardLayoutConvitesIndexRoute
+  '/dashboard/instrumentos': typeof AuthDashboardLayoutInstrumentosIndexRoute
+  '/dashboard/membros': typeof AuthDashboardLayoutMembrosIndexRoute
+  '/dashboard/musicos': typeof AuthDashboardLayoutMusicosIndexRoute
+  '/dashboard/papeis': typeof AuthDashboardLayoutPapeisIndexRoute
+  '/dashboard/professores': typeof AuthDashboardLayoutProfessoresIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/dashboard/_layout': typeof DashboardLayoutRouteWithChildren
-  '/login/': typeof LoginIndexRoute
+  '/_auth': typeof AuthRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_auth/': typeof AuthIndexRoute
   '/profile/': typeof ProfileIndexRoute
-  '/dashboard/_layout/alunos/': typeof DashboardLayoutAlunosIndexRoute
-  '/dashboard/_layout/convites/': typeof DashboardLayoutConvitesIndexRoute
-  '/dashboard/_layout/funcionarios/': typeof DashboardLayoutFuncionariosIndexRoute
-  '/dashboard/_layout/instrumentos/': typeof DashboardLayoutInstrumentosIndexRoute
-  '/dashboard/_layout/membros/': typeof DashboardLayoutMembrosIndexRoute
-  '/dashboard/_layout/musicos/': typeof DashboardLayoutMusicosIndexRoute
-  '/dashboard/_layout/papeis/': typeof DashboardLayoutPapeisIndexRoute
-  '/dashboard/_layout/professores/': typeof DashboardLayoutProfessoresIndexRoute
+  '/_auth/dashboard/_layout': typeof AuthDashboardLayoutRouteWithChildren
+  '/_auth/dashboard/_layout/alunos/': typeof AuthDashboardLayoutAlunosIndexRoute
+  '/_auth/dashboard/_layout/convites/': typeof AuthDashboardLayoutConvitesIndexRoute
+  '/_auth/dashboard/_layout/instrumentos/': typeof AuthDashboardLayoutInstrumentosIndexRoute
+  '/_auth/dashboard/_layout/membros/': typeof AuthDashboardLayoutMembrosIndexRoute
+  '/_auth/dashboard/_layout/musicos/': typeof AuthDashboardLayoutMusicosIndexRoute
+  '/_auth/dashboard/_layout/papeis/': typeof AuthDashboardLayoutPapeisIndexRoute
+  '/_auth/dashboard/_layout/professores/': typeof AuthDashboardLayoutProfessoresIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/dashboard'
-    | '/login/'
+    | '/login'
     | '/profile/'
+    | '/dashboard'
     | '/dashboard/alunos/'
     | '/dashboard/convites/'
-    | '/dashboard/funcionarios/'
     | '/dashboard/instrumentos/'
     | '/dashboard/membros/'
     | '/dashboard/musicos/'
@@ -151,13 +146,12 @@ export interface FileRouteTypes {
     | '/dashboard/professores/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/dashboard'
     | '/login'
+    | '/'
     | '/profile'
+    | '/dashboard'
     | '/dashboard/alunos'
     | '/dashboard/convites'
-    | '/dashboard/funcionarios'
     | '/dashboard/instrumentos'
     | '/dashboard/membros'
     | '/dashboard/musicos'
@@ -165,49 +159,48 @@ export interface FileRouteTypes {
     | '/dashboard/professores'
   id:
     | '__root__'
-    | '/'
-    | '/dashboard/_layout'
-    | '/login/'
+    | '/_auth'
+    | '/login'
+    | '/_auth/'
     | '/profile/'
-    | '/dashboard/_layout/alunos/'
-    | '/dashboard/_layout/convites/'
-    | '/dashboard/_layout/funcionarios/'
-    | '/dashboard/_layout/instrumentos/'
-    | '/dashboard/_layout/membros/'
-    | '/dashboard/_layout/musicos/'
-    | '/dashboard/_layout/papeis/'
-    | '/dashboard/_layout/professores/'
+    | '/_auth/dashboard/_layout'
+    | '/_auth/dashboard/_layout/alunos/'
+    | '/_auth/dashboard/_layout/convites/'
+    | '/_auth/dashboard/_layout/instrumentos/'
+    | '/_auth/dashboard/_layout/membros/'
+    | '/_auth/dashboard/_layout/musicos/'
+    | '/_auth/dashboard/_layout/papeis/'
+    | '/_auth/dashboard/_layout/professores/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  DashboardLayoutRoute: typeof DashboardLayoutRouteWithChildren
-  LoginIndexRoute: typeof LoginIndexRoute
+  AuthRoute: typeof AuthRouteWithChildren
+  LoginRoute: typeof LoginRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth/': {
+      id: '/_auth/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/_layout': {
-      id: '/dashboard/_layout'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardLayoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login/': {
-      id: '/login/'
-      path: '/login'
-      fullPath: '/login/'
-      preLoaderRoute: typeof LoginIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthIndexRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/profile/': {
       id: '/profile/'
@@ -216,95 +209,105 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/_layout/alunos/': {
-      id: '/dashboard/_layout/alunos/'
+    '/_auth/dashboard/_layout': {
+      id: '/_auth/dashboard/_layout'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthDashboardLayoutRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/dashboard/_layout/alunos/': {
+      id: '/_auth/dashboard/_layout/alunos/'
       path: '/alunos'
       fullPath: '/dashboard/alunos/'
-      preLoaderRoute: typeof DashboardLayoutAlunosIndexRouteImport
-      parentRoute: typeof DashboardLayoutRoute
+      preLoaderRoute: typeof AuthDashboardLayoutAlunosIndexRouteImport
+      parentRoute: typeof AuthDashboardLayoutRoute
     }
-    '/dashboard/_layout/convites/': {
-      id: '/dashboard/_layout/convites/'
+    '/_auth/dashboard/_layout/convites/': {
+      id: '/_auth/dashboard/_layout/convites/'
       path: '/convites'
       fullPath: '/dashboard/convites/'
-      preLoaderRoute: typeof DashboardLayoutConvitesIndexRouteImport
-      parentRoute: typeof DashboardLayoutRoute
+      preLoaderRoute: typeof AuthDashboardLayoutConvitesIndexRouteImport
+      parentRoute: typeof AuthDashboardLayoutRoute
     }
-    '/dashboard/_layout/funcionarios/': {
-      id: '/dashboard/_layout/funcionarios/'
-      path: '/funcionarios'
-      fullPath: '/dashboard/funcionarios/'
-      preLoaderRoute: typeof DashboardLayoutFuncionariosIndexRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/dashboard/_layout/instrumentos/': {
-      id: '/dashboard/_layout/instrumentos/'
+    '/_auth/dashboard/_layout/instrumentos/': {
+      id: '/_auth/dashboard/_layout/instrumentos/'
       path: '/instrumentos'
       fullPath: '/dashboard/instrumentos/'
-      preLoaderRoute: typeof DashboardLayoutInstrumentosIndexRouteImport
-      parentRoute: typeof DashboardLayoutRoute
+      preLoaderRoute: typeof AuthDashboardLayoutInstrumentosIndexRouteImport
+      parentRoute: typeof AuthDashboardLayoutRoute
     }
-    '/dashboard/_layout/membros/': {
-      id: '/dashboard/_layout/membros/'
+    '/_auth/dashboard/_layout/membros/': {
+      id: '/_auth/dashboard/_layout/membros/'
       path: '/membros'
       fullPath: '/dashboard/membros/'
-      preLoaderRoute: typeof DashboardLayoutMembrosIndexRouteImport
-      parentRoute: typeof DashboardLayoutRoute
+      preLoaderRoute: typeof AuthDashboardLayoutMembrosIndexRouteImport
+      parentRoute: typeof AuthDashboardLayoutRoute
     }
-    '/dashboard/_layout/musicos/': {
-      id: '/dashboard/_layout/musicos/'
+    '/_auth/dashboard/_layout/musicos/': {
+      id: '/_auth/dashboard/_layout/musicos/'
       path: '/musicos'
       fullPath: '/dashboard/musicos/'
-      preLoaderRoute: typeof DashboardLayoutMusicosIndexRouteImport
-      parentRoute: typeof DashboardLayoutRoute
+      preLoaderRoute: typeof AuthDashboardLayoutMusicosIndexRouteImport
+      parentRoute: typeof AuthDashboardLayoutRoute
     }
-    '/dashboard/_layout/papeis/': {
-      id: '/dashboard/_layout/papeis/'
+    '/_auth/dashboard/_layout/papeis/': {
+      id: '/_auth/dashboard/_layout/papeis/'
       path: '/papeis'
       fullPath: '/dashboard/papeis/'
-      preLoaderRoute: typeof DashboardLayoutPapeisIndexRouteImport
-      parentRoute: typeof DashboardLayoutRoute
+      preLoaderRoute: typeof AuthDashboardLayoutPapeisIndexRouteImport
+      parentRoute: typeof AuthDashboardLayoutRoute
     }
-    '/dashboard/_layout/professores/': {
-      id: '/dashboard/_layout/professores/'
+    '/_auth/dashboard/_layout/professores/': {
+      id: '/_auth/dashboard/_layout/professores/'
       path: '/professores'
       fullPath: '/dashboard/professores/'
-      preLoaderRoute: typeof DashboardLayoutProfessoresIndexRouteImport
-      parentRoute: typeof DashboardLayoutRoute
+      preLoaderRoute: typeof AuthDashboardLayoutProfessoresIndexRouteImport
+      parentRoute: typeof AuthDashboardLayoutRoute
     }
   }
 }
 
-interface DashboardLayoutRouteChildren {
-  DashboardLayoutAlunosIndexRoute: typeof DashboardLayoutAlunosIndexRoute
-  DashboardLayoutConvitesIndexRoute: typeof DashboardLayoutConvitesIndexRoute
-  DashboardLayoutFuncionariosIndexRoute: typeof DashboardLayoutFuncionariosIndexRoute
-  DashboardLayoutInstrumentosIndexRoute: typeof DashboardLayoutInstrumentosIndexRoute
-  DashboardLayoutMembrosIndexRoute: typeof DashboardLayoutMembrosIndexRoute
-  DashboardLayoutMusicosIndexRoute: typeof DashboardLayoutMusicosIndexRoute
-  DashboardLayoutPapeisIndexRoute: typeof DashboardLayoutPapeisIndexRoute
-  DashboardLayoutProfessoresIndexRoute: typeof DashboardLayoutProfessoresIndexRoute
+interface AuthDashboardLayoutRouteChildren {
+  AuthDashboardLayoutAlunosIndexRoute: typeof AuthDashboardLayoutAlunosIndexRoute
+  AuthDashboardLayoutConvitesIndexRoute: typeof AuthDashboardLayoutConvitesIndexRoute
+  AuthDashboardLayoutInstrumentosIndexRoute: typeof AuthDashboardLayoutInstrumentosIndexRoute
+  AuthDashboardLayoutMembrosIndexRoute: typeof AuthDashboardLayoutMembrosIndexRoute
+  AuthDashboardLayoutMusicosIndexRoute: typeof AuthDashboardLayoutMusicosIndexRoute
+  AuthDashboardLayoutPapeisIndexRoute: typeof AuthDashboardLayoutPapeisIndexRoute
+  AuthDashboardLayoutProfessoresIndexRoute: typeof AuthDashboardLayoutProfessoresIndexRoute
 }
 
-const DashboardLayoutRouteChildren: DashboardLayoutRouteChildren = {
-  DashboardLayoutAlunosIndexRoute: DashboardLayoutAlunosIndexRoute,
-  DashboardLayoutConvitesIndexRoute: DashboardLayoutConvitesIndexRoute,
-  DashboardLayoutFuncionariosIndexRoute: DashboardLayoutFuncionariosIndexRoute,
-  DashboardLayoutInstrumentosIndexRoute: DashboardLayoutInstrumentosIndexRoute,
-  DashboardLayoutMembrosIndexRoute: DashboardLayoutMembrosIndexRoute,
-  DashboardLayoutMusicosIndexRoute: DashboardLayoutMusicosIndexRoute,
-  DashboardLayoutPapeisIndexRoute: DashboardLayoutPapeisIndexRoute,
-  DashboardLayoutProfessoresIndexRoute: DashboardLayoutProfessoresIndexRoute,
+const AuthDashboardLayoutRouteChildren: AuthDashboardLayoutRouteChildren = {
+  AuthDashboardLayoutAlunosIndexRoute: AuthDashboardLayoutAlunosIndexRoute,
+  AuthDashboardLayoutConvitesIndexRoute: AuthDashboardLayoutConvitesIndexRoute,
+  AuthDashboardLayoutInstrumentosIndexRoute:
+    AuthDashboardLayoutInstrumentosIndexRoute,
+  AuthDashboardLayoutMembrosIndexRoute: AuthDashboardLayoutMembrosIndexRoute,
+  AuthDashboardLayoutMusicosIndexRoute: AuthDashboardLayoutMusicosIndexRoute,
+  AuthDashboardLayoutPapeisIndexRoute: AuthDashboardLayoutPapeisIndexRoute,
+  AuthDashboardLayoutProfessoresIndexRoute:
+    AuthDashboardLayoutProfessoresIndexRoute,
 }
 
-const DashboardLayoutRouteWithChildren = DashboardLayoutRoute._addFileChildren(
-  DashboardLayoutRouteChildren,
-)
+const AuthDashboardLayoutRouteWithChildren =
+  AuthDashboardLayoutRoute._addFileChildren(AuthDashboardLayoutRouteChildren)
+
+interface AuthRouteChildren {
+  AuthIndexRoute: typeof AuthIndexRoute
+  AuthDashboardLayoutRoute: typeof AuthDashboardLayoutRouteWithChildren
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthIndexRoute: AuthIndexRoute,
+  AuthDashboardLayoutRoute: AuthDashboardLayoutRouteWithChildren,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  DashboardLayoutRoute: DashboardLayoutRouteWithChildren,
-  LoginIndexRoute: LoginIndexRoute,
+  AuthRoute: AuthRouteWithChildren,
+  LoginRoute: LoginRoute,
   ProfileIndexRoute: ProfileIndexRoute,
 }
 export const routeTree = rootRouteImport
