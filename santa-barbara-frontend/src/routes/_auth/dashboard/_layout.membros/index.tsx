@@ -1,5 +1,8 @@
+import { updateMemberById, type Member } from "#/api/member";
+import { MemberEditDialog } from "#/components/business/membros/member-edit-dialog";
 import { MemberFormDialog } from "#/components/business/membros/member-form-dialog";
 import { MemberTable } from "#/components/business/membros/member-table";
+import { MemberResponsaveisDialog } from "#/components/business/membros/responsaveis/member-responsaveis-dialog";
 import { Button } from '#/components/ui/button';
 import { ButtonGroup } from "#/components/ui/button-group";
 import { Field, FieldLabel } from '#/components/ui/field';
@@ -20,6 +23,11 @@ function Membros() {
     const { state, actions } = useMembers();
     const searchTermRef = useRef<string>("")
     const [isOpen, setIsOpen] = useState(false);
+    const [respMember, setRespMember] = useState<Member | null>(null)
+
+
+    const [editing, setEditing] = useState<Member | null>(null)
+
 
 
 
@@ -43,7 +51,10 @@ function Membros() {
                         <UserPlus />
                         Novo Membro
                     </Button>
-                    <MemberFormDialog onSubmit={async (values: MemberFormValues) => await registrarMembro(values) } open={isOpen} onOpenChange={setIsOpen} />
+                    <MemberFormDialog onSubmit={async (values: MemberFormValues) =>  {
+                        await registrarMembro(values)
+                        actions.refresh();
+                    } } open={isOpen} onOpenChange={setIsOpen} />
                 </div>
             </div>
 
@@ -80,8 +91,39 @@ function Membros() {
                 ) : (
                     <MemberTable 
                         membros={state.members?.content ?? []}
+
+                        onEdit={setEditing}
+                        onManageResponsaveis={setRespMember}
+
                     />
+
+
             )}
+
+
+            {editing && (
+                <MemberEditDialog
+                    key={editing.id} 
+                    member={editing}
+                    open
+                    onOpenChange={(o) => !o && setEditing(null)}
+                    onSubmit={async (id, req) => {
+                        await updateMemberById(id, req)
+                        actions.refresh();
+                    }}
+                />
+            )}
+
+
+            {respMember && (
+                <MemberResponsaveisDialog
+                    key={respMember.id}
+                    member={respMember}
+                    open
+                    onOpenChange={(o) => !o && setRespMember(null)}
+                />
+            )}
+            
 
         </>
     )

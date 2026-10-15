@@ -19,23 +19,26 @@ interface Props {
   onChangeValue: (id: string) => void
   onBlur?: () => void
   isInvalid?: boolean
-  onCreateNew?: (termo: string) => void
+  onCreateNew?: (termo: string) => void,
+  excludeIds?: string[]
 }
 
-export function ResponsavelSelect({ id, value, onChangeValue, onBlur, isInvalid, onCreateNew }: Props) {
+export function ResponsavelSelect({ id, value, onChangeValue, onBlur, isInvalid, onCreateNew, excludeIds }: Props) {
   const [open, setOpen] = useState(false)
   const [termo, setTermo] = useState('')
   const [selecionado, setSelecionado] = useState<ResponsavelOption | null>(null)
 
   const debounced = useDebounce(termo.trim(), 300)
 
-  const { data: sugestoes = [], isFetching } = useQuery({
+  const { data: sugestoesBrutas = [], isFetching } = useQuery({
     queryKey: ['responsaveis', debounced],
     queryFn: () => searchResponsaveis(debounced),
     enabled: open,
     staleTime: 30_000,
     placeholderData: keepPreviousData,
   })
+
+  const sugestoes = excludeIds ? sugestoesBrutas.filter((m) => !excludeIds.includes(m.id)) : sugestoesBrutas
 
   const semResultado = !isFetching && debounced === termo.trim() && sugestoes.length === 0
 

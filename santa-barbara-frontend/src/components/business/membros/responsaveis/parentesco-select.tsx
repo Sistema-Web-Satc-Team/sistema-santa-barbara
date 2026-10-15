@@ -1,9 +1,10 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#/components/ui/select'
+import { RELACOES, type RelacaoValue } from '#/lib/relacao-responsavel'
 
 interface Props {
   id?: string
   value: string
-  onChangeValue: (value: string) => void
+  onChangeValue: (value: RelacaoValue) => void
   onBlur?: () => void
   isInvalid?: boolean
 }
@@ -15,11 +16,9 @@ export function ParentescoSelect({ id, value, onChangeValue, onBlur, isInvalid }
         <SelectValue placeholder="Selecione o parentesco" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="PROGENITORES">Pai/Mãe</SelectItem>
-        <SelectItem value="AVO">Avô/Avó</SelectItem>
-        <SelectItem value="TIO">Tio/Tia</SelectItem>
-        <SelectItem value="PADRINHO">Padrinho/Madrinha</SelectItem>
-        <SelectItem value="RESPONSAVEL_LEGAL">Responsável legal</SelectItem>
+        {RELACOES.map((r) => (
+          <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>
+        ))}
       </SelectContent>
     </Select>
   )

@@ -16,13 +16,9 @@ import {
     TableRow
 } from '#/components/ui/table';
 import { capitalizeAll, cn } from '#/lib/utils';
-import { Briefcase, Ellipsis, Lock, LockOpen, Mail, MapPin, Pencil, Phone, Users } from 'lucide-react';
+import { Briefcase, Ellipsis, Lock, LockOpen, Mail, MapPin, Pencil, Phone, Users, UsersRound } from 'lucide-react';
 import { Badge, type VariantBadgeType } from '../../ui/badge';
 
-/*
-* Parte do código foi gerado com IA - Claude Sonnet 5.5
-* Revisado por: Laurence Floriano Luciano
-*/
 
 /* ───────────── Status de acesso ───────────── */
 
@@ -98,9 +94,15 @@ export interface MemberTableProps {
     onEdit?: (member: Member) => void;
     onBlock?: (member: Member) => void;
     onUnblock?: (member: Member) => void;
+    onManageResponsaveis?: (member: Member) => void;
 }
 
-export function MemberTable({ membros, onManageRoles, onEdit, onBlock, onUnblock }: MemberTableProps) {
+export function MemberTable({ membros, onManageRoles, onEdit, onBlock, onUnblock, onManageResponsaveis }: MemberTableProps) {
+
+    
+
+
+
     if (membros.length === 0) {
         return (
             <div className="flex flex-col items-center rounded-xl border border-dashed bg-card px-6 py-16 text-center">
@@ -117,6 +119,7 @@ export function MemberTable({ membros, onManageRoles, onEdit, onBlock, onUnblock
 
     return (
         <div className="w-full max-w-full overflow-hidden rounded-xl border bg-card shadow-xs">
+
             <Table>
                 <TableHeader className="bg-muted/60">
                     <TableRow className="hover:bg-transparent">
@@ -197,6 +200,9 @@ export function MemberTable({ membros, onManageRoles, onEdit, onBlock, onUnblock
                                             </DropdownMenuItem>
                                             <DropdownMenuItem onSelect={() => onEdit?.(member)}>
                                                 <Pencil /> Editar
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onSelect={() => onManageResponsaveis?.(member)}>
+                                                <UsersRound /> Gerenciar responsáveis
                                             </DropdownMenuItem>
                                             {hasCredential && <DropdownMenuSeparator />}
                                             {hasCredential && status !== 'BLOQUEADO' && (

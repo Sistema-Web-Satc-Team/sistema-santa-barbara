@@ -1,7 +1,11 @@
 import { dataNascimentoValida, ehMenor, type DataNascimentoValue } from '#/lib/idade'
+import { RELACOES, type RelacaoValue } from '#/lib/relacao-responsavel'
+
 import { z } from 'zod'
 
-export const parentescoEnum = z.enum(['PROGENITORES', 'AVO', 'TIO', 'PADRINHO', 'RESPOSAVEL_LEGAL'])
+export const parentescoEnum = z.enum(
+  RELACOES.map((r) => r.value) as [RelacaoValue, ...RelacaoValue[]],
+)
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
