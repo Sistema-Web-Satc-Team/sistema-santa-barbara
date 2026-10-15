@@ -1,4 +1,4 @@
-import type { Member, StatusCredencialAcesso } from '#/api/member';
+import type { Member, Sexo, StatusCredencialAcesso } from '#/api/member';
 import { Button } from '#/components/ui/button';
 import {
     DropdownMenu,
@@ -29,6 +29,12 @@ const STATUS: Record<string, { label: string; variant: VariantBadgeType }> = {
     CONVIDADO: { label: 'Convidado', variant: 'info' },
     SEM_ACESSO: { label: 'Sem acesso', variant: 'muted' }
 };
+
+const SEXO: Record<Sexo ,{ label: string }> = {
+    MASCULINO: { label: "masculino"},
+    FEMININO: { label: "feminino" },
+    NAO_INFORMADO: { label: "não informado"}
+}
 
 function StatusBadge({ value }: { value: StatusCredencialAcesso }) {
     const key = String(value);
@@ -64,13 +70,14 @@ function initials(name: string): string {
 function MemberAvatar({ name, minor, avatar }: { name: string; minor: boolean, avatar?: string }) {
     return (
         <span
-            aria-hidden="true"
+           aria-hidden="true"
             className={cn(
-                'inline-flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold',
+                'inline-flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold overflow-hidden',
                 minor ? 'bg-warning/15 text-warning' : 'bg-primary/10 text-primary'
             )}
+
         >
-            {avatar ? <img src={avatar} alt="Foto de perfil do membro" /> :
+            {avatar ? <img src={avatar} alt="Foto de perfil do membro"  className="w-full h-full object-cover" /> :
                 initials(name)}
         </span>
     );
@@ -153,7 +160,7 @@ export function MemberTable({ membros, onManageRoles, onEdit, onBlock, onUnblock
                                         <div className="flex min-w-0 flex-col">
                                             <span className="text-[0.95rem] font-semibold leading-tight text-foreground">{nome}</span>
                                             <span className="mt-0.5 text-xs text-muted-foreground">
-                                                {member.idade} anos • sexo {String(member.sexo).toLocaleLowerCase()}
+                                                {member.idade} anos • sexo {SEXO[member.sexo].label}
                                             </span>
                                             <div className="mt-2 flex flex-wrap items-center gap-1.5">
                                                 <StatusBadge value={member.statusCredencialAcesso} />
