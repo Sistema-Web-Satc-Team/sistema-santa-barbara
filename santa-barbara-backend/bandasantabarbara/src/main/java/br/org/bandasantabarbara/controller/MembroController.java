@@ -62,12 +62,10 @@ public class MembroController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    public MessageResponse registrarMembro(
+    public MembroResponse registrarMembro(
             @RequestBody @Valid MembroRequest dto
     ) {
-        cadastrarMembroUseCase.execute(dto);
-
-        return new MessageResponse("Membro adicionado com sucesso.");
+        return cadastrarMembroUseCase.execute(dto);
     }
 
     @GetMapping
@@ -79,9 +77,10 @@ public class MembroController {
                     direction = Sort.Direction.ASC
             )
             Pageable pageable,
-            @RequestParam(required = false) String search
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Boolean maiorDeIdade
     ) {
-        return consultarMembrosUseCase.listarMembros(search, pageable);
+        return consultarMembrosUseCase.listarMembros(search, maiorDeIdade, pageable);
     }
 
 

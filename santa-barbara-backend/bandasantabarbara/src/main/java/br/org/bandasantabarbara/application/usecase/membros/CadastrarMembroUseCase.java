@@ -37,7 +37,7 @@ public class CadastrarMembroUseCase {
        }
 
        this.membroRepository.save(membro);
-       return  this.membroMapper.toResponse(membro);
+       return this.membroMapper.toResponse(membro);
     }
 
 

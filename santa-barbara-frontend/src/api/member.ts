@@ -31,9 +31,9 @@ export interface UpdateMemberRequest {
 
 export interface RegisterMemberRequest {
     nome: string;
-    email: string;
-    telefone: string;
-    endereco: string;
+    email?: string
+    telefone?: string
+    endereco?: string
     sexo: string;
     dataNascimento: string;
 }
@@ -75,6 +75,21 @@ export interface MemberBinds {
   vinculos: BindsGroup;
 }
 
+/*
+*
+* Responsável
+* 
+*/
+
+export type RelacaoResponsavel = "PROGENITORES" | "AVO" | "TIO" | "PADRINHO" | "RESPOSAVEL_LEGAL";
+
+
+export interface RequestMembroMenor {
+    menor: RegisterMemberRequest,
+    idResponsavel: string;
+    grauRelacao: RelacaoResponsavel;
+}
+
 
 async function fetchMembers(request: MembersFilterRequest): Promise<PageDefaultResponse<Member>> {
     const  { data } = await api.get(`api/v1/membros`,
@@ -101,9 +116,27 @@ async function updateMemberById(id: string, request: UpdateMemberRequest): Promi
     await api.patch(`api/v1/membros/${id}`, body)
 }
 
-async function registerMember(request: RegisterMemberRequest): Promise<void> {
-    await api.post(`api/v1/membros`, request)
+async function registerMember(request: RegisterMemberRequest): Promise<Member> {
+  const { data } = await api.post<Member>('api/v1/membros', request)
+  return data
 }
 
-export { fetchMemberBindsById, fetchMembers, registerMember, updateMemberById };
+async function cadastrarMembroMenor(request: RequestMembroMenor) {
+    await api.post(`api/v1/membros/menores`, request)
+}
+
+async function searchResponsaveis(search: string): Promise<Member[]> {
+  const { data } = await api.get<PageDefaultResponse<Member>>('api/v1/membros', {
+    params: {
+      search: search || undefined,
+      maiorDeIdade: true,
+      size: 8,
+      sort: 'nome,asc',
+      page: 0,
+    },
+  })
+  return data.content // ajuste se o seu PageDefaultResponse usar outro nome
+}
+
+export { cadastrarMembroMenor, fetchMemberBindsById, fetchMembers, registerMember, searchResponsaveis, updateMemberById };
 

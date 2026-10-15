@@ -41,4 +41,16 @@ public class MembroSpecs {
             );
         };
     }
+
+    public static Specification<Membro> porMaioridade(Boolean maiorDeIdade) {
+        return (root, query, cb) -> {
+            if (maiorDeIdade == null) return null;
+
+            LocalDate limite = LocalDate.now().minusYears(18);
+
+            return maiorDeIdade
+                    ? cb.lessThanOrEqualTo(root.<LocalDate>get("dataNascimento"), limite)
+                    : cb.greaterThan(root.<LocalDate>get("dataNascimento"), limite);
+        };
+    }
 }

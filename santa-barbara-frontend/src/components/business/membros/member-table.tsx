@@ -17,7 +17,7 @@ import {
 } from '#/components/ui/table';
 import { capitalizeAll, cn } from '#/lib/utils';
 import { Briefcase, Ellipsis, Lock, LockOpen, Mail, MapPin, Pencil, Phone, Users } from 'lucide-react';
-import { Badge, type VariantBadgeType } from '../ui/badge';
+import { Badge, type VariantBadgeType } from '../../ui/badge';
 
 /*
 * Parte do código foi gerado com IA - Claude Sonnet 5.5
