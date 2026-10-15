@@ -1,10 +1,11 @@
+import type { Role } from '#/api/funcoes';
 import { RoleCard } from '#/components/business/role-card';
 import { Spinner } from '#/components/ui/spinner';
 import { useListRoles } from '#/hooks/use-list-roles';
 
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/_auth/dashboard/_layout/papeis/')({
+export const Route = createFileRoute('/_auth/dashboard/_layout/funcoes/')({
   component: Papeis,
 })
 
@@ -25,10 +26,10 @@ function Papeis() {
 
   return (
     <div className="p-8">
-      <h2 className="text-3xl font-bold mb-8">Papéis</h2>
+      <h2 className="text-3xl font-bold mb-8">Funções:</h2>
       <div className="grid grid-cols-2 gap-4">
-        {data?.map((role: string) => (
-          <RoleCard key={role} role={role} />
+        {data?.map((role: Role) => (
+          <RoleCard key={role.code} nome={role.nome} descricao={role.descricao} />
         ))}
       </div>
     </div>
