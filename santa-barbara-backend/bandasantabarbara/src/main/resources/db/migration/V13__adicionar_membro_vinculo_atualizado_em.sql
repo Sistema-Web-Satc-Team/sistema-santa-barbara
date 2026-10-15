@@ -1,0 +1,1 @@
+ALTER TABLE membro_vinculo ADD COLUMN atualizado_em TIMESTAMPTZ;

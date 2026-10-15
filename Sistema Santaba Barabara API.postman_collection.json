@@ -1,0 +1,1622 @@
+{
+  "info": {
+    "_postman_id": "ab9ea696-82db-4f4a-a166-7a25d0aa9421",
+    "name": "Sistema Santaba Barabara API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40826204",
+    "_collection_link": "https://go.postman.co/collection/40826204-ab9ea696-82db-4f4a-a166-7a25d0aa9421?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "papeis",
+      "item": [
+        {
+          "name": "{nome}",
+          "item": [
+            {
+              "name": "permissoes",
+              "item": [
+                {
+                  "name": "listar Permissoes 1",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/papeis/:nome/permissoes",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "papeis",
+                        ":nome",
+                        "permissoes"
+                      ],
+                      "variable": [
+                        {
+                          "key": "nome",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/papeis/:nome/permissoes",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "papeis",
+                            ":nome",
+                            "permissoes"
+                          ],
+                          "variable": [
+                            {
+                              "key": "nome",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "*/*"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "[\n  \"string\",\n  \"string\"\n]"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "listar Papeis",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/papeis?page=0&size=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "papeis"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/papeis?page=0&size=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "papeis"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"content\": [\n    \"string\",\n    \"string\"\n  ],\n  \"pageNumber\": 7642,\n  \"pageSize\": 8593\n}"
+            }
+          ]
+        },
+        {
+          "name": "atribuir Permissoes",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"papel\": \"string\",\n  \"permissoes\": [\n    \"string\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/papeis",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "papeis"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "OK",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"papel\": \"string\",\n  \"permissoes\": [\n    \"string\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/papeis",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "papeis"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"message\": \"string\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "adicionar Papel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/papeis",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "papeis"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nome\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/papeis",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "papeis"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"message\": \"string\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "remover Papel",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"papel\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/papeis",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "papeis"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "No Content",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"papel\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/papeis",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "papeis"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "convites",
+      "item": [
+        {
+          "name": "{id}",
+          "item": [
+            {
+              "name": "get Convite",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/convites/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "convites",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "442bc880-fd35-8755-892f-73fc258bd997"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/convites/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "convites",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "442bc880-fd35-8755-892f-73fc258bd997"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "*/*"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"idConvite\": \"c9879b09-fa79-8b66-c090-4b4ff50fac98\",\n  \"URL\": \"string\",\n  \"criadoEm\": \"2014-07-11T02:53:22.246Z\",\n  \"expiraEm\": \"1999-04-02T04:40:27.675Z\",\n  \"status\": \"ENVIADO\",\n  \"membro\": {\n    \"id\": \"cb502988-7a9e-9031-b7de-505f296545cb\",\n    \"nome\": \"string\",\n    \"sobrenome\": \"string\",\n    \"email\": \"string\",\n    \"telefone\": \"string\",\n    \"papeis\": [\n      \"string\",\n      \"string\"\n    ]\n  }\n}"
+                }
+              ]
+            },
+            {
+              "name": "reenviar Convite",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/convites/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "convites",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "442bc880-fd35-8755-892f-73fc258bd997"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/convites/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "convites",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "442bc880-fd35-8755-892f-73fc258bd997"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "*/*"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"idConvite\": \"string\",\n  \"URL\": \"string\",\n  \"criadoEm\": \"1990-06-25T23:00:08.883Z\",\n  \"expiraEm\": \"1962-09-05T23:39:28.210Z\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "aceitar",
+          "item": [
+            {
+              "name": "aceitar Convite",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idConvite\": \"f3e682dd-a26d-05c2-d014-01b725c45102\",\n  \"nomeDeUsuario\": \"string\",\n  \"senha\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/convites/aceitar",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "convites",
+                    "aceitar"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"idConvite\": \"f3e682dd-a26d-05c2-d014-01b725c45102\",\n  \"nomeDeUsuario\": \"string\",\n  \"senha\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/convites/aceitar",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "convites",
+                        "aceitar"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "*/*"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"message\": \"string\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "validar",
+          "item": [
+            {
+              "name": "{id}",
+              "item": [
+                {
+                  "name": "is Valido",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/convites/validar/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "convites",
+                        "validar",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "442bc880-fd35-8755-892f-73fc258bd997"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/convites/validar/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "convites",
+                            "validar",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "442bc880-fd35-8755-892f-73fc258bd997"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "*/*"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "false"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/convites?page=0&size=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "convites"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/convites?page=0&size=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "convites"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"content\": [\n    {\n      \"idConvite\": \"a4a75a79-b85e-00ee-621f-79376cc1fa07\",\n      \"URL\": \"string\",\n      \"criadoEm\": \"2010-01-26T10:51:05.517Z\",\n      \"expiraEm\": \"1951-12-11T21:07:45.009Z\",\n      \"status\": \"ENVIADO\",\n      \"membro\": {\n        \"id\": \"a972b2e4-31aa-ea27-e7b4-e9e27061a5ba\",\n        \"nome\": \"string\",\n        \"sobrenome\": \"string\",\n        \"email\": \"string\",\n        \"telefone\": \"string\",\n        \"papeis\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    },\n    {\n      \"idConvite\": \"2be51549-f093-e66d-18d6-c085170a26df\",\n      \"URL\": \"string\",\n      \"criadoEm\": \"2009-06-26T05:12:27.731Z\",\n      \"expiraEm\": \"1994-10-08T22:51:42.049Z\",\n      \"status\": \"REJEITADO\",\n      \"membro\": {\n        \"id\": \"6001f3be-693a-a74e-e9cf-cd23a198781d\",\n        \"nome\": \"string\",\n        \"sobrenome\": \"string\",\n        \"email\": \"string\",\n        \"telefone\": \"string\",\n        \"papeis\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    }\n  ],\n  \"pageNumber\": 3084,\n  \"pageSize\": 7390\n}"
+            }
+          ]
+        },
+        {
+          "name": "convidar Membro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idMembro\": \"47fd0893-ca81-33aa-f10d-e100bd701e64\"\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/convites",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "convites"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idMembro\": \"47fd0893-ca81-33aa-f10d-e100bd701e64\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/convites",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "convites"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"idConvite\": \"string\",\n  \"URL\": \"string\",\n  \"criadoEm\": \"1990-06-25T23:00:08.883Z\",\n  \"expiraEm\": \"1962-09-05T23:39:28.210Z\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "setup",
+      "item": [
+        {
+          "name": "register Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"3uL95qU@jsfBdzAaHKdgnZEiSeJtxrQvjVsEvODAU.higk\",\n  \"senha\": \"string\",\n  \"username\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/setup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "setup"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"3uL95qU@jsfBdzAaHKdgnZEiSeJtxrQvjVsEvODAU.higk\",\n  \"senha\": \"string\",\n  \"username\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/setup",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "setup"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"message\": \"string\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "membros",
+      "item": [
+        {
+          "name": "{id}",
+          "item": [
+            {
+              "name": "atualizar Membro",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nome\": \"string\",\n  \"sobrenome\": \"string\",\n  \"email\": \"z2EwMUd4A@CjifsnyXIhZSmdIWBOGoTYE.ouq\",\n  \"papeis\": [\n    \"string\",\n    \"string\"\n  ],\n  \"telefone\": \"stringstring\",\n  \"endereco\": \"string\",\n  \"status\": \"ATIVO\",\n  \"dataNascimento\": \"1991-06-17\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/membros/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "membros",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "442bc880-fd35-8755-892f-73fc258bd997"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "No Content",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"nome\": \"string\",\n  \"sobrenome\": \"string\",\n  \"email\": \"z2EwMUd4A@CjifsnyXIhZSmdIWBOGoTYE.ouq\",\n  \"papeis\": [\n    \"string\",\n    \"string\"\n  ],\n  \"telefone\": \"stringstring\",\n  \"endereco\": \"string\",\n  \"status\": \"ATIVO\",\n  \"dataNascimento\": \"1991-06-17\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/membros/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "membros",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "442bc880-fd35-8755-892f-73fc258bd997"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "No Content",
+                  "code": 204,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "listar Membros",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/membros?page=0&size=10&papel=string&papel=string&nome=string",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "membros"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "papel",
+                  "value": "string"
+                },
+                {
+                  "key": "papel",
+                  "value": "string"
+                },
+                {
+                  "key": "nome",
+                  "value": "string"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/membros?page=0&size=10&papel=string&nome=string",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "membros"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    },
+                    {
+                      "key": "papel",
+                      "value": "string"
+                    },
+                    {
+                      "key": "nome",
+                      "value": "string"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"content\": [\n    {\n      \"id\": \"1eb506a6-c409-8022-9b76-7aceb5b8eb92\",\n      \"nome\": \"string\",\n      \"sobrenome\": \"string\",\n      \"nomeDeUsuario\": \"string\",\n      \"telefone\": \"string\",\n      \"endereco\": \"string\",\n      \"email\": \"string\",\n      \"papeis\": [\n        \"string\",\n        \"string\"\n      ],\n      \"idade\": 2164,\n      \"dataNascimento\": \"string\",\n      \"status\": \"REMOVIDO\"\n    },\n    {\n      \"id\": \"55f368e4-dcda-b230-2e23-ed611cc01115\",\n      \"nome\": \"string\",\n      \"sobrenome\": \"string\",\n      \"nomeDeUsuario\": \"string\",\n      \"telefone\": \"string\",\n      \"endereco\": \"string\",\n      \"email\": \"string\",\n      \"papeis\": [\n        \"string\",\n        \"string\"\n      ],\n      \"idade\": 6948,\n      \"dataNascimento\": \"string\",\n      \"status\": \"ATIVO\"\n    }\n  ],\n  \"pageNumber\": 9160,\n  \"pageSize\": 3641\n}"
+            }
+          ]
+        },
+        {
+          "name": "registrar Membro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataNascimento\": \"1967-10-08\",\n  \"email\": \"oJxn-WXp6qukGz3@TGlQwoflxRINhAIDOnDex.wq\",\n  \"nome\": \"string\",\n  \"papeis\": [\n    \"string\"\n  ],\n  \"sobrenome\": \"string\",\n  \"telefone\": \"stringstring\",\n  \"endereco\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/membros",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "membros"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"dataNascimento\": \"1967-10-08\",\n  \"email\": \"oJxn-WXp6qukGz3@TGlQwoflxRINhAIDOnDex.wq\",\n  \"nome\": \"string\",\n  \"papeis\": [\n    \"string\"\n  ],\n  \"sobrenome\": \"string\",\n  \"telefone\": \"stringstring\",\n  \"endereco\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/membros",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "membros"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"message\": \"string\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "logout",
+          "item": [
+            {
+              "name": "logout",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/auth/logout",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/auth/logout",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "logout"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "*/*"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"message\": \"string\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "login",
+          "item": [
+            {
+              "name": "login",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"login\": \"string\",\n  \"senha\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"login\": \"string\",\n  \"senha\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/auth/login",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "login"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "*/*"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"message\": \"string\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "me",
+          "item": [
+            {
+              "name": "obter Dados Do Membro Autenticado",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/auth/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "me"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/auth/me",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "me"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "*/*"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"id\": \"85c29a3f-02ba-d6e7-a5c8-55d5ca9d6d7c\",\n  \"nome\": \"string\",\n  \"sobrenome\": \"string\",\n  \"nomeUsuario\": \"string\",\n  \"email\": \"string\",\n  \"telefone\": \"string\",\n  \"endereco\": \"string\",\n  \"papeis\": [\n    \"string\",\n    \"string\"\n  ],\n  \"age\": 4768,\n  \"dataNascimento\": \"string\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "atualizar Meu Perfil",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nomeDeUsuario\": \"string\",\n  \"email\": \"eYW@WcYDtITUSYuXTVyiPur.yoi\",\n  \"telefone\": \"stringstrin\",\n  \"endereco\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "me"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "No Content",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"nomeDeUsuario\": \"string\",\n  \"email\": \"eYW@WcYDtITUSYuXTVyiPur.yoi\",\n  \"telefone\": \"stringstrin\",\n  \"endereco\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/auth/me",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "me"
+                      ]
+                    }
+                  },
+                  "status": "No Content",
+                  "code": 204,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "permissoes",
+      "item": [
+        {
+          "name": "listar Permissoes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/permissoes?page=0&size=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "permissoes"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/permissoes?page=0&size=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "permissoes"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"content\": [\n    \"string\",\n    \"string\"\n  ],\n  \"pageNumber\": 7642,\n  \"pageSize\": 8593\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/v1"
+    }
+  ]
+}
