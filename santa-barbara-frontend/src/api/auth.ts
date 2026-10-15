@@ -54,14 +54,13 @@ export async function updateUserProfile(data: MeUpdateRequest) {
 }
 
 export async function saveProfilePhoto(
-  photo: Blob,
-  replace: boolean,
+  photo: Blob
 ): Promise<void> {
   const formData = new FormData()
   formData.append('file', photo, 'foto-perfil.jpg')
 
   await api.request({
-    method: replace ? 'PUT' : 'POST',
+    method: 'POST',
     url: '/api/v1/auth/me/foto-perfil',
     data: formData,
     headers: { 'Content-Type': 'multipart/form-data' },
