@@ -45,6 +45,7 @@ public class Convite {
     public Convite(Membro membro) {
         this();
         this.membro = membro;
+        this.status = EnumConviteStatus.PENDENTE;
     }
 
     public boolean foiEnviado() {
@@ -128,6 +129,11 @@ public class Convite {
         this.status = foiEnviado()
                 ? EnumConviteStatus.FALHA_REENVIO
                 : EnumConviteStatus.FALHA_ENVIO;
+    }
+
+    public void aceitar() {
+        this.verificarSePodeSerAceito();
+        this.status = EnumConviteStatus.ACEITO;
     }
 
 

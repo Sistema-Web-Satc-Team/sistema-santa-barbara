@@ -25,8 +25,8 @@ export function useProfilePhoto() {
     queryClient.invalidateQueries({ queryKey: ['user-profile'] })
 
   const save = useMutation({
-    mutationFn: ({ photo, replace }: { photo: Blob; replace: boolean }) =>
-      saveProfilePhoto(photo, replace),
+    mutationFn: ({ photo }: { photo: Blob; }) =>
+      saveProfilePhoto(photo),
     onSuccess: async () => {
       await refreshProfile()
       toast.success('Foto de perfil atualizada.')

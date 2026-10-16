@@ -1,8 +1,10 @@
 import { updateMemberById, type Member } from "#/api/member";
+import { DataPagination } from "#/components/business/data-pagination";
 import { MemberEditDialog } from "#/components/business/membros/member-edit-dialog";
 import { MemberFormDialog } from "#/components/business/membros/member-form-dialog";
 import { MemberTable } from "#/components/business/membros/member-table";
 import { MemberResponsaveisDialog } from "#/components/business/membros/responsaveis/member-responsaveis-dialog";
+import { MemberVinculosDrawer } from "#/components/business/vinculos/member-vinculos-drawer";
 import { Button } from '#/components/ui/button';
 import { ButtonGroup } from "#/components/ui/button-group";
 import { Field, FieldLabel } from '#/components/ui/field';
@@ -23,10 +25,12 @@ function Membros() {
     const { state, actions } = useMembers();
     const searchTermRef = useRef<string>("")
     const [isOpen, setIsOpen] = useState(false);
+
     const [respMember, setRespMember] = useState<Member | null>(null)
-
-
     const [editing, setEditing] = useState<Member | null>(null)
+    const [vincMember, setVincMember] = useState<Member | null>(null)
+
+
 
 
 
@@ -36,8 +40,6 @@ function Membros() {
             <Spinner />
         </div>
     }
-
-
 
 
     return (
@@ -94,11 +96,25 @@ function Membros() {
 
                         onEdit={setEditing}
                         onManageResponsaveis={setRespMember}
+                        onManageRoles={setVincMember}
 
                     />
 
-
             )}
+
+
+            <DataPagination 
+                pagesSizes={[5,10,20,25,50]}
+                pagination={{
+                    page: state.members?.page ?? 0,
+                    size: state.members?.size ?? 1,
+                    totalElements: state.members?.totalElements ?? 1,
+                    totalPages: state.members?.totalPages ?? 1,
+                }}
+                onPageChange={(value: number) => actions.setFilter("page", value)}
+                onSizeChange={(value: number) => actions.setFilter("size", value)}
+            />
+
 
 
             {editing && (
@@ -123,7 +139,17 @@ function Membros() {
                     onOpenChange={(o) => !o && setRespMember(null)}
                 />
             )}
-            
+
+
+            {vincMember && (
+                <MemberVinculosDrawer
+                    key={vincMember.id}
+                    member={vincMember}
+                    open
+                    onOpenChange={(o) => !o && setVincMember(null)}
+                />
+            )}
+                        
 
         </>
     )

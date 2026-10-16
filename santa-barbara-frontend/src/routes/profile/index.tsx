@@ -1,61 +1,52 @@
+import { ProfileAvatarEditor } from '#/components/business/profile-avatar-editor';
 import { Button } from '#/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '#/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '#/components/ui/card';
+import { Field, FieldError, FieldLabel } from '#/components/ui/field';
+import { Input } from '#/components/ui/input';
 import { Spinner } from '#/components/ui/spinner';
 import { useAuth } from '#/hooks/use-auth';
+import { capitalizeAll } from '#/lib/utils';
+import { formSchemaProfileUpdate } from '#/schemas/form-schema-profile-update';
 import { useForm } from '@tanstack/react-form';
 import { createFileRoute, Navigate, useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import z from 'zod';
-import { ProfileAvatarEditor } from '#/components/business/profile-avatar-editor';
-import { CardDescription, CardTitle } from '#/components/ui/card';
-import { Field, FieldError, FieldLabel } from '#/components/ui/field';
-import { Input } from '#/components/ui/input';
+
 
 export const Route = createFileRoute('/profile/')({
     component: Profile,
 })
 
+
+
 function Profile() {
     const { state, actions } = useAuth();
-    const navigate = useNavigate();
     const profile = state.profile;
 
-    const displayName = profile?.nome || profile?.nomeUsuario || profile?.email || "Usuário";
-    const userInitials = displayName.slice(0, 2).toUpperCase();
+    const navigate = useNavigate();
 
-    const formSchema = z.object({
-        email: z.email().nonempty(),
-        endereco: z
-            .string()
-            .min(6, "O endereço muito pequeno.")
-            .max(256, "Endereço muito grande.")
-            .nonoptional(),
-        telefone: z.string()
-            .min(11, "Telefone precisa ter no minimo 11 caracteres.")
-            .max(20, "Telefone com muitos caracteres")
-            .nonoptional()
-    })
+    const displayName = profile?.nomeUsuario ?? capitalizeAll(profile?.nome || profile?.email || "Usuário");
 
+   
     const form = useForm({
         defaultValues: {
-            email: profile?.email,
-            endereco: profile?.endereco,
-            telefone: profile?.telefone
+            endereco: profile?.endereco ?? '',
+            telefone: profile?.telefone ?? ''
         },
         validators: {
-            onSubmit: formSchema
+            onSubmit: formSchemaProfileUpdate
         },
         onSubmit: async ({ value }) => {
             try {
                 await actions.updateProfile({
-                    endereco: value.endereco,
-                    telefone: value.telefone
-                })
+                    endereco: value.endereco.trim() || undefined,
+                    telefone: value.telefone.trim() || undefined
+                });
 
                 toast.success("Dados atualizados com sucesso.")
 
 
             } catch (err: any) {
+                console.log(err);
                 toast.error(err.message || "Erro ao atualizar os dados.");
             }
         }
@@ -89,35 +80,17 @@ function Profile() {
                     <ProfileAvatarEditor />
                 </CardContent>
 
+                <div className="mb-0 ml-6 text-foreground flex items-center ">
+                    <span className='font-semibold'>E-mail:</span>
+                    <span className='text-sm ml-2'>{profile.email}</span>
+                </div>
+
                 <form onSubmit={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     form.handleSubmit();
                 }}>
                     <CardContent className="space-y-4">
-                        <form.Field name="email">
-                            {(field) => {
-                                const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0;
-                                return (
-                                    <Field data-invalid={isInvalid} className="mb-4 text-foreground">
-                                        <FieldLabel htmlFor={field.name}>E-mail</FieldLabel>
-                                        <Input
-                                            id={field.name}
-                                            name={field.name}
-                                            value={field.state.value}
-                                            onBlur={field.handleBlur}
-                                            onChange={(e) => field.handleChange(e.target.value)}
-                                            aria-invalid={isInvalid}
-                                            placeholder="seu@email.com"
-                                            className="placeholder:tracking-widest aria-invalid:placeholder:text-destructive/50"
-                                            type="email"
-                                        />
-                                        {isInvalid && <FieldError errors={field.state.meta.errors} className="-mt-1" />}
-                                    </Field>
-                                );
-                            }}
-                        </form.Field>
-
                         <form.Field name="endereco">
                             {(field) => {
                                 const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0;
@@ -162,15 +135,38 @@ function Profile() {
                     </CardContent>
 
                     <CardFooter className="flex justify-end gap-2 mt-8">
-                        <form.Subscribe
-                            selector={(state) => [state.canSubmit, state.isSubmitting]}
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => navigate({ to: "/" })}
                         >
-                            {([canSubmit, isSubmitting]) => (
-                                <Button type="submit" disabled={!canSubmit}>
-                                    {isSubmitting ? <Spinner className="mr-2 size-4" /> : null}
-                                    Salvar Alterações
-                                </Button>
-                            )}
+                            Voltar
+                        </Button>
+
+                        <form.Subscribe
+                            selector={(state) =>
+                                [
+                                    state.canSubmit,
+                                    state.isSubmitting,
+                                    state.values
+                                ] as const
+                            }
+                        >
+                            {([canSubmit, isSubmitting, values]) => {
+                                const hasChanges =
+                                    values.endereco !== (profile?.endereco ?? '') ||
+                                    values.telefone !== (profile?.telefone ?? '');
+
+                                return (
+                                    <Button
+                                        type="submit"
+                                        disabled={!canSubmit || isSubmitting || !hasChanges}
+                                    >
+                                        {isSubmitting && <Spinner className="mr-2 size-4" />}
+                                        Salvar Alterações
+                                    </Button>
+                                );
+                            }}
                         </form.Subscribe>
                     </CardFooter>
                 </form>

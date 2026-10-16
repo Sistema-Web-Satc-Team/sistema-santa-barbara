@@ -1,5 +1,4 @@
 import { api } from "#/lib/axios";
-import type { Role } from "./funcoes";
 
 
 export type Sexo = "MASCULINO" | "FEMININO" | "NAO_INFORMADO";
@@ -44,36 +43,6 @@ export interface MembersFilterRequest extends PageFilters<Member> {
     search?: string,
 }
 
-/*
-*
-* BINDS
-*
-*/
-
-export type StatusBind = "ATIVO" | "ENCERRADO" | "CANCELADO" | "SUSPENSO";
-
-export interface Bind {
-  id: number;
-  dataInicio: string;
-  dataTermino: string;
-  funcao: Role;
-  status: StatusBind;
-}
-
-export interface BindsGroup {
-  atuais: Bind[];
-  encerrados: Bind[];
-  cancelados: Bind[];
-}
-
-export interface MemberBinds {
-  id: string;
-  nome: string;
-  dataNascimento: string; 
-  idade: number;
-  sexo: Sexo;
-  vinculos: BindsGroup;
-}
 
 /*
 *
@@ -135,7 +104,7 @@ async function searchResponsaveis(search: string): Promise<Member[]> {
       page: 0,
     },
   })
-  return data.content // ajuste se o seu PageDefaultResponse usar outro nome
+  return data.content
 }
 
 export { cadastrarMembroMenor, fetchMemberBindsById, fetchMembers, registerMember, searchResponsaveis, updateMemberById };

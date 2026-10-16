@@ -1,9 +1,9 @@
 
-import { fetchRoles } from "#/api/funcoes";
+import { fetchRoles, type Role } from "#/api/funcoes";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 interface ListRolesProps {
-    data: string[] | undefined,
+    data: Role[] | undefined,
     state: { isLoading: boolean, isEmpty: boolean }
 }
 
@@ -21,12 +21,9 @@ export function useListRoles(): ListRolesProps {
 
     const isEmpty = !isLoading && (!data || data.length === 0);
 
-    const formattedData = data?.map( (value) => {
-        return value.replaceAll('_', ' ')
-    })
 
     return { 
-        data: formattedData,
+        data: data,
         state: { isLoading, isEmpty } 
     };
 }

@@ -12,14 +12,15 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthIndexRouteImport } from './routes/_auth/index'
+import { Route as ConvidarMembroIdRouteImport } from './routes/convidar-membro.$id'
 import { Route as ProfileIndexRouteImport } from './routes/profile/index'
 import { Route as AuthDashboardLayoutRouteImport } from './routes/_auth/dashboard/_layout'
 import { Route as AuthDashboardLayoutAlunosIndexRouteImport } from './routes/_auth/dashboard/_layout.alunos/index'
 import { Route as AuthDashboardLayoutConvitesIndexRouteImport } from './routes/_auth/dashboard/_layout.convites/index'
+import { Route as AuthDashboardLayoutFuncoesIndexRouteImport } from './routes/_auth/dashboard/_layout.funcoes/index'
 import { Route as AuthDashboardLayoutInstrumentosIndexRouteImport } from './routes/_auth/dashboard/_layout.instrumentos/index'
 import { Route as AuthDashboardLayoutMembrosIndexRouteImport } from './routes/_auth/dashboard/_layout.membros/index'
 import { Route as AuthDashboardLayoutMusicosIndexRouteImport } from './routes/_auth/dashboard/_layout.musicos/index'
-import { Route as AuthDashboardLayoutPapeisIndexRouteImport } from './routes/_auth/dashboard/_layout.papeis/index'
 import { Route as AuthDashboardLayoutProfessoresIndexRouteImport } from './routes/_auth/dashboard/_layout.professores/index'
 
 const AuthRoute = AuthRouteImport.update({
@@ -35,6 +36,11 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthRoute,
+} as any)
+const ConvidarMembroIdRoute = ConvidarMembroIdRouteImport.update({
+  id: '/convidar-membro/$id',
+  path: '/convidar-membro/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileIndexRoute = ProfileIndexRouteImport.update({
   id: '/profile/',
@@ -58,6 +64,12 @@ const AuthDashboardLayoutConvitesIndexRoute =
     path: '/convites/',
     getParentRoute: () => AuthDashboardLayoutRoute,
   } as any)
+const AuthDashboardLayoutFuncoesIndexRoute =
+  AuthDashboardLayoutFuncoesIndexRouteImport.update({
+    id: '/funcoes/',
+    path: '/funcoes/',
+    getParentRoute: () => AuthDashboardLayoutRoute,
+  } as any)
 const AuthDashboardLayoutInstrumentosIndexRoute =
   AuthDashboardLayoutInstrumentosIndexRouteImport.update({
     id: '/instrumentos/',
@@ -76,12 +88,6 @@ const AuthDashboardLayoutMusicosIndexRoute =
     path: '/musicos/',
     getParentRoute: () => AuthDashboardLayoutRoute,
   } as any)
-const AuthDashboardLayoutPapeisIndexRoute =
-  AuthDashboardLayoutPapeisIndexRouteImport.update({
-    id: '/papeis/',
-    path: '/papeis/',
-    getParentRoute: () => AuthDashboardLayoutRoute,
-  } as any)
 const AuthDashboardLayoutProfessoresIndexRoute =
   AuthDashboardLayoutProfessoresIndexRouteImport.update({
     id: '/professores/',
@@ -92,42 +98,45 @@ const AuthDashboardLayoutProfessoresIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
   '/login': typeof LoginRoute
+  '/convidar-membro/$id': typeof ConvidarMembroIdRoute
   '/profile/': typeof ProfileIndexRoute
   '/dashboard': typeof AuthDashboardLayoutRouteWithChildren
   '/dashboard/alunos/': typeof AuthDashboardLayoutAlunosIndexRoute
   '/dashboard/convites/': typeof AuthDashboardLayoutConvitesIndexRoute
+  '/dashboard/funcoes/': typeof AuthDashboardLayoutFuncoesIndexRoute
   '/dashboard/instrumentos/': typeof AuthDashboardLayoutInstrumentosIndexRoute
   '/dashboard/membros/': typeof AuthDashboardLayoutMembrosIndexRoute
   '/dashboard/musicos/': typeof AuthDashboardLayoutMusicosIndexRoute
-  '/dashboard/papeis/': typeof AuthDashboardLayoutPapeisIndexRoute
   '/dashboard/professores/': typeof AuthDashboardLayoutProfessoresIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/convidar-membro/$id': typeof ConvidarMembroIdRoute
   '/': typeof AuthIndexRoute
   '/profile': typeof ProfileIndexRoute
   '/dashboard': typeof AuthDashboardLayoutRouteWithChildren
   '/dashboard/alunos': typeof AuthDashboardLayoutAlunosIndexRoute
   '/dashboard/convites': typeof AuthDashboardLayoutConvitesIndexRoute
+  '/dashboard/funcoes': typeof AuthDashboardLayoutFuncoesIndexRoute
   '/dashboard/instrumentos': typeof AuthDashboardLayoutInstrumentosIndexRoute
   '/dashboard/membros': typeof AuthDashboardLayoutMembrosIndexRoute
   '/dashboard/musicos': typeof AuthDashboardLayoutMusicosIndexRoute
-  '/dashboard/papeis': typeof AuthDashboardLayoutPapeisIndexRoute
   '/dashboard/professores': typeof AuthDashboardLayoutProfessoresIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
+  '/convidar-membro/$id': typeof ConvidarMembroIdRoute
   '/_auth/': typeof AuthIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/_auth/dashboard/_layout': typeof AuthDashboardLayoutRouteWithChildren
   '/_auth/dashboard/_layout/alunos/': typeof AuthDashboardLayoutAlunosIndexRoute
   '/_auth/dashboard/_layout/convites/': typeof AuthDashboardLayoutConvitesIndexRoute
+  '/_auth/dashboard/_layout/funcoes/': typeof AuthDashboardLayoutFuncoesIndexRoute
   '/_auth/dashboard/_layout/instrumentos/': typeof AuthDashboardLayoutInstrumentosIndexRoute
   '/_auth/dashboard/_layout/membros/': typeof AuthDashboardLayoutMembrosIndexRoute
   '/_auth/dashboard/_layout/musicos/': typeof AuthDashboardLayoutMusicosIndexRoute
-  '/_auth/dashboard/_layout/papeis/': typeof AuthDashboardLayoutPapeisIndexRoute
   '/_auth/dashboard/_layout/professores/': typeof AuthDashboardLayoutProfessoresIndexRoute
 }
 export interface FileRouteTypes {
@@ -135,47 +144,51 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/convidar-membro/$id'
     | '/profile/'
     | '/dashboard'
     | '/dashboard/alunos/'
     | '/dashboard/convites/'
+    | '/dashboard/funcoes/'
     | '/dashboard/instrumentos/'
     | '/dashboard/membros/'
     | '/dashboard/musicos/'
-    | '/dashboard/papeis/'
     | '/dashboard/professores/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
+    | '/convidar-membro/$id'
     | '/'
     | '/profile'
     | '/dashboard'
     | '/dashboard/alunos'
     | '/dashboard/convites'
+    | '/dashboard/funcoes'
     | '/dashboard/instrumentos'
     | '/dashboard/membros'
     | '/dashboard/musicos'
-    | '/dashboard/papeis'
     | '/dashboard/professores'
   id:
     | '__root__'
     | '/_auth'
     | '/login'
+    | '/convidar-membro/$id'
     | '/_auth/'
     | '/profile/'
     | '/_auth/dashboard/_layout'
     | '/_auth/dashboard/_layout/alunos/'
     | '/_auth/dashboard/_layout/convites/'
+    | '/_auth/dashboard/_layout/funcoes/'
     | '/_auth/dashboard/_layout/instrumentos/'
     | '/_auth/dashboard/_layout/membros/'
     | '/_auth/dashboard/_layout/musicos/'
-    | '/_auth/dashboard/_layout/papeis/'
     | '/_auth/dashboard/_layout/professores/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   LoginRoute: typeof LoginRoute
+  ConvidarMembroIdRoute: typeof ConvidarMembroIdRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
 }
 
@@ -201,6 +214,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof AuthRoute
+    }
+    '/convidar-membro/$id': {
+      id: '/convidar-membro/$id'
+      path: '/convidar-membro/$id'
+      fullPath: '/convidar-membro/$id'
+      preLoaderRoute: typeof ConvidarMembroIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/profile/': {
       id: '/profile/'
@@ -230,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthDashboardLayoutConvitesIndexRouteImport
       parentRoute: typeof AuthDashboardLayoutRoute
     }
+    '/_auth/dashboard/_layout/funcoes/': {
+      id: '/_auth/dashboard/_layout/funcoes/'
+      path: '/funcoes'
+      fullPath: '/dashboard/funcoes/'
+      preLoaderRoute: typeof AuthDashboardLayoutFuncoesIndexRouteImport
+      parentRoute: typeof AuthDashboardLayoutRoute
+    }
     '/_auth/dashboard/_layout/instrumentos/': {
       id: '/_auth/dashboard/_layout/instrumentos/'
       path: '/instrumentos'
@@ -251,13 +278,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthDashboardLayoutMusicosIndexRouteImport
       parentRoute: typeof AuthDashboardLayoutRoute
     }
-    '/_auth/dashboard/_layout/papeis/': {
-      id: '/_auth/dashboard/_layout/papeis/'
-      path: '/papeis'
-      fullPath: '/dashboard/papeis/'
-      preLoaderRoute: typeof AuthDashboardLayoutPapeisIndexRouteImport
-      parentRoute: typeof AuthDashboardLayoutRoute
-    }
     '/_auth/dashboard/_layout/professores/': {
       id: '/_auth/dashboard/_layout/professores/'
       path: '/professores'
@@ -271,21 +291,21 @@ declare module '@tanstack/react-router' {
 interface AuthDashboardLayoutRouteChildren {
   AuthDashboardLayoutAlunosIndexRoute: typeof AuthDashboardLayoutAlunosIndexRoute
   AuthDashboardLayoutConvitesIndexRoute: typeof AuthDashboardLayoutConvitesIndexRoute
+  AuthDashboardLayoutFuncoesIndexRoute: typeof AuthDashboardLayoutFuncoesIndexRoute
   AuthDashboardLayoutInstrumentosIndexRoute: typeof AuthDashboardLayoutInstrumentosIndexRoute
   AuthDashboardLayoutMembrosIndexRoute: typeof AuthDashboardLayoutMembrosIndexRoute
   AuthDashboardLayoutMusicosIndexRoute: typeof AuthDashboardLayoutMusicosIndexRoute
-  AuthDashboardLayoutPapeisIndexRoute: typeof AuthDashboardLayoutPapeisIndexRoute
   AuthDashboardLayoutProfessoresIndexRoute: typeof AuthDashboardLayoutProfessoresIndexRoute
 }
 
 const AuthDashboardLayoutRouteChildren: AuthDashboardLayoutRouteChildren = {
   AuthDashboardLayoutAlunosIndexRoute: AuthDashboardLayoutAlunosIndexRoute,
   AuthDashboardLayoutConvitesIndexRoute: AuthDashboardLayoutConvitesIndexRoute,
+  AuthDashboardLayoutFuncoesIndexRoute: AuthDashboardLayoutFuncoesIndexRoute,
   AuthDashboardLayoutInstrumentosIndexRoute:
     AuthDashboardLayoutInstrumentosIndexRoute,
   AuthDashboardLayoutMembrosIndexRoute: AuthDashboardLayoutMembrosIndexRoute,
   AuthDashboardLayoutMusicosIndexRoute: AuthDashboardLayoutMusicosIndexRoute,
-  AuthDashboardLayoutPapeisIndexRoute: AuthDashboardLayoutPapeisIndexRoute,
   AuthDashboardLayoutProfessoresIndexRoute:
     AuthDashboardLayoutProfessoresIndexRoute,
 }
@@ -308,6 +328,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   LoginRoute: LoginRoute,
+  ConvidarMembroIdRoute: ConvidarMembroIdRoute,
   ProfileIndexRoute: ProfileIndexRoute,
 }
 export const routeTree = rootRouteImport

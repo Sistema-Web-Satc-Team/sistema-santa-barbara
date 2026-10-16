@@ -76,6 +76,12 @@ public class FileService {
         storage.delete(file.getStorageKey());
     }
 
+    @Transactional
+    public void delete(StoredFile file) {
+        repository.delete(file);
+        storage.delete(file.getStorageKey());
+    }
+
     private String sanitize(String name) {
         if (name == null || name.isBlank()) return "arquivo";
         String clean = Path.of(name).getFileName().toString();
@@ -89,6 +95,18 @@ public class FileService {
                 .path("/files/{id}")
                 .buildAndExpand(fileId)
                 .toUriString();
+    }
+
+    public String urlForByResource(String resource, UUID fileId) {
+        if (fileId == null) return null;
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(resource + "/files/{id}")
+                .buildAndExpand(fileId)
+                .toUriString();
+    }
+
+    public String urlForByResource(String resource, StoredFile file) {
+        return file == null ? null : urlForByResource(resource, file.getId());
     }
 
     public String urlFor(StoredFile file) {

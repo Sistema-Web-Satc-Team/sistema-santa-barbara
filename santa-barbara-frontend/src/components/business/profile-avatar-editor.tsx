@@ -11,17 +11,19 @@ import { Spinner } from '#/components/ui/spinner'
 import { useAuth } from '#/hooks/use-auth'
 import { useCoarsePointer } from '#/hooks/use-coarse-pointer'
 import { useProfilePhoto } from '#/hooks/use-profile-photo'
-import { prepareImage } from '#/lib/image-crop'
 import type { PreparedImage } from '#/lib/image-crop'
-import { CameraIcon, ImageIcon, Trash2Icon, UserRoundIcon } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { prepareImage } from '#/lib/image-crop'
+import { capitalizeAll } from '#/lib/utils'
+import { CameraIcon, ImageIcon, Trash2Icon } from 'lucide-react'
 import type { ChangeEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import { initials } from './membros/members'
 
 export function ProfileAvatarEditor() {
   const { state } = useAuth()
   const photoUrl = state.profile?.avatarURL ?? ''
-  const displayName = state.profile?.nome ?? ''
+  const displayName = capitalizeAll(state.profile?.nome ?? '');
   const isTouchDevice = useCoarsePointer()
   const { save, remove } = useProfilePhoto()
 
@@ -56,7 +58,7 @@ export function ProfileAvatarEditor() {
   }
 
   function handleConfirm(photo: Blob) {
-    save.mutate({ photo, replace: hasPhoto }, { onSuccess: () => setImage(null) })
+    save.mutate({ photo }, { onSuccess: () => setImage(null) })
   }
 
   return (
@@ -66,7 +68,7 @@ export function ProfileAvatarEditor() {
           <AvatarImage src={photoUrl} alt={`Foto de perfil de ${displayName}`} />
         )}
         <AvatarFallback>
-          <UserRoundIcon className="size-9" aria-hidden />
+          {state.profile && initials(displayName)}
         </AvatarFallback>
       </Avatar>
 

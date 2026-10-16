@@ -64,7 +64,7 @@ public class MembroVinculo {
             ATIVO,
             AGENDADO,
             CANCELADO,
-            ENCERADO;
+            ENCERRADO;
 
     }
 
@@ -142,7 +142,7 @@ public class MembroVinculo {
 
         if (this.estaAgendado()) { return MembroVinculoStatusEnum.AGENDADO; }
 
-        return MembroVinculoStatusEnum.ENCERADO;
+        return MembroVinculoStatusEnum.ENCERRADO;
     }
 
 }

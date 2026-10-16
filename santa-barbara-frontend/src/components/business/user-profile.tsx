@@ -1,6 +1,8 @@
 import { useAuth } from "#/hooks/use-auth";
+import { capitalizeAll } from "#/lib/utils";
 import { ChevronsUpDown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { initials } from "./membros/members";
 
 
 export function UserProfile() {
@@ -14,13 +16,13 @@ export function UserProfile() {
         `}
         >
             <Avatar size="lg">
-                <AvatarImage src={state.profile?.avatarUrl ?? ""} alt={state.profile?.nome} />
+                <AvatarImage src={state.profile?.avatarURL ?? ""} alt={capitalizeAll(state.profile?.nome ?? '')} />
                 <AvatarFallback>
-                    {state.profile && state.profile.nome.length > 0 ? state.profile.nome[0] : "UK"}
+                    {state.profile && initials(state.profile.nome)}
                 </AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left w-fit">
-                <span className="text-sm text-foreground font-bold whitespace-nowrap">{state.profile && state.profile.nome.length > 0 ? state.profile.nome : "Unknown"}</span>
+                <span className="text-sm text-foreground font-bold whitespace-nowrap">{state.profile && state.profile.nome.length > 0 ? capitalizeAll(state.profile.nome) : "Unknown"}</span>
                 <span className="text-xs text-muted-foreground whitespace-nowrap">{state.profile && state.profile.email.length > 0 ? state.profile.email : "unknown@example.com"}</span>
             </div>
             <ChevronsUpDown className="w-4 h-4 text-sidebar-foreground" />

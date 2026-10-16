@@ -101,10 +101,10 @@ function DashboardLayout() {
 
 
                   <SidebarMenuItem>
-                    <SidebarMenuButton asChild isActive={pathname === "/dashboard/papeis"}>
-                      <Link to="/dashboard/papeis">
+                    <SidebarMenuButton asChild isActive={pathname === "/dashboard/funcoes"}>
+                      <Link to="/dashboard/funcoes">
                         <Shield />
-                        <span>Papeis</span>
+                        <span>Funções</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

@@ -2,16 +2,24 @@ import { Button } from '#/components/ui/button';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '#/components/ui/select';
-import type { UsePaginationResponse } from '#/hooks/use-pagination';
 
 
 interface DataPaginationProps {
-  pagination: UsePaginationResponse;
-  pagesSizes?: number[];
+  pagination: {
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  },
+  onSizeChange: (size: number) => void;
+  onPageChange: (page: number) => void;
+  pagesSizes: number[];
 }
 
 export function DataPagination({
   pagination,
+  onSizeChange,
+  onPageChange,
   pagesSizes = [10,20,50]
 }: DataPaginationProps) {
 
@@ -19,7 +27,7 @@ export function DataPagination({
     <div className="flex items-center justify-between mt-4">
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <span>Itens por página</span>
-        <Select value={String(pagination.data.size)} onValueChange={(v) => pagination.actions.setSize(Number(v))}>
+        <Select value={String(pagination.size)} onValueChange={(v) => onSizeChange(Math.floor(Number(v)))}>
           <SelectTrigger className="w-20">
             <SelectValue />
           </SelectTrigger>
@@ -29,18 +37,18 @@ export function DataPagination({
             ))}
           </SelectContent>
         </Select>
-        {pagination.data.totalElements !== undefined && <span>{pagination.data.totalElements} no total</span>}
+        {pagination.totalElements !== undefined && <span>{pagination.totalElements} no total</span>}
       </div>
 
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm" disabled={pagination.data.page === 0} onClick={() => pagination.actions.setPage(pagination.data.page - 1)}>
+        <Button variant="outline" size="sm" disabled={pagination.page === 0} onClick={() => onPageChange(pagination.page - 1)}>
           Anterior
         </Button>
         <span className="text-sm">
-          Página {pagination.data.page + 1}
-          {pagination.data.totalPages !== undefined && ` de ${Math.max(pagination.data.totalPages, 1)}`}
+          Página {pagination.page + 1}
+          {pagination.totalPages !== undefined && ` de ${Math.max(pagination.totalPages, 1)}`}
         </span>
-        <Button variant="outline" size="sm" disabled={!pagination.state.hasNext} onClick={() => pagination.actions.setPage(pagination.data.page + 1)}>
+        <Button variant="outline" size="sm" disabled={pagination.page + 1 >= pagination.totalPages} onClick={() => onPageChange(pagination.page + 1)}>
           Próxima
         </Button>
       </div>
