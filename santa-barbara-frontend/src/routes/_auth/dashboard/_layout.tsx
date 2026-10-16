@@ -92,7 +92,7 @@ function DashboardLayout() {
 
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild isActive={pathname === "/dashboard/membros/convites"}>
-                      <Link to="/dashboard/convites">
+                      <Link to="/dashboard/convites" search={{page: 0}}>
                         <Mail />
                         <span>Convidar Membros</span>
                       </Link>

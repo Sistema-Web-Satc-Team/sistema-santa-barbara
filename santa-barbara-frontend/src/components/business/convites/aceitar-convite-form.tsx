@@ -4,7 +4,6 @@ import {
     Eye,
     EyeOff,
     KeyRound,
-    Music2,
     UserRound
 } from 'lucide-react';
 import { useState } from 'react';
@@ -85,7 +84,11 @@ export function AceitarConviteForm({
       <div className="relative w-full max-w-md">
         <div className="mb-8 flex flex-col items-center text-center">
           <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm">
-            <Music2 className="size-7" aria-hidden="true" />
+            <img 
+                src="/assets/images/Brand.jpg" 
+                alt="Brasão Santa Bárbara" 
+                className="size-24 object-contain contrast-[0.94]" 
+            />
           </div>
 
           <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">

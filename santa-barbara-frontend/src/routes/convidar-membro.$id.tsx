@@ -2,9 +2,12 @@ import { validarConvite } from '#/api/convites';
 import { AceitarConviteForm } from '#/components/business/convites/aceitar-convite-form';
 import { Spinner } from '#/components/ui/spinner';
 import { useQuery } from '@tanstack/react-query';
-import { createFileRoute, Navigate } from '@tanstack/react-router';
+import { createFileRoute, Navigate, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/convidar-membro/$id')({
+  beforeLoad: ({ context }) => {
+    if (context.profile) throw redirect({ to: '/' })
+  },
   component: ConvidarMembroPage,
 });
 
