@@ -47,6 +47,8 @@ public class ConvidarMembro {
 
         Convite convite = new Convite(membro);
 
+        this.conviteRepository.save(convite);
+
         return processarEnvio(convite, request.canal());
     }
 
