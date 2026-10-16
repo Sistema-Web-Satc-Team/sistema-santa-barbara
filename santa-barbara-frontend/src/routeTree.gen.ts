@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthIndexRouteImport } from './routes/_auth/index'
+import { Route as ConvidarMembroIdRouteImport } from './routes/convidar-membro.$id'
 import { Route as ProfileIndexRouteImport } from './routes/profile/index'
 import { Route as AuthDashboardLayoutRouteImport } from './routes/_auth/dashboard/_layout'
 import { Route as AuthDashboardLayoutAlunosIndexRouteImport } from './routes/_auth/dashboard/_layout.alunos/index'
@@ -35,6 +36,11 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthRoute,
+} as any)
+const ConvidarMembroIdRoute = ConvidarMembroIdRouteImport.update({
+  id: '/convidar-membro/$id',
+  path: '/convidar-membro/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileIndexRoute = ProfileIndexRouteImport.update({
   id: '/profile/',
@@ -92,6 +98,7 @@ const AuthDashboardLayoutProfessoresIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
   '/login': typeof LoginRoute
+  '/convidar-membro/$id': typeof ConvidarMembroIdRoute
   '/profile/': typeof ProfileIndexRoute
   '/dashboard': typeof AuthDashboardLayoutRouteWithChildren
   '/dashboard/alunos/': typeof AuthDashboardLayoutAlunosIndexRoute
@@ -104,6 +111,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/convidar-membro/$id': typeof ConvidarMembroIdRoute
   '/': typeof AuthIndexRoute
   '/profile': typeof ProfileIndexRoute
   '/dashboard': typeof AuthDashboardLayoutRouteWithChildren
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
+  '/convidar-membro/$id': typeof ConvidarMembroIdRoute
   '/_auth/': typeof AuthIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/_auth/dashboard/_layout': typeof AuthDashboardLayoutRouteWithChildren
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/convidar-membro/$id'
     | '/profile/'
     | '/dashboard'
     | '/dashboard/alunos/'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
+    | '/convidar-membro/$id'
     | '/'
     | '/profile'
     | '/dashboard'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_auth'
     | '/login'
+    | '/convidar-membro/$id'
     | '/_auth/'
     | '/profile/'
     | '/_auth/dashboard/_layout'
@@ -176,6 +188,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   LoginRoute: typeof LoginRoute
+  ConvidarMembroIdRoute: typeof ConvidarMembroIdRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
 }
 
@@ -201,6 +214,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof AuthRoute
+    }
+    '/convidar-membro/$id': {
+      id: '/convidar-membro/$id'
+      path: '/convidar-membro/$id'
+      fullPath: '/convidar-membro/$id'
+      preLoaderRoute: typeof ConvidarMembroIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/profile/': {
       id: '/profile/'
@@ -308,6 +328,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   LoginRoute: LoginRoute,
+  ConvidarMembroIdRoute: ConvidarMembroIdRoute,
   ProfileIndexRoute: ProfileIndexRoute,
 }
 export const routeTree = rootRouteImport

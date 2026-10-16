@@ -6,6 +6,7 @@ import br.org.bandasantabarbara.application.dtos.convite.*;
 import br.org.bandasantabarbara.application.usecase.convites.AceitarConvite;
 import br.org.bandasantabarbara.application.usecase.convites.ConsultarConvite;
 import br.org.bandasantabarbara.application.usecase.convites.ConvidarMembro;
+import br.org.bandasantabarbara.model.EnumConviteStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -64,13 +65,15 @@ public class ConviteController {
     public PageResponse<ConsultarConviteResponse> listar(
             @PageableDefault(
                     size = 20,
-                    sort = "status",
+                    sort = "dataCriacaoConvite",
                     direction = Sort.Direction.ASC
             )
-            Pageable pageable
+            Pageable pageable,
+            @RequestParam(required = false) EnumConviteStatus status,
+            @RequestParam(required = false) String search
     ) {
 
-        return this.consultarConviteUsecase.listar(pageable);
+        return this.consultarConviteUsecase.listar(search, status, pageable);
     }
 
 

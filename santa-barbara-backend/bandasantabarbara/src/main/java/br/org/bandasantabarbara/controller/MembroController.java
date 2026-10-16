@@ -78,9 +78,10 @@ public class MembroController {
             )
             Pageable pageable,
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) Boolean maiorDeIdade
+            @RequestParam(required = false) Boolean maiorDeIdade,
+            @RequestParam(required = false) Boolean semAcesso
     ) {
-        return consultarMembrosUseCase.listarMembros(search, maiorDeIdade, pageable);
+        return consultarMembrosUseCase.listarMembros(search, maiorDeIdade, semAcesso, pageable);
     }
 
 

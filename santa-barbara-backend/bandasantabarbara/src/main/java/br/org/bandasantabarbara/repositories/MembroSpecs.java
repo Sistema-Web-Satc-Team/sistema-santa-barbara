@@ -1,6 +1,7 @@
 package br.org.bandasantabarbara.repositories;
 
 import br.org.bandasantabarbara.model.Membro;
+import br.org.bandasantabarbara.model.MembroCredencial;
 import br.org.bandasantabarbara.model.MembroVinculo;
 import org.springframework.data.jpa.domain.Specification;
 import java.time.LocalDate;
@@ -51,6 +52,18 @@ public class MembroSpecs {
             return maiorDeIdade
                     ? cb.lessThanOrEqualTo(root.<LocalDate>get("dataNascimento"), limite)
                     : cb.greaterThan(root.<LocalDate>get("dataNascimento"), limite);
+        };
+    }
+
+    public static Specification<Membro> semAcesso(Boolean semAcesso) {
+        return (root, query, cb) -> {
+            if (semAcesso == null) return null;
+
+            Subquery<Long> sub = query.subquery(Long.class);
+            Root<MembroCredencial> cred = sub.from(MembroCredencial.class);
+            sub.select(cb.literal(1L)).where(cb.equal(cred.get("membro"), root));
+
+            return semAcesso ? cb.not(cb.exists(sub)) : cb.exists(sub);
         };
     }
 }

@@ -30,10 +30,11 @@ public class ConsultarMembrosUseCase {
     }
 
 
-    public PageResponse<MembroResponse> listarMembros(String busca, Boolean maiorDeIdade, Pageable pageable) {
+    public PageResponse<MembroResponse> listarMembros(String busca, Boolean maiorDeIdade, Boolean semAcesso, Pageable pageable) {
         Specification<Membro> spec = Specification
                 .where(MembroSpecs.porNomeOuEmail(busca))
-                .and(MembroSpecs.porMaioridade(maiorDeIdade));
+                .and(MembroSpecs.porMaioridade(maiorDeIdade))
+                .and(MembroSpecs.semAcesso(semAcesso));
 
         Page<Membro> membrosPage = membroRepository.findAll(spec, pageable);
 

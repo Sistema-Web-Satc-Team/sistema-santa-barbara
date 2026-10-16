@@ -6,6 +6,7 @@ import br.org.bandasantabarbara.application.dtos.membros.MembroResumidoResponse;
 import br.org.bandasantabarbara.application.mapper.PageMapper;
 import br.org.bandasantabarbara.exception.NotFoundException;
 import br.org.bandasantabarbara.model.Convite;
+import br.org.bandasantabarbara.model.EnumConviteStatus;
 import br.org.bandasantabarbara.model.Membro;
 import br.org.bandasantabarbara.repositories.ConviteRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,9 +54,10 @@ public class ConsultarConvite {
         );
     }
 
-    public PageResponse<ConsultarConviteResponse> listar(Pageable pageable) {
+    public PageResponse<ConsultarConviteResponse> listar(String search, EnumConviteStatus status, Pageable pageable) {
 
-        Page<Convite> convites = this.conviteRepository.listarTodosConvites(pageable);
+
+        Page<Convite> convites = this.conviteRepository.listarTodosConvites(search, status, pageable);
 
         Page<ConsultarConviteResponse> paginaResponse = convites.map(convite -> new ConsultarConviteResponse(
                 convite.getId(),
