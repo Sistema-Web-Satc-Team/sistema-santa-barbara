@@ -20,6 +20,7 @@ import { Route as AuthDashboardLayoutConvitesIndexRouteImport } from './routes/_
 import { Route as AuthDashboardLayoutFuncoesIndexRouteImport } from './routes/_auth/dashboard/_layout.funcoes/index'
 import { Route as AuthDashboardLayoutInstrumentosIndexRouteImport } from './routes/_auth/dashboard/_layout.instrumentos/index'
 import { Route as AuthDashboardLayoutMembrosIndexRouteImport } from './routes/_auth/dashboard/_layout.membros/index'
+import { Route as AuthDashboardLayoutMusicasIndexRouteImport } from './routes/_auth/dashboard/_layout.musicas/index'
 import { Route as AuthDashboardLayoutMusicosIndexRouteImport } from './routes/_auth/dashboard/_layout.musicos/index'
 import { Route as AuthDashboardLayoutProfessoresIndexRouteImport } from './routes/_auth/dashboard/_layout.professores/index'
 
@@ -82,6 +83,12 @@ const AuthDashboardLayoutMembrosIndexRoute =
     path: '/membros/',
     getParentRoute: () => AuthDashboardLayoutRoute,
   } as any)
+const AuthDashboardLayoutMusicasIndexRoute =
+  AuthDashboardLayoutMusicasIndexRouteImport.update({
+    id: '/musicas/',
+    path: '/musicas/',
+    getParentRoute: () => AuthDashboardLayoutRoute,
+  } as any)
 const AuthDashboardLayoutMusicosIndexRoute =
   AuthDashboardLayoutMusicosIndexRouteImport.update({
     id: '/musicos/',
@@ -106,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/funcoes/': typeof AuthDashboardLayoutFuncoesIndexRoute
   '/dashboard/instrumentos/': typeof AuthDashboardLayoutInstrumentosIndexRoute
   '/dashboard/membros/': typeof AuthDashboardLayoutMembrosIndexRoute
+  '/dashboard/musicas/': typeof AuthDashboardLayoutMusicasIndexRoute
   '/dashboard/musicos/': typeof AuthDashboardLayoutMusicosIndexRoute
   '/dashboard/professores/': typeof AuthDashboardLayoutProfessoresIndexRoute
 }
@@ -120,6 +128,7 @@ export interface FileRoutesByTo {
   '/dashboard/funcoes': typeof AuthDashboardLayoutFuncoesIndexRoute
   '/dashboard/instrumentos': typeof AuthDashboardLayoutInstrumentosIndexRoute
   '/dashboard/membros': typeof AuthDashboardLayoutMembrosIndexRoute
+  '/dashboard/musicas': typeof AuthDashboardLayoutMusicasIndexRoute
   '/dashboard/musicos': typeof AuthDashboardLayoutMusicosIndexRoute
   '/dashboard/professores': typeof AuthDashboardLayoutProfessoresIndexRoute
 }
@@ -136,6 +145,7 @@ export interface FileRoutesById {
   '/_auth/dashboard/_layout/funcoes/': typeof AuthDashboardLayoutFuncoesIndexRoute
   '/_auth/dashboard/_layout/instrumentos/': typeof AuthDashboardLayoutInstrumentosIndexRoute
   '/_auth/dashboard/_layout/membros/': typeof AuthDashboardLayoutMembrosIndexRoute
+  '/_auth/dashboard/_layout/musicas/': typeof AuthDashboardLayoutMusicasIndexRoute
   '/_auth/dashboard/_layout/musicos/': typeof AuthDashboardLayoutMusicosIndexRoute
   '/_auth/dashboard/_layout/professores/': typeof AuthDashboardLayoutProfessoresIndexRoute
 }
@@ -152,6 +162,7 @@ export interface FileRouteTypes {
     | '/dashboard/funcoes/'
     | '/dashboard/instrumentos/'
     | '/dashboard/membros/'
+    | '/dashboard/musicas/'
     | '/dashboard/musicos/'
     | '/dashboard/professores/'
   fileRoutesByTo: FileRoutesByTo
@@ -166,6 +177,7 @@ export interface FileRouteTypes {
     | '/dashboard/funcoes'
     | '/dashboard/instrumentos'
     | '/dashboard/membros'
+    | '/dashboard/musicas'
     | '/dashboard/musicos'
     | '/dashboard/professores'
   id:
@@ -181,6 +193,7 @@ export interface FileRouteTypes {
     | '/_auth/dashboard/_layout/funcoes/'
     | '/_auth/dashboard/_layout/instrumentos/'
     | '/_auth/dashboard/_layout/membros/'
+    | '/_auth/dashboard/_layout/musicas/'
     | '/_auth/dashboard/_layout/musicos/'
     | '/_auth/dashboard/_layout/professores/'
   fileRoutesById: FileRoutesById
@@ -271,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthDashboardLayoutMembrosIndexRouteImport
       parentRoute: typeof AuthDashboardLayoutRoute
     }
+    '/_auth/dashboard/_layout/musicas/': {
+      id: '/_auth/dashboard/_layout/musicas/'
+      path: '/musicas'
+      fullPath: '/dashboard/musicas/'
+      preLoaderRoute: typeof AuthDashboardLayoutMusicasIndexRouteImport
+      parentRoute: typeof AuthDashboardLayoutRoute
+    }
     '/_auth/dashboard/_layout/musicos/': {
       id: '/_auth/dashboard/_layout/musicos/'
       path: '/musicos'
@@ -294,6 +314,7 @@ interface AuthDashboardLayoutRouteChildren {
   AuthDashboardLayoutFuncoesIndexRoute: typeof AuthDashboardLayoutFuncoesIndexRoute
   AuthDashboardLayoutInstrumentosIndexRoute: typeof AuthDashboardLayoutInstrumentosIndexRoute
   AuthDashboardLayoutMembrosIndexRoute: typeof AuthDashboardLayoutMembrosIndexRoute
+  AuthDashboardLayoutMusicasIndexRoute: typeof AuthDashboardLayoutMusicasIndexRoute
   AuthDashboardLayoutMusicosIndexRoute: typeof AuthDashboardLayoutMusicosIndexRoute
   AuthDashboardLayoutProfessoresIndexRoute: typeof AuthDashboardLayoutProfessoresIndexRoute
 }
@@ -305,6 +326,7 @@ const AuthDashboardLayoutRouteChildren: AuthDashboardLayoutRouteChildren = {
   AuthDashboardLayoutInstrumentosIndexRoute:
     AuthDashboardLayoutInstrumentosIndexRoute,
   AuthDashboardLayoutMembrosIndexRoute: AuthDashboardLayoutMembrosIndexRoute,
+  AuthDashboardLayoutMusicasIndexRoute: AuthDashboardLayoutMusicasIndexRoute,
   AuthDashboardLayoutMusicosIndexRoute: AuthDashboardLayoutMusicosIndexRoute,
   AuthDashboardLayoutProfessoresIndexRoute:
     AuthDashboardLayoutProfessoresIndexRoute,
