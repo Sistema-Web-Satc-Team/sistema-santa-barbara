@@ -1,4 +1,5 @@
 import { api } from '#/lib/axios'
+import { normalizeText } from '#/lib/text'
 
 export interface Musica {
   id: string
@@ -74,8 +75,6 @@ export async function fetchGeneroSugestoes(q: string): Promise<string[]> {
 export function matchesGenres(musica: Musica, selected: string[]): boolean {
   if (selected.length === 0) return true
 
-  const normalizeText = (text: string) =>
-    text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
   const wanted = selected.map(normalizeText)
   return musica.generos.some((genero) => wanted.includes(normalizeText(genero)))
 }
