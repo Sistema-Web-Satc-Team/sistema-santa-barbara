@@ -37,7 +37,7 @@ public class ConviteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public ConvidarMembroResponse convidarMembro(@RequestBody ConvidarMembroRequest dto) {
         return convidarMembroUsecase.convidar(dto);
     }
@@ -45,7 +45,7 @@ public class ConviteController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public ConvidarMembroResponse reenviarConvite(@PathVariable("id") UUID idConvite, @RequestBody CanalDTO request) {
         var dto = new ReenviarConviteRequest(idConvite, request.canal());
         return convidarMembroUsecase.reenviarConvite(dto);
@@ -53,7 +53,7 @@ public class ConviteController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public ConsultarConviteResponse getConvite(@PathVariable("id") UUID idConvite) {
         return this.consultarConviteUsecase.pegarPorId(idConvite);
     }
@@ -61,7 +61,7 @@ public class ConviteController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public PageResponse<ConsultarConviteResponse> listar(
             @PageableDefault(
                     size = 20,

@@ -30,7 +30,7 @@ public class PerfilService {
     public PerfilResponse buscarComClaims(UUID membroId, String nomeUsuario, List<String> papeis) {
         Membro membro = this.membroRepository.findById(membroId).orElseThrow(() -> new RuntimeException("Ocorreu um erro interno no servidor."));
 
-        return this.perfilMapper.toResponse(membro, nomeUsuario, papeis, this.fileService.urlFor(membro.getAvatarFile()));
+        return this.perfilMapper.toResponse(membro, nomeUsuario, papeis, this.fileService.urlForByResource( "/auth/me",membro.getAvatarFile()));
     }
 
     @Transactional

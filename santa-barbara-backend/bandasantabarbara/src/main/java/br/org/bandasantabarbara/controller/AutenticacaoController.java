@@ -6,17 +6,18 @@ import br.org.bandasantabarbara.application.dtos.auth.LoginRequest;
 import br.org.bandasantabarbara.application.dtos.auth.TokenResponse;
 import br.org.bandasantabarbara.application.dtos.profile.PerfilRequest;
 import br.org.bandasantabarbara.application.dtos.profile.PerfilResponse;
-import br.org.bandasantabarbara.application.usecase.auth.AtribuirFotoPerfilUseCase;
-import br.org.bandasantabarbara.application.usecase.auth.AutenticarMembroUseCase;
-import br.org.bandasantabarbara.application.usecase.auth.PerfilService;
-import br.org.bandasantabarbara.application.usecase.auth.RemoverFotoPerfilUseCase;
+import br.org.bandasantabarbara.application.services.storage.FileService;
+import br.org.bandasantabarbara.application.usecase.auth.*;
 import jakarta.validation.Valid;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,12 +29,16 @@ public class AutenticacaoController {
     private final PerfilService perfilService;
     private final AtribuirFotoPerfilUseCase atribuirFotoPerfilUseCase;
     private final RemoverFotoPerfilUseCase removerFotoPerfilUseCase;
+    private final ObterFotoPerfilUseCase obterFotoPerfilUseCase;
+    private final FileService fileService;
 
-    public AutenticacaoController(AutenticarMembroUseCase autenticarMembroUseCase, PerfilService perfilService, AtribuirFotoPerfilUseCase atribuirFotoPerfilUseCase, RemoverFotoPerfilUseCase removerFotoPerfilUseCase) {
+    public AutenticacaoController(AutenticarMembroUseCase autenticarMembroUseCase, ObterFotoPerfilUseCase obterFotoPerfilUseCase, FileService fileService, PerfilService perfilService, AtribuirFotoPerfilUseCase atribuirFotoPerfilUseCase, RemoverFotoPerfilUseCase removerFotoPerfilUseCase) {
         this.autenticarMembroUseCase = autenticarMembroUseCase;
         this.perfilService = perfilService;
         this.atribuirFotoPerfilUseCase = atribuirFotoPerfilUseCase;
         this.removerFotoPerfilUseCase = removerFotoPerfilUseCase;
+        this.obterFotoPerfilUseCase = obterFotoPerfilUseCase;
+        this.fileService = fileService;
     }
 
     @PostMapping("/login")
@@ -97,6 +102,23 @@ public class AutenticacaoController {
     public boolean verificar(@AuthenticationPrincipal Jwt jwt) {
 
         return jwt.getSubject() != null;
+    }
+
+    @GetMapping("/me/files/{id}")
+    public ResponseEntity<Resource> download(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        var fileMetadata = this.fileService.getMetadata(id);
+        var inputStream = this.obterFotoPerfilUseCase.open(id, UUID.fromString(jwt.getSubject()));
+
+        ContentDisposition disposition = ContentDisposition.inline()
+                .filename(fileMetadata.getFilename(), StandardCharsets.UTF_8)
+                .build();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(fileMetadata.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
+                .header("X-Content-Type-Options", "nosniff")
+                .body(new InputStreamResource(inputStream));
+
     }
 
 

@@ -24,7 +24,7 @@ public class InstrumentoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public InstrumentoResponse criarInstrumento(
             @RequestBody InstrumentoRequest body
     ) {
@@ -33,7 +33,7 @@ public class InstrumentoController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO', 'ALUNO', 'PROFESSOR', 'SECRETARIO', 'MUSICO_BANDA', 'RESPONSAVEL')")
     public List<InstrumentoResponse> listarInstrumentos(
 
     ) {
@@ -43,7 +43,7 @@ public class InstrumentoController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO', 'ALUNO', 'PROFESSOR', 'SECRETARIO', 'MUSICO_BANDA', 'RESPONSAVEL')")
     public InstrumentoResponse pegarInstrumentoPorId(
         @PathVariable int id
     ) {
@@ -54,7 +54,7 @@ public class InstrumentoController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public InstrumentoResponse atualizarInstrumentos(
             @PathVariable int id,
             @RequestBody InstrumentoRequest body
@@ -65,7 +65,7 @@ public class InstrumentoController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public void removerInstrumentos(
             @PathVariable int id
     ) {

@@ -24,7 +24,7 @@ public class FuncaoControlller {
 
 
     @GetMapping
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public List<FuncaoResponse> listarFuncoes() {
         return this.funcaoService.listarFuncoes();
     }

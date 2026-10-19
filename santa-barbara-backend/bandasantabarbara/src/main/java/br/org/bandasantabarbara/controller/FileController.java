@@ -28,7 +28,7 @@ public class FileController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
     public ResponseEntity<FileResponse> upload(@RequestParam("file") MultipartFile file) {
         StoredFile saved = service.upload(file);
         URI location = URI.create("/files/" + saved.getId());
@@ -37,7 +37,7 @@ public class FileController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
     public ResponseEntity<Resource> download(@PathVariable UUID id) {
         StoredFile file = service.getMetadata(id);
 
@@ -53,7 +53,7 @@ public class FileController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.delete(id);
         return ResponseEntity.noContent().build();

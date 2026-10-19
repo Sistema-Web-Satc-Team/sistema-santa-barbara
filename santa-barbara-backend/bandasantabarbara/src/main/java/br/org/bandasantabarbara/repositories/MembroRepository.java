@@ -1,6 +1,7 @@
 package br.org.bandasantabarbara.repositories;
 
 import br.org.bandasantabarbara.model.Membro;
+import br.org.bandasantabarbara.model.Partitura;
 import jakarta.persistence.Entity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -28,4 +29,8 @@ public interface MembroRepository extends JpaRepository<Membro, UUID>, JpaSpecif
         WHERE m.id = :id
     """)
     Optional<Membro> findByIdWithVinculos(@Param("id") UUID id);
+
+
+    @Query("SELECT m FROM Membro m JOIN FETCH m.avatarFile WHERE m.avatarFile.id = :fileId")
+    Optional<Membro> findByFileIdWithFile(@Param("fileId") UUID fileId);
 }

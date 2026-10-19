@@ -16,9 +16,13 @@ public interface MembroVinculoRepository extends Repository<MembroVinculo, Integ
 
     MembroVinculo save(MembroVinculo membroVinculo);
 
+    @EntityGraph(attributePaths = {"funcao"})
     @Query("select v from MembroVinculo v where v.id = :idVinculo and v.membro.id = :idMembro")
     Optional<MembroVinculo> findByIdAndMembroId(@Param("idVinculo") Integer idVinculo,
                                                 @Param("idMembro") UUID idMembro);
+
+    @Query("SELECT COUNT(v) FROM MembroVinculo v WHERE v.funcao.code = :codigo AND v.dataTermino IS NULL AND v.deletadoEm IS NULL")
+    long countByFuncaoCodeAndAtivoTrue(@Param("codigo") String codigo);
 
     @EntityGraph(attributePaths = "funcao")
     List<MembroVinculo> findByMembroId(UUID idMembro);

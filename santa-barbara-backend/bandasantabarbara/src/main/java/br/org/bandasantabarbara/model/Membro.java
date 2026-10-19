@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
 // Contém informações pessoais
 //
 
-// I
 @Entity
 @Table(name = "membro")
 public class Membro implements Persistable<UUID> {
@@ -64,7 +63,6 @@ public class Membro implements Persistable<UUID> {
         }
     }
 
-    // H
     @Id
     private UUID id;
 
@@ -127,7 +125,6 @@ public class Membro implements Persistable<UUID> {
     @Setter @Getter
     private StoredFile avatarFile;
 
-    // A
     public void setNome(String nome) {
 
         if (nome == null || nome.isBlank() ) {
@@ -163,7 +160,6 @@ public class Membro implements Persistable<UUID> {
         this.dataNascimento = dataNascimento;
     }
 
-    // T
     public void setEmail(String email) {
 
         if (email == null || email.isBlank()) {
@@ -204,7 +200,6 @@ public class Membro implements Persistable<UUID> {
      *
      */
 
-    // E
     @OneToMany(mappedBy = "membro", fetch = FetchType.LAZY)
     @Getter
     private List<MembroVinculo> vinculos;
@@ -214,7 +209,6 @@ public class Membro implements Persistable<UUID> {
     @Getter
     private List<MembroResponsavel> responsaveis;
 
-    // T
     @OneToOne(mappedBy = "membro", fetch = FetchType.EAGER)
     @Getter
     private MembroCredencial credencial;
@@ -276,7 +270,6 @@ public class Membro implements Persistable<UUID> {
 
 
 
-    //  H
     // Status para Credencial
     public String getStatusCredencial() {
 
@@ -287,7 +280,6 @@ public class Membro implements Persistable<UUID> {
         return "SEM_ACESSO";
     }
 
-    // I
     public int getIdade() {
         if (this.dataNascimento == null) {
             throw new RuntimeException("Data de nascimento não definida.");
@@ -298,4 +290,3 @@ public class Membro implements Persistable<UUID> {
 
 
 }
-// S

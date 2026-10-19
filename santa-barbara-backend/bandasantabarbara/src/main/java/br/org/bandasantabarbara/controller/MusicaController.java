@@ -78,14 +78,14 @@ public class MusicaController {
 
     @GetMapping("/generos/sugestoes")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'ALUNO', 'MAESTRO', 'MUSICO_BANDA', 'PROFESSOR', 'RESPONSAVEL')")
     public List<String> sugestionarGeneros(@RequestParam String q) {
         return this.sugerirGeneroUseCase.sugerir(q);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'ALUNO', 'MAESTRO', 'MUSICO_BANDA', 'PROFESSOR', 'RESPONSAVEL')")
     public PageResponse<MusicaResponse> listar(
             @PageableDefault(
                     size = 10,
@@ -100,7 +100,7 @@ public class MusicaController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public ResponseEntity<MusicaResponse> atualizar(
             @PathVariable UUID id,
             @Valid @RequestBody MusicaRequest request) {
@@ -115,7 +115,7 @@ public class MusicaController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public ResponseEntity<Void> remover(@PathVariable UUID id) {
         this.removerMusicaUseCase.executar(id);
         return ResponseEntity.noContent().build();
@@ -123,7 +123,7 @@ public class MusicaController {
 
     @PostMapping(value = "/{musicaId}/partituras", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public PartituraResponse cadastrarPartituras(
             @PathVariable UUID musicaId,
             @RequestPart("file") MultipartFile file,
@@ -135,7 +135,7 @@ public class MusicaController {
     }
 
     @GetMapping("/{musicaId}/partituras")
-    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'MAESTRO', 'ALUNO', 'MUSICO_BANDA', 'PROFESSOR')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'RESPONSAVEL', 'ADMIN', 'MAESTRO', 'ALUNO', 'MUSICO_BANDA', 'PROFESSOR')")
     public List<PartituraResponse> listarPartiturasDaMusica(
             @PathVariable UUID musicaId
     ) {
@@ -144,7 +144,7 @@ public class MusicaController {
 
     @DeleteMapping("/partituras/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public ResponseEntity<Void> removerPartitura(@PathVariable UUID id) {
         this.removerPartituraUseCase.executar(id);
         return ResponseEntity.noContent().build();
@@ -153,7 +153,7 @@ public class MusicaController {
 
     @PutMapping("/partituras/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public PartituraResponse atualizarPartitura(
             @PathVariable UUID id,
             @RequestBody @Valid PartituraRequest request
