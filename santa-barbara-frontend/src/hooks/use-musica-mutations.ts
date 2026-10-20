@@ -1,4 +1,4 @@
-import { deleteMusica, updateMusica } from '#/api/musica'
+import { createMusica, deleteMusica, updateMusica } from '#/api/musica'
 import { getErrorMessage } from '#/lib/api-error'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
@@ -8,10 +8,25 @@ export function useMusicaMutations() {
 
   const refreshList = () => queryClient.invalidateQueries({ queryKey: ['musicas-list'] })
 
+  const refreshGenres = () => queryClient.invalidateQueries({ queryKey: ['genre-suggestions'] })
+
+  const create = useMutation({
+    mutationFn: createMusica,
+    onSuccess: async () => {
+      await Promise.all([refreshList(), refreshGenres()])
+      toast.success('Música cadastrada com sucesso.')
+    },
+   onError: (error) => {
+      toast.error(getErrorMessage(error, 'Não foi possível cadastrar a música.'))
+    },
+  })
+
+
+
   const update = useMutation({
     mutationFn: updateMusica,
     onSuccess: async () => {
-      await refreshList()
+      await Promise.all([refreshList(), refreshGenres()])
       toast.success('Música atualizada.')
     },
     onError: (error) => {
@@ -30,5 +45,5 @@ export function useMusicaMutations() {
     },
   })
 
-  return { update, remove }
+  return { create, update, remove }
 }

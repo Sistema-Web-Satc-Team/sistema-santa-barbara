@@ -51,7 +51,9 @@ export function MusicTable({ musicas, canEdit, canDelete, onOpen, onDelete }: Mu
                   </div>
                   <div className="min-w-0">
                     <p className="truncate font-medium">{musica.titulo}</p>
-                    <p className="truncate text-sm text-muted-foreground">{musica.compositor}</p>
+                    <p className="truncate text-sm text-muted-foreground">
++                      {musica.compositor?.trim() ? musica.compositor : 'Compositor não informado'}
++                    </p>
                   </div>
                 </div>
               </TableCell>

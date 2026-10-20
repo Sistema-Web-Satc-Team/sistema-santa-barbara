@@ -4,7 +4,7 @@ import { normalizeText } from '#/lib/text'
 export interface Musica {
   id: string
   titulo: string
-  compositor: string
+  compositor: string | null
   generos: string[]
 }
 
@@ -24,7 +24,7 @@ export interface MusicaFilterRequest {
 
 export interface MusicaInput {
   titulo: string
-  compositor: string
+  compositor?: string
   generos: string[]
 }
 
@@ -53,6 +53,9 @@ export async function fetchMusicas(request: MusicaFilterRequest): Promise<Musica
   }
 
   return data
+}
+export async function createMusica(request: MusicaInput): Promise<void> {
+  await api.post('api/v1/musicas', request)
 }
 
 export async function updateMusica(request: UpdateMusicaRequest): Promise<void> {

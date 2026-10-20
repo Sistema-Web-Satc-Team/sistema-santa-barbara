@@ -17,7 +17,7 @@ import z from 'zod'
 
 const formSchema = z.object({
   titulo: z.string().trim().min(1, 'Informe o título da música.'),
-  compositor: z.string().trim().min(1, 'Informe o compositor.'),
+  compositor: z.string().trim(),
   generos: z.array(z.string()),
 })
 
@@ -32,7 +32,7 @@ function MusicForm({ musica, onClose, onSubmit }: MusicFormProps) {
   const form = useForm({
     defaultValues: {
       titulo: musica.titulo,
-      compositor: musica.compositor,
+      compositor: musica.compositor ?? '',
       generos: musica.generos,
     },
     validators: {
@@ -41,13 +41,13 @@ function MusicForm({ musica, onClose, onSubmit }: MusicFormProps) {
     onSubmit: async ({ value }) => {
       const values: MusicaInput = {
         titulo: value.titulo.trim(),
-        compositor: value.compositor.trim(),
+        compositor: value.compositor.trim() || undefined,
         generos: value.generos,
       }
 
       const unchanged =
         values.titulo === musica.titulo &&
-        values.compositor === musica.compositor &&
+        (values.compositor ?? '') === (musica.compositor ?? '') &&
         values.generos.length === musica.generos.length &&
         values.generos.every((genero, index) => genero === musica.generos[index])
 
@@ -96,7 +96,7 @@ function MusicForm({ musica, onClose, onSubmit }: MusicFormProps) {
           const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
           return (
             <Field data-invalid={isInvalid} className="text-foreground">
-              <FieldLabel htmlFor={field.name}>Compositor*</FieldLabel>
+              <FieldLabel htmlFor={field.name}>Compositor</FieldLabel>
               <Input
                 id={field.name}
                 name={field.name}
