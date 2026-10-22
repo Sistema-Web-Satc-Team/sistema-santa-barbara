@@ -14,15 +14,29 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthIndexRouteImport } from './routes/_auth/index'
 import { Route as ConvidarMembroIdRouteImport } from './routes/convidar-membro.$id'
 import { Route as ProfileIndexRouteImport } from './routes/profile/index'
-import { Route as AuthDashboardLayoutRouteImport } from './routes/_auth/dashboard/_layout'
-import { Route as AuthDashboardLayoutAlunosIndexRouteImport } from './routes/_auth/dashboard/_layout.alunos/index'
-import { Route as AuthDashboardLayoutConvitesIndexRouteImport } from './routes/_auth/dashboard/_layout.convites/index'
-import { Route as AuthDashboardLayoutFuncoesIndexRouteImport } from './routes/_auth/dashboard/_layout.funcoes/index'
-import { Route as AuthDashboardLayoutInstrumentosIndexRouteImport } from './routes/_auth/dashboard/_layout.instrumentos/index'
-import { Route as AuthDashboardLayoutMembrosIndexRouteImport } from './routes/_auth/dashboard/_layout.membros/index'
-import { Route as AuthDashboardLayoutMusicasIndexRouteImport } from './routes/_auth/dashboard/_layout.musicas/index'
-import { Route as AuthDashboardLayoutMusicosIndexRouteImport } from './routes/_auth/dashboard/_layout.musicos/index'
-import { Route as AuthDashboardLayoutProfessoresIndexRouteImport } from './routes/_auth/dashboard/_layout.professores/index'
+import { Route as AuthAlunoLayoutRouteImport } from './routes/_auth/aluno/_layout'
+import { Route as AuthMaestroLayoutRouteImport } from './routes/_auth/maestro/_layout'
+import { Route as AuthMusicoLayoutRouteImport } from './routes/_auth/musico/_layout'
+import { Route as AuthProfessorLayoutRouteImport } from './routes/_auth/professor/_layout'
+import { Route as AuthAdminDashboardLayoutRouteImport } from './routes/_auth/_admin/dashboard/_layout'
+import { Route as AuthAlunoLayoutMusicasRouteImport } from './routes/_auth/aluno/_layout.musicas'
+import { Route as AuthMaestroLayoutMusicasRouteImport } from './routes/_auth/maestro/_layout.musicas'
+import { Route as AuthMusicoLayoutMusicasRouteImport } from './routes/_auth/musico/_layout.musicas'
+import { Route as AuthProfessorLayoutMusicasRouteImport } from './routes/_auth/professor/_layout.musicas'
+import { Route as AuthSecretarioDashboardLayoutRouteImport } from './routes/_auth/secretario/dashboard/_layout'
+import { Route as AuthAdminDashboardLayoutAlunosIndexRouteImport } from './routes/_auth/_admin/dashboard/_layout.alunos/index'
+import { Route as AuthAdminDashboardLayoutConvitesIndexRouteImport } from './routes/_auth/_admin/dashboard/_layout.convites/index'
+import { Route as AuthAdminDashboardLayoutFuncoesIndexRouteImport } from './routes/_auth/_admin/dashboard/_layout.funcoes/index'
+import { Route as AuthAdminDashboardLayoutInstrumentosIndexRouteImport } from './routes/_auth/_admin/dashboard/_layout.instrumentos/index'
+import { Route as AuthAdminDashboardLayoutMembrosIndexRouteImport } from './routes/_auth/_admin/dashboard/_layout.membros/index'
+import { Route as AuthAdminDashboardLayoutMusicasIndexRouteImport } from './routes/_auth/_admin/dashboard/_layout.musicas/index'
+import { Route as AuthAdminDashboardLayoutMusicosIndexRouteImport } from './routes/_auth/_admin/dashboard/_layout.musicos/index'
+import { Route as AuthAdminDashboardLayoutProfessoresIndexRouteImport } from './routes/_auth/_admin/dashboard/_layout.professores/index'
+import { Route as AuthSecretarioDashboardLayoutAlunosIndexRouteImport } from './routes/_auth/secretario/dashboard/_layout.alunos/index'
+import { Route as AuthSecretarioDashboardLayoutConvitesIndexRouteImport } from './routes/_auth/secretario/dashboard/_layout.convites/index'
+import { Route as AuthSecretarioDashboardLayoutMembrosIndexRouteImport } from './routes/_auth/secretario/dashboard/_layout.membros/index'
+import { Route as AuthSecretarioDashboardLayoutMusicosIndexRouteImport } from './routes/_auth/secretario/dashboard/_layout.musicos/index'
+import { Route as AuthSecretarioDashboardLayoutProfessoresIndexRouteImport } from './routes/_auth/secretario/dashboard/_layout.professores/index'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -48,58 +62,137 @@ const ProfileIndexRoute = ProfileIndexRouteImport.update({
   path: '/profile/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthDashboardLayoutRoute = AuthDashboardLayoutRouteImport.update({
-  id: '/dashboard/_layout',
-  path: '/dashboard',
+const AuthAlunoLayoutRoute = AuthAlunoLayoutRouteImport.update({
+  id: '/aluno/_layout',
+  path: '/aluno',
   getParentRoute: () => AuthRoute,
 } as any)
-const AuthDashboardLayoutAlunosIndexRoute =
-  AuthDashboardLayoutAlunosIndexRouteImport.update({
+const AuthMaestroLayoutRoute = AuthMaestroLayoutRouteImport.update({
+  id: '/maestro/_layout',
+  path: '/maestro',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthMusicoLayoutRoute = AuthMusicoLayoutRouteImport.update({
+  id: '/musico/_layout',
+  path: '/musico',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthProfessorLayoutRoute = AuthProfessorLayoutRouteImport.update({
+  id: '/professor/_layout',
+  path: '/professor',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthAdminDashboardLayoutRoute =
+  AuthAdminDashboardLayoutRouteImport.update({
+    id: '/_admin/dashboard/_layout',
+    path: '/dashboard',
+    getParentRoute: () => AuthRoute,
+  } as any)
+const AuthAlunoLayoutMusicasRoute = AuthAlunoLayoutMusicasRouteImport.update({
+  id: '/musicas',
+  path: '/musicas',
+  getParentRoute: () => AuthAlunoLayoutRoute,
+} as any)
+const AuthMaestroLayoutMusicasRoute =
+  AuthMaestroLayoutMusicasRouteImport.update({
+    id: '/musicas',
+    path: '/musicas',
+    getParentRoute: () => AuthMaestroLayoutRoute,
+  } as any)
+const AuthMusicoLayoutMusicasRoute = AuthMusicoLayoutMusicasRouteImport.update({
+  id: '/musicas',
+  path: '/musicas',
+  getParentRoute: () => AuthMusicoLayoutRoute,
+} as any)
+const AuthProfessorLayoutMusicasRoute =
+  AuthProfessorLayoutMusicasRouteImport.update({
+    id: '/musicas',
+    path: '/musicas',
+    getParentRoute: () => AuthProfessorLayoutRoute,
+  } as any)
+const AuthSecretarioDashboardLayoutRoute =
+  AuthSecretarioDashboardLayoutRouteImport.update({
+    id: '/secretario/dashboard/_layout',
+    path: '/secretario/dashboard',
+    getParentRoute: () => AuthRoute,
+  } as any)
+const AuthAdminDashboardLayoutAlunosIndexRoute =
+  AuthAdminDashboardLayoutAlunosIndexRouteImport.update({
     id: '/alunos/',
     path: '/alunos/',
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => AuthAdminDashboardLayoutRoute,
   } as any)
-const AuthDashboardLayoutConvitesIndexRoute =
-  AuthDashboardLayoutConvitesIndexRouteImport.update({
+const AuthAdminDashboardLayoutConvitesIndexRoute =
+  AuthAdminDashboardLayoutConvitesIndexRouteImport.update({
     id: '/convites/',
     path: '/convites/',
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => AuthAdminDashboardLayoutRoute,
   } as any)
-const AuthDashboardLayoutFuncoesIndexRoute =
-  AuthDashboardLayoutFuncoesIndexRouteImport.update({
+const AuthAdminDashboardLayoutFuncoesIndexRoute =
+  AuthAdminDashboardLayoutFuncoesIndexRouteImport.update({
     id: '/funcoes/',
     path: '/funcoes/',
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => AuthAdminDashboardLayoutRoute,
   } as any)
-const AuthDashboardLayoutInstrumentosIndexRoute =
-  AuthDashboardLayoutInstrumentosIndexRouteImport.update({
+const AuthAdminDashboardLayoutInstrumentosIndexRoute =
+  AuthAdminDashboardLayoutInstrumentosIndexRouteImport.update({
     id: '/instrumentos/',
     path: '/instrumentos/',
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => AuthAdminDashboardLayoutRoute,
   } as any)
-const AuthDashboardLayoutMembrosIndexRoute =
-  AuthDashboardLayoutMembrosIndexRouteImport.update({
+const AuthAdminDashboardLayoutMembrosIndexRoute =
+  AuthAdminDashboardLayoutMembrosIndexRouteImport.update({
     id: '/membros/',
     path: '/membros/',
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => AuthAdminDashboardLayoutRoute,
   } as any)
-const AuthDashboardLayoutMusicasIndexRoute =
-  AuthDashboardLayoutMusicasIndexRouteImport.update({
+const AuthAdminDashboardLayoutMusicasIndexRoute =
+  AuthAdminDashboardLayoutMusicasIndexRouteImport.update({
     id: '/musicas/',
     path: '/musicas/',
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => AuthAdminDashboardLayoutRoute,
   } as any)
-const AuthDashboardLayoutMusicosIndexRoute =
-  AuthDashboardLayoutMusicosIndexRouteImport.update({
+const AuthAdminDashboardLayoutMusicosIndexRoute =
+  AuthAdminDashboardLayoutMusicosIndexRouteImport.update({
     id: '/musicos/',
     path: '/musicos/',
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => AuthAdminDashboardLayoutRoute,
   } as any)
-const AuthDashboardLayoutProfessoresIndexRoute =
-  AuthDashboardLayoutProfessoresIndexRouteImport.update({
+const AuthAdminDashboardLayoutProfessoresIndexRoute =
+  AuthAdminDashboardLayoutProfessoresIndexRouteImport.update({
     id: '/professores/',
     path: '/professores/',
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => AuthAdminDashboardLayoutRoute,
+  } as any)
+const AuthSecretarioDashboardLayoutAlunosIndexRoute =
+  AuthSecretarioDashboardLayoutAlunosIndexRouteImport.update({
+    id: '/alunos/',
+    path: '/alunos/',
+    getParentRoute: () => AuthSecretarioDashboardLayoutRoute,
+  } as any)
+const AuthSecretarioDashboardLayoutConvitesIndexRoute =
+  AuthSecretarioDashboardLayoutConvitesIndexRouteImport.update({
+    id: '/convites/',
+    path: '/convites/',
+    getParentRoute: () => AuthSecretarioDashboardLayoutRoute,
+  } as any)
+const AuthSecretarioDashboardLayoutMembrosIndexRoute =
+  AuthSecretarioDashboardLayoutMembrosIndexRouteImport.update({
+    id: '/membros/',
+    path: '/membros/',
+    getParentRoute: () => AuthSecretarioDashboardLayoutRoute,
+  } as any)
+const AuthSecretarioDashboardLayoutMusicosIndexRoute =
+  AuthSecretarioDashboardLayoutMusicosIndexRouteImport.update({
+    id: '/musicos/',
+    path: '/musicos/',
+    getParentRoute: () => AuthSecretarioDashboardLayoutRoute,
+  } as any)
+const AuthSecretarioDashboardLayoutProfessoresIndexRoute =
+  AuthSecretarioDashboardLayoutProfessoresIndexRouteImport.update({
+    id: '/professores/',
+    path: '/professores/',
+    getParentRoute: () => AuthSecretarioDashboardLayoutRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -107,30 +200,58 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/convidar-membro/$id': typeof ConvidarMembroIdRoute
   '/profile/': typeof ProfileIndexRoute
-  '/dashboard': typeof AuthDashboardLayoutRouteWithChildren
-  '/dashboard/alunos/': typeof AuthDashboardLayoutAlunosIndexRoute
-  '/dashboard/convites/': typeof AuthDashboardLayoutConvitesIndexRoute
-  '/dashboard/funcoes/': typeof AuthDashboardLayoutFuncoesIndexRoute
-  '/dashboard/instrumentos/': typeof AuthDashboardLayoutInstrumentosIndexRoute
-  '/dashboard/membros/': typeof AuthDashboardLayoutMembrosIndexRoute
-  '/dashboard/musicas/': typeof AuthDashboardLayoutMusicasIndexRoute
-  '/dashboard/musicos/': typeof AuthDashboardLayoutMusicosIndexRoute
-  '/dashboard/professores/': typeof AuthDashboardLayoutProfessoresIndexRoute
+  '/aluno': typeof AuthAlunoLayoutRouteWithChildren
+  '/maestro': typeof AuthMaestroLayoutRouteWithChildren
+  '/musico': typeof AuthMusicoLayoutRouteWithChildren
+  '/professor': typeof AuthProfessorLayoutRouteWithChildren
+  '/dashboard': typeof AuthAdminDashboardLayoutRouteWithChildren
+  '/aluno/musicas': typeof AuthAlunoLayoutMusicasRoute
+  '/maestro/musicas': typeof AuthMaestroLayoutMusicasRoute
+  '/musico/musicas': typeof AuthMusicoLayoutMusicasRoute
+  '/professor/musicas': typeof AuthProfessorLayoutMusicasRoute
+  '/secretario/dashboard': typeof AuthSecretarioDashboardLayoutRouteWithChildren
+  '/dashboard/alunos/': typeof AuthAdminDashboardLayoutAlunosIndexRoute
+  '/dashboard/convites/': typeof AuthAdminDashboardLayoutConvitesIndexRoute
+  '/dashboard/funcoes/': typeof AuthAdminDashboardLayoutFuncoesIndexRoute
+  '/dashboard/instrumentos/': typeof AuthAdminDashboardLayoutInstrumentosIndexRoute
+  '/dashboard/membros/': typeof AuthAdminDashboardLayoutMembrosIndexRoute
+  '/dashboard/musicas/': typeof AuthAdminDashboardLayoutMusicasIndexRoute
+  '/dashboard/musicos/': typeof AuthAdminDashboardLayoutMusicosIndexRoute
+  '/dashboard/professores/': typeof AuthAdminDashboardLayoutProfessoresIndexRoute
+  '/secretario/dashboard/alunos/': typeof AuthSecretarioDashboardLayoutAlunosIndexRoute
+  '/secretario/dashboard/convites/': typeof AuthSecretarioDashboardLayoutConvitesIndexRoute
+  '/secretario/dashboard/membros/': typeof AuthSecretarioDashboardLayoutMembrosIndexRoute
+  '/secretario/dashboard/musicos/': typeof AuthSecretarioDashboardLayoutMusicosIndexRoute
+  '/secretario/dashboard/professores/': typeof AuthSecretarioDashboardLayoutProfessoresIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/convidar-membro/$id': typeof ConvidarMembroIdRoute
   '/': typeof AuthIndexRoute
   '/profile': typeof ProfileIndexRoute
-  '/dashboard': typeof AuthDashboardLayoutRouteWithChildren
-  '/dashboard/alunos': typeof AuthDashboardLayoutAlunosIndexRoute
-  '/dashboard/convites': typeof AuthDashboardLayoutConvitesIndexRoute
-  '/dashboard/funcoes': typeof AuthDashboardLayoutFuncoesIndexRoute
-  '/dashboard/instrumentos': typeof AuthDashboardLayoutInstrumentosIndexRoute
-  '/dashboard/membros': typeof AuthDashboardLayoutMembrosIndexRoute
-  '/dashboard/musicas': typeof AuthDashboardLayoutMusicasIndexRoute
-  '/dashboard/musicos': typeof AuthDashboardLayoutMusicosIndexRoute
-  '/dashboard/professores': typeof AuthDashboardLayoutProfessoresIndexRoute
+  '/aluno': typeof AuthAlunoLayoutRouteWithChildren
+  '/maestro': typeof AuthMaestroLayoutRouteWithChildren
+  '/musico': typeof AuthMusicoLayoutRouteWithChildren
+  '/professor': typeof AuthProfessorLayoutRouteWithChildren
+  '/dashboard': typeof AuthAdminDashboardLayoutRouteWithChildren
+  '/aluno/musicas': typeof AuthAlunoLayoutMusicasRoute
+  '/maestro/musicas': typeof AuthMaestroLayoutMusicasRoute
+  '/musico/musicas': typeof AuthMusicoLayoutMusicasRoute
+  '/professor/musicas': typeof AuthProfessorLayoutMusicasRoute
+  '/secretario/dashboard': typeof AuthSecretarioDashboardLayoutRouteWithChildren
+  '/dashboard/alunos': typeof AuthAdminDashboardLayoutAlunosIndexRoute
+  '/dashboard/convites': typeof AuthAdminDashboardLayoutConvitesIndexRoute
+  '/dashboard/funcoes': typeof AuthAdminDashboardLayoutFuncoesIndexRoute
+  '/dashboard/instrumentos': typeof AuthAdminDashboardLayoutInstrumentosIndexRoute
+  '/dashboard/membros': typeof AuthAdminDashboardLayoutMembrosIndexRoute
+  '/dashboard/musicas': typeof AuthAdminDashboardLayoutMusicasIndexRoute
+  '/dashboard/musicos': typeof AuthAdminDashboardLayoutMusicosIndexRoute
+  '/dashboard/professores': typeof AuthAdminDashboardLayoutProfessoresIndexRoute
+  '/secretario/dashboard/alunos': typeof AuthSecretarioDashboardLayoutAlunosIndexRoute
+  '/secretario/dashboard/convites': typeof AuthSecretarioDashboardLayoutConvitesIndexRoute
+  '/secretario/dashboard/membros': typeof AuthSecretarioDashboardLayoutMembrosIndexRoute
+  '/secretario/dashboard/musicos': typeof AuthSecretarioDashboardLayoutMusicosIndexRoute
+  '/secretario/dashboard/professores': typeof AuthSecretarioDashboardLayoutProfessoresIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -139,15 +260,29 @@ export interface FileRoutesById {
   '/convidar-membro/$id': typeof ConvidarMembroIdRoute
   '/_auth/': typeof AuthIndexRoute
   '/profile/': typeof ProfileIndexRoute
-  '/_auth/dashboard/_layout': typeof AuthDashboardLayoutRouteWithChildren
-  '/_auth/dashboard/_layout/alunos/': typeof AuthDashboardLayoutAlunosIndexRoute
-  '/_auth/dashboard/_layout/convites/': typeof AuthDashboardLayoutConvitesIndexRoute
-  '/_auth/dashboard/_layout/funcoes/': typeof AuthDashboardLayoutFuncoesIndexRoute
-  '/_auth/dashboard/_layout/instrumentos/': typeof AuthDashboardLayoutInstrumentosIndexRoute
-  '/_auth/dashboard/_layout/membros/': typeof AuthDashboardLayoutMembrosIndexRoute
-  '/_auth/dashboard/_layout/musicas/': typeof AuthDashboardLayoutMusicasIndexRoute
-  '/_auth/dashboard/_layout/musicos/': typeof AuthDashboardLayoutMusicosIndexRoute
-  '/_auth/dashboard/_layout/professores/': typeof AuthDashboardLayoutProfessoresIndexRoute
+  '/_auth/aluno/_layout': typeof AuthAlunoLayoutRouteWithChildren
+  '/_auth/maestro/_layout': typeof AuthMaestroLayoutRouteWithChildren
+  '/_auth/musico/_layout': typeof AuthMusicoLayoutRouteWithChildren
+  '/_auth/professor/_layout': typeof AuthProfessorLayoutRouteWithChildren
+  '/_auth/_admin/dashboard/_layout': typeof AuthAdminDashboardLayoutRouteWithChildren
+  '/_auth/aluno/_layout/musicas': typeof AuthAlunoLayoutMusicasRoute
+  '/_auth/maestro/_layout/musicas': typeof AuthMaestroLayoutMusicasRoute
+  '/_auth/musico/_layout/musicas': typeof AuthMusicoLayoutMusicasRoute
+  '/_auth/professor/_layout/musicas': typeof AuthProfessorLayoutMusicasRoute
+  '/_auth/secretario/dashboard/_layout': typeof AuthSecretarioDashboardLayoutRouteWithChildren
+  '/_auth/_admin/dashboard/_layout/alunos/': typeof AuthAdminDashboardLayoutAlunosIndexRoute
+  '/_auth/_admin/dashboard/_layout/convites/': typeof AuthAdminDashboardLayoutConvitesIndexRoute
+  '/_auth/_admin/dashboard/_layout/funcoes/': typeof AuthAdminDashboardLayoutFuncoesIndexRoute
+  '/_auth/_admin/dashboard/_layout/instrumentos/': typeof AuthAdminDashboardLayoutInstrumentosIndexRoute
+  '/_auth/_admin/dashboard/_layout/membros/': typeof AuthAdminDashboardLayoutMembrosIndexRoute
+  '/_auth/_admin/dashboard/_layout/musicas/': typeof AuthAdminDashboardLayoutMusicasIndexRoute
+  '/_auth/_admin/dashboard/_layout/musicos/': typeof AuthAdminDashboardLayoutMusicosIndexRoute
+  '/_auth/_admin/dashboard/_layout/professores/': typeof AuthAdminDashboardLayoutProfessoresIndexRoute
+  '/_auth/secretario/dashboard/_layout/alunos/': typeof AuthSecretarioDashboardLayoutAlunosIndexRoute
+  '/_auth/secretario/dashboard/_layout/convites/': typeof AuthSecretarioDashboardLayoutConvitesIndexRoute
+  '/_auth/secretario/dashboard/_layout/membros/': typeof AuthSecretarioDashboardLayoutMembrosIndexRoute
+  '/_auth/secretario/dashboard/_layout/musicos/': typeof AuthSecretarioDashboardLayoutMusicosIndexRoute
+  '/_auth/secretario/dashboard/_layout/professores/': typeof AuthSecretarioDashboardLayoutProfessoresIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -156,7 +291,16 @@ export interface FileRouteTypes {
     | '/login'
     | '/convidar-membro/$id'
     | '/profile/'
+    | '/aluno'
+    | '/maestro'
+    | '/musico'
+    | '/professor'
     | '/dashboard'
+    | '/aluno/musicas'
+    | '/maestro/musicas'
+    | '/musico/musicas'
+    | '/professor/musicas'
+    | '/secretario/dashboard'
     | '/dashboard/alunos/'
     | '/dashboard/convites/'
     | '/dashboard/funcoes/'
@@ -165,13 +309,27 @@ export interface FileRouteTypes {
     | '/dashboard/musicas/'
     | '/dashboard/musicos/'
     | '/dashboard/professores/'
+    | '/secretario/dashboard/alunos/'
+    | '/secretario/dashboard/convites/'
+    | '/secretario/dashboard/membros/'
+    | '/secretario/dashboard/musicos/'
+    | '/secretario/dashboard/professores/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
     | '/convidar-membro/$id'
     | '/'
     | '/profile'
+    | '/aluno'
+    | '/maestro'
+    | '/musico'
+    | '/professor'
     | '/dashboard'
+    | '/aluno/musicas'
+    | '/maestro/musicas'
+    | '/musico/musicas'
+    | '/professor/musicas'
+    | '/secretario/dashboard'
     | '/dashboard/alunos'
     | '/dashboard/convites'
     | '/dashboard/funcoes'
@@ -180,6 +338,11 @@ export interface FileRouteTypes {
     | '/dashboard/musicas'
     | '/dashboard/musicos'
     | '/dashboard/professores'
+    | '/secretario/dashboard/alunos'
+    | '/secretario/dashboard/convites'
+    | '/secretario/dashboard/membros'
+    | '/secretario/dashboard/musicos'
+    | '/secretario/dashboard/professores'
   id:
     | '__root__'
     | '/_auth'
@@ -187,15 +350,29 @@ export interface FileRouteTypes {
     | '/convidar-membro/$id'
     | '/_auth/'
     | '/profile/'
-    | '/_auth/dashboard/_layout'
-    | '/_auth/dashboard/_layout/alunos/'
-    | '/_auth/dashboard/_layout/convites/'
-    | '/_auth/dashboard/_layout/funcoes/'
-    | '/_auth/dashboard/_layout/instrumentos/'
-    | '/_auth/dashboard/_layout/membros/'
-    | '/_auth/dashboard/_layout/musicas/'
-    | '/_auth/dashboard/_layout/musicos/'
-    | '/_auth/dashboard/_layout/professores/'
+    | '/_auth/aluno/_layout'
+    | '/_auth/maestro/_layout'
+    | '/_auth/musico/_layout'
+    | '/_auth/professor/_layout'
+    | '/_auth/_admin/dashboard/_layout'
+    | '/_auth/aluno/_layout/musicas'
+    | '/_auth/maestro/_layout/musicas'
+    | '/_auth/musico/_layout/musicas'
+    | '/_auth/professor/_layout/musicas'
+    | '/_auth/secretario/dashboard/_layout'
+    | '/_auth/_admin/dashboard/_layout/alunos/'
+    | '/_auth/_admin/dashboard/_layout/convites/'
+    | '/_auth/_admin/dashboard/_layout/funcoes/'
+    | '/_auth/_admin/dashboard/_layout/instrumentos/'
+    | '/_auth/_admin/dashboard/_layout/membros/'
+    | '/_auth/_admin/dashboard/_layout/musicas/'
+    | '/_auth/_admin/dashboard/_layout/musicos/'
+    | '/_auth/_admin/dashboard/_layout/professores/'
+    | '/_auth/secretario/dashboard/_layout/alunos/'
+    | '/_auth/secretario/dashboard/_layout/convites/'
+    | '/_auth/secretario/dashboard/_layout/membros/'
+    | '/_auth/secretario/dashboard/_layout/musicos/'
+    | '/_auth/secretario/dashboard/_layout/professores/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -242,107 +419,297 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth/dashboard/_layout': {
-      id: '/_auth/dashboard/_layout'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthDashboardLayoutRouteImport
+    '/_auth/aluno/_layout': {
+      id: '/_auth/aluno/_layout'
+      path: '/aluno'
+      fullPath: '/aluno'
+      preLoaderRoute: typeof AuthAlunoLayoutRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_auth/dashboard/_layout/alunos/': {
-      id: '/_auth/dashboard/_layout/alunos/'
+    '/_auth/maestro/_layout': {
+      id: '/_auth/maestro/_layout'
+      path: '/maestro'
+      fullPath: '/maestro'
+      preLoaderRoute: typeof AuthMaestroLayoutRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/musico/_layout': {
+      id: '/_auth/musico/_layout'
+      path: '/musico'
+      fullPath: '/musico'
+      preLoaderRoute: typeof AuthMusicoLayoutRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/professor/_layout': {
+      id: '/_auth/professor/_layout'
+      path: '/professor'
+      fullPath: '/professor'
+      preLoaderRoute: typeof AuthProfessorLayoutRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/_admin/dashboard/_layout': {
+      id: '/_auth/_admin/dashboard/_layout'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthAdminDashboardLayoutRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/aluno/_layout/musicas': {
+      id: '/_auth/aluno/_layout/musicas'
+      path: '/musicas'
+      fullPath: '/aluno/musicas'
+      preLoaderRoute: typeof AuthAlunoLayoutMusicasRouteImport
+      parentRoute: typeof AuthAlunoLayoutRoute
+    }
+    '/_auth/maestro/_layout/musicas': {
+      id: '/_auth/maestro/_layout/musicas'
+      path: '/musicas'
+      fullPath: '/maestro/musicas'
+      preLoaderRoute: typeof AuthMaestroLayoutMusicasRouteImport
+      parentRoute: typeof AuthMaestroLayoutRoute
+    }
+    '/_auth/musico/_layout/musicas': {
+      id: '/_auth/musico/_layout/musicas'
+      path: '/musicas'
+      fullPath: '/musico/musicas'
+      preLoaderRoute: typeof AuthMusicoLayoutMusicasRouteImport
+      parentRoute: typeof AuthMusicoLayoutRoute
+    }
+    '/_auth/professor/_layout/musicas': {
+      id: '/_auth/professor/_layout/musicas'
+      path: '/musicas'
+      fullPath: '/professor/musicas'
+      preLoaderRoute: typeof AuthProfessorLayoutMusicasRouteImport
+      parentRoute: typeof AuthProfessorLayoutRoute
+    }
+    '/_auth/secretario/dashboard/_layout': {
+      id: '/_auth/secretario/dashboard/_layout'
+      path: '/secretario/dashboard'
+      fullPath: '/secretario/dashboard'
+      preLoaderRoute: typeof AuthSecretarioDashboardLayoutRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/_admin/dashboard/_layout/alunos/': {
+      id: '/_auth/_admin/dashboard/_layout/alunos/'
       path: '/alunos'
       fullPath: '/dashboard/alunos/'
-      preLoaderRoute: typeof AuthDashboardLayoutAlunosIndexRouteImport
-      parentRoute: typeof AuthDashboardLayoutRoute
+      preLoaderRoute: typeof AuthAdminDashboardLayoutAlunosIndexRouteImport
+      parentRoute: typeof AuthAdminDashboardLayoutRoute
     }
-    '/_auth/dashboard/_layout/convites/': {
-      id: '/_auth/dashboard/_layout/convites/'
+    '/_auth/_admin/dashboard/_layout/convites/': {
+      id: '/_auth/_admin/dashboard/_layout/convites/'
       path: '/convites'
       fullPath: '/dashboard/convites/'
-      preLoaderRoute: typeof AuthDashboardLayoutConvitesIndexRouteImport
-      parentRoute: typeof AuthDashboardLayoutRoute
+      preLoaderRoute: typeof AuthAdminDashboardLayoutConvitesIndexRouteImport
+      parentRoute: typeof AuthAdminDashboardLayoutRoute
     }
-    '/_auth/dashboard/_layout/funcoes/': {
-      id: '/_auth/dashboard/_layout/funcoes/'
+    '/_auth/_admin/dashboard/_layout/funcoes/': {
+      id: '/_auth/_admin/dashboard/_layout/funcoes/'
       path: '/funcoes'
       fullPath: '/dashboard/funcoes/'
-      preLoaderRoute: typeof AuthDashboardLayoutFuncoesIndexRouteImport
-      parentRoute: typeof AuthDashboardLayoutRoute
+      preLoaderRoute: typeof AuthAdminDashboardLayoutFuncoesIndexRouteImport
+      parentRoute: typeof AuthAdminDashboardLayoutRoute
     }
-    '/_auth/dashboard/_layout/instrumentos/': {
-      id: '/_auth/dashboard/_layout/instrumentos/'
+    '/_auth/_admin/dashboard/_layout/instrumentos/': {
+      id: '/_auth/_admin/dashboard/_layout/instrumentos/'
       path: '/instrumentos'
       fullPath: '/dashboard/instrumentos/'
-      preLoaderRoute: typeof AuthDashboardLayoutInstrumentosIndexRouteImport
-      parentRoute: typeof AuthDashboardLayoutRoute
+      preLoaderRoute: typeof AuthAdminDashboardLayoutInstrumentosIndexRouteImport
+      parentRoute: typeof AuthAdminDashboardLayoutRoute
     }
-    '/_auth/dashboard/_layout/membros/': {
-      id: '/_auth/dashboard/_layout/membros/'
+    '/_auth/_admin/dashboard/_layout/membros/': {
+      id: '/_auth/_admin/dashboard/_layout/membros/'
       path: '/membros'
       fullPath: '/dashboard/membros/'
-      preLoaderRoute: typeof AuthDashboardLayoutMembrosIndexRouteImport
-      parentRoute: typeof AuthDashboardLayoutRoute
+      preLoaderRoute: typeof AuthAdminDashboardLayoutMembrosIndexRouteImport
+      parentRoute: typeof AuthAdminDashboardLayoutRoute
     }
-    '/_auth/dashboard/_layout/musicas/': {
-      id: '/_auth/dashboard/_layout/musicas/'
+    '/_auth/_admin/dashboard/_layout/musicas/': {
+      id: '/_auth/_admin/dashboard/_layout/musicas/'
       path: '/musicas'
       fullPath: '/dashboard/musicas/'
-      preLoaderRoute: typeof AuthDashboardLayoutMusicasIndexRouteImport
-      parentRoute: typeof AuthDashboardLayoutRoute
+      preLoaderRoute: typeof AuthAdminDashboardLayoutMusicasIndexRouteImport
+      parentRoute: typeof AuthAdminDashboardLayoutRoute
     }
-    '/_auth/dashboard/_layout/musicos/': {
-      id: '/_auth/dashboard/_layout/musicos/'
+    '/_auth/_admin/dashboard/_layout/musicos/': {
+      id: '/_auth/_admin/dashboard/_layout/musicos/'
       path: '/musicos'
       fullPath: '/dashboard/musicos/'
-      preLoaderRoute: typeof AuthDashboardLayoutMusicosIndexRouteImport
-      parentRoute: typeof AuthDashboardLayoutRoute
+      preLoaderRoute: typeof AuthAdminDashboardLayoutMusicosIndexRouteImport
+      parentRoute: typeof AuthAdminDashboardLayoutRoute
     }
-    '/_auth/dashboard/_layout/professores/': {
-      id: '/_auth/dashboard/_layout/professores/'
+    '/_auth/_admin/dashboard/_layout/professores/': {
+      id: '/_auth/_admin/dashboard/_layout/professores/'
       path: '/professores'
       fullPath: '/dashboard/professores/'
-      preLoaderRoute: typeof AuthDashboardLayoutProfessoresIndexRouteImport
-      parentRoute: typeof AuthDashboardLayoutRoute
+      preLoaderRoute: typeof AuthAdminDashboardLayoutProfessoresIndexRouteImport
+      parentRoute: typeof AuthAdminDashboardLayoutRoute
+    }
+    '/_auth/secretario/dashboard/_layout/alunos/': {
+      id: '/_auth/secretario/dashboard/_layout/alunos/'
+      path: '/alunos'
+      fullPath: '/secretario/dashboard/alunos/'
+      preLoaderRoute: typeof AuthSecretarioDashboardLayoutAlunosIndexRouteImport
+      parentRoute: typeof AuthSecretarioDashboardLayoutRoute
+    }
+    '/_auth/secretario/dashboard/_layout/convites/': {
+      id: '/_auth/secretario/dashboard/_layout/convites/'
+      path: '/convites'
+      fullPath: '/secretario/dashboard/convites/'
+      preLoaderRoute: typeof AuthSecretarioDashboardLayoutConvitesIndexRouteImport
+      parentRoute: typeof AuthSecretarioDashboardLayoutRoute
+    }
+    '/_auth/secretario/dashboard/_layout/membros/': {
+      id: '/_auth/secretario/dashboard/_layout/membros/'
+      path: '/membros'
+      fullPath: '/secretario/dashboard/membros/'
+      preLoaderRoute: typeof AuthSecretarioDashboardLayoutMembrosIndexRouteImport
+      parentRoute: typeof AuthSecretarioDashboardLayoutRoute
+    }
+    '/_auth/secretario/dashboard/_layout/musicos/': {
+      id: '/_auth/secretario/dashboard/_layout/musicos/'
+      path: '/musicos'
+      fullPath: '/secretario/dashboard/musicos/'
+      preLoaderRoute: typeof AuthSecretarioDashboardLayoutMusicosIndexRouteImport
+      parentRoute: typeof AuthSecretarioDashboardLayoutRoute
+    }
+    '/_auth/secretario/dashboard/_layout/professores/': {
+      id: '/_auth/secretario/dashboard/_layout/professores/'
+      path: '/professores'
+      fullPath: '/secretario/dashboard/professores/'
+      preLoaderRoute: typeof AuthSecretarioDashboardLayoutProfessoresIndexRouteImport
+      parentRoute: typeof AuthSecretarioDashboardLayoutRoute
     }
   }
 }
 
-interface AuthDashboardLayoutRouteChildren {
-  AuthDashboardLayoutAlunosIndexRoute: typeof AuthDashboardLayoutAlunosIndexRoute
-  AuthDashboardLayoutConvitesIndexRoute: typeof AuthDashboardLayoutConvitesIndexRoute
-  AuthDashboardLayoutFuncoesIndexRoute: typeof AuthDashboardLayoutFuncoesIndexRoute
-  AuthDashboardLayoutInstrumentosIndexRoute: typeof AuthDashboardLayoutInstrumentosIndexRoute
-  AuthDashboardLayoutMembrosIndexRoute: typeof AuthDashboardLayoutMembrosIndexRoute
-  AuthDashboardLayoutMusicasIndexRoute: typeof AuthDashboardLayoutMusicasIndexRoute
-  AuthDashboardLayoutMusicosIndexRoute: typeof AuthDashboardLayoutMusicosIndexRoute
-  AuthDashboardLayoutProfessoresIndexRoute: typeof AuthDashboardLayoutProfessoresIndexRoute
+interface AuthAlunoLayoutRouteChildren {
+  AuthAlunoLayoutMusicasRoute: typeof AuthAlunoLayoutMusicasRoute
 }
 
-const AuthDashboardLayoutRouteChildren: AuthDashboardLayoutRouteChildren = {
-  AuthDashboardLayoutAlunosIndexRoute: AuthDashboardLayoutAlunosIndexRoute,
-  AuthDashboardLayoutConvitesIndexRoute: AuthDashboardLayoutConvitesIndexRoute,
-  AuthDashboardLayoutFuncoesIndexRoute: AuthDashboardLayoutFuncoesIndexRoute,
-  AuthDashboardLayoutInstrumentosIndexRoute:
-    AuthDashboardLayoutInstrumentosIndexRoute,
-  AuthDashboardLayoutMembrosIndexRoute: AuthDashboardLayoutMembrosIndexRoute,
-  AuthDashboardLayoutMusicasIndexRoute: AuthDashboardLayoutMusicasIndexRoute,
-  AuthDashboardLayoutMusicosIndexRoute: AuthDashboardLayoutMusicosIndexRoute,
-  AuthDashboardLayoutProfessoresIndexRoute:
-    AuthDashboardLayoutProfessoresIndexRoute,
+const AuthAlunoLayoutRouteChildren: AuthAlunoLayoutRouteChildren = {
+  AuthAlunoLayoutMusicasRoute: AuthAlunoLayoutMusicasRoute,
 }
 
-const AuthDashboardLayoutRouteWithChildren =
-  AuthDashboardLayoutRoute._addFileChildren(AuthDashboardLayoutRouteChildren)
+const AuthAlunoLayoutRouteWithChildren = AuthAlunoLayoutRoute._addFileChildren(
+  AuthAlunoLayoutRouteChildren,
+)
+
+interface AuthMaestroLayoutRouteChildren {
+  AuthMaestroLayoutMusicasRoute: typeof AuthMaestroLayoutMusicasRoute
+}
+
+const AuthMaestroLayoutRouteChildren: AuthMaestroLayoutRouteChildren = {
+  AuthMaestroLayoutMusicasRoute: AuthMaestroLayoutMusicasRoute,
+}
+
+const AuthMaestroLayoutRouteWithChildren =
+  AuthMaestroLayoutRoute._addFileChildren(AuthMaestroLayoutRouteChildren)
+
+interface AuthMusicoLayoutRouteChildren {
+  AuthMusicoLayoutMusicasRoute: typeof AuthMusicoLayoutMusicasRoute
+}
+
+const AuthMusicoLayoutRouteChildren: AuthMusicoLayoutRouteChildren = {
+  AuthMusicoLayoutMusicasRoute: AuthMusicoLayoutMusicasRoute,
+}
+
+const AuthMusicoLayoutRouteWithChildren =
+  AuthMusicoLayoutRoute._addFileChildren(AuthMusicoLayoutRouteChildren)
+
+interface AuthProfessorLayoutRouteChildren {
+  AuthProfessorLayoutMusicasRoute: typeof AuthProfessorLayoutMusicasRoute
+}
+
+const AuthProfessorLayoutRouteChildren: AuthProfessorLayoutRouteChildren = {
+  AuthProfessorLayoutMusicasRoute: AuthProfessorLayoutMusicasRoute,
+}
+
+const AuthProfessorLayoutRouteWithChildren =
+  AuthProfessorLayoutRoute._addFileChildren(AuthProfessorLayoutRouteChildren)
+
+interface AuthAdminDashboardLayoutRouteChildren {
+  AuthAdminDashboardLayoutAlunosIndexRoute: typeof AuthAdminDashboardLayoutAlunosIndexRoute
+  AuthAdminDashboardLayoutConvitesIndexRoute: typeof AuthAdminDashboardLayoutConvitesIndexRoute
+  AuthAdminDashboardLayoutFuncoesIndexRoute: typeof AuthAdminDashboardLayoutFuncoesIndexRoute
+  AuthAdminDashboardLayoutInstrumentosIndexRoute: typeof AuthAdminDashboardLayoutInstrumentosIndexRoute
+  AuthAdminDashboardLayoutMembrosIndexRoute: typeof AuthAdminDashboardLayoutMembrosIndexRoute
+  AuthAdminDashboardLayoutMusicasIndexRoute: typeof AuthAdminDashboardLayoutMusicasIndexRoute
+  AuthAdminDashboardLayoutMusicosIndexRoute: typeof AuthAdminDashboardLayoutMusicosIndexRoute
+  AuthAdminDashboardLayoutProfessoresIndexRoute: typeof AuthAdminDashboardLayoutProfessoresIndexRoute
+}
+
+const AuthAdminDashboardLayoutRouteChildren: AuthAdminDashboardLayoutRouteChildren =
+  {
+    AuthAdminDashboardLayoutAlunosIndexRoute:
+      AuthAdminDashboardLayoutAlunosIndexRoute,
+    AuthAdminDashboardLayoutConvitesIndexRoute:
+      AuthAdminDashboardLayoutConvitesIndexRoute,
+    AuthAdminDashboardLayoutFuncoesIndexRoute:
+      AuthAdminDashboardLayoutFuncoesIndexRoute,
+    AuthAdminDashboardLayoutInstrumentosIndexRoute:
+      AuthAdminDashboardLayoutInstrumentosIndexRoute,
+    AuthAdminDashboardLayoutMembrosIndexRoute:
+      AuthAdminDashboardLayoutMembrosIndexRoute,
+    AuthAdminDashboardLayoutMusicasIndexRoute:
+      AuthAdminDashboardLayoutMusicasIndexRoute,
+    AuthAdminDashboardLayoutMusicosIndexRoute:
+      AuthAdminDashboardLayoutMusicosIndexRoute,
+    AuthAdminDashboardLayoutProfessoresIndexRoute:
+      AuthAdminDashboardLayoutProfessoresIndexRoute,
+  }
+
+const AuthAdminDashboardLayoutRouteWithChildren =
+  AuthAdminDashboardLayoutRoute._addFileChildren(
+    AuthAdminDashboardLayoutRouteChildren,
+  )
+
+interface AuthSecretarioDashboardLayoutRouteChildren {
+  AuthSecretarioDashboardLayoutAlunosIndexRoute: typeof AuthSecretarioDashboardLayoutAlunosIndexRoute
+  AuthSecretarioDashboardLayoutConvitesIndexRoute: typeof AuthSecretarioDashboardLayoutConvitesIndexRoute
+  AuthSecretarioDashboardLayoutMembrosIndexRoute: typeof AuthSecretarioDashboardLayoutMembrosIndexRoute
+  AuthSecretarioDashboardLayoutMusicosIndexRoute: typeof AuthSecretarioDashboardLayoutMusicosIndexRoute
+  AuthSecretarioDashboardLayoutProfessoresIndexRoute: typeof AuthSecretarioDashboardLayoutProfessoresIndexRoute
+}
+
+const AuthSecretarioDashboardLayoutRouteChildren: AuthSecretarioDashboardLayoutRouteChildren =
+  {
+    AuthSecretarioDashboardLayoutAlunosIndexRoute:
+      AuthSecretarioDashboardLayoutAlunosIndexRoute,
+    AuthSecretarioDashboardLayoutConvitesIndexRoute:
+      AuthSecretarioDashboardLayoutConvitesIndexRoute,
+    AuthSecretarioDashboardLayoutMembrosIndexRoute:
+      AuthSecretarioDashboardLayoutMembrosIndexRoute,
+    AuthSecretarioDashboardLayoutMusicosIndexRoute:
+      AuthSecretarioDashboardLayoutMusicosIndexRoute,
+    AuthSecretarioDashboardLayoutProfessoresIndexRoute:
+      AuthSecretarioDashboardLayoutProfessoresIndexRoute,
+  }
+
+const AuthSecretarioDashboardLayoutRouteWithChildren =
+  AuthSecretarioDashboardLayoutRoute._addFileChildren(
+    AuthSecretarioDashboardLayoutRouteChildren,
+  )
 
 interface AuthRouteChildren {
   AuthIndexRoute: typeof AuthIndexRoute
-  AuthDashboardLayoutRoute: typeof AuthDashboardLayoutRouteWithChildren
+  AuthAlunoLayoutRoute: typeof AuthAlunoLayoutRouteWithChildren
+  AuthMaestroLayoutRoute: typeof AuthMaestroLayoutRouteWithChildren
+  AuthMusicoLayoutRoute: typeof AuthMusicoLayoutRouteWithChildren
+  AuthProfessorLayoutRoute: typeof AuthProfessorLayoutRouteWithChildren
+  AuthAdminDashboardLayoutRoute: typeof AuthAdminDashboardLayoutRouteWithChildren
+  AuthSecretarioDashboardLayoutRoute: typeof AuthSecretarioDashboardLayoutRouteWithChildren
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthIndexRoute: AuthIndexRoute,
-  AuthDashboardLayoutRoute: AuthDashboardLayoutRouteWithChildren,
+  AuthAlunoLayoutRoute: AuthAlunoLayoutRouteWithChildren,
+  AuthMaestroLayoutRoute: AuthMaestroLayoutRouteWithChildren,
+  AuthMusicoLayoutRoute: AuthMusicoLayoutRouteWithChildren,
+  AuthProfessorLayoutRoute: AuthProfessorLayoutRouteWithChildren,
+  AuthAdminDashboardLayoutRoute: AuthAdminDashboardLayoutRouteWithChildren,
+  AuthSecretarioDashboardLayoutRoute:
+    AuthSecretarioDashboardLayoutRouteWithChildren,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)

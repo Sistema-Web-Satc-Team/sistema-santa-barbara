@@ -11,17 +11,14 @@ import { Field, FieldLabel } from '#/components/ui/field';
 import { Input } from "#/components/ui/input";
 import { Spinner } from '#/components/ui/spinner';
 import { useMembers } from "#/hooks/use-members";
+import { registrarMembro } from "#/lib/registrar-membro";
 import type { MemberFormValues } from "#/schemas/form-schema-member";
-import { createFileRoute } from '@tanstack/react-router';
 import { UserPlus } from "lucide-react";
 import { useRef, useState } from "react";
-import { registrarMembro } from "./registrar-membro";
 
-export const Route = createFileRoute('/_auth/dashboard/_layout/membros/')({
-  component: Membros,
-})
 
-function Membros() {
+
+export function MembrosPage() {
     const { state, actions } = useMembers();
     const searchTermRef = useRef<string>("")
     const [isOpen, setIsOpen] = useState(false);

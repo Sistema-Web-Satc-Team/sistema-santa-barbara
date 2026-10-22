@@ -1,11 +1,13 @@
 import { fetchUserProfile, login, logout, updateUserProfile, type LoginRequest, type MeUpdateRequest } from "#/api/auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import type React from "react";
+import React from "react";
 import { AuthContext } from "./auth-context";
 
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+
+    const [currentRole, setCurrentRole] = React.useState<string | null>(null);
 
     const queryClient = useQueryClient();
 
@@ -48,6 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             isLoading,
             error: error as Error | null,
             isUpdating: updateMutation.isPending,
+            currentRole,
             loggedIn: () => { return user != null; }
         },
         actions: {
@@ -70,7 +73,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
                     throw new Error("Ocorreu um erro interno.");
                 }
-            }
+            },
+            setCurrentRole: (value: string) => { setCurrentRole(value) }
            
         }
     }

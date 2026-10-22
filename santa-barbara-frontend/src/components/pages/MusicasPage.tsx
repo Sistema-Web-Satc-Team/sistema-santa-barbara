@@ -1,8 +1,8 @@
-import { matchesGenres } from '#/api/musica'
 import type { Musica, MusicaInput } from '#/api/musica'
+import { matchesGenres } from '#/api/musica'
 import { GenreMultiSelect } from '#/components/business/genre-multi-select'
-import { MusicDeleteDialog } from '#/components/business/music-delete-dialog'
 import { MusicCreateDialog } from '#/components/business/music-create-dialog'
+import { MusicDeleteDialog } from '#/components/business/music-delete-dialog'
 import { MusicDetailsDialog } from '#/components/business/music-details-dialog'
 import { MusicTable } from '#/components/business/music-table'
 import { Button } from '#/components/ui/button'
@@ -14,28 +14,20 @@ import { useInfiniteScroll } from '#/hooks/use-infinite-scroll'
 import { useListMusicas } from '#/hooks/use-list-musicas'
 import { useMusicaMutations } from '#/hooks/use-musica-mutations'
 import { uniqueText } from '#/lib/text'
-import { createFileRoute } from '@tanstack/react-router'
 import { PlusIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
-
-
-
-
-export const Route = createFileRoute('/_auth/dashboard/_layout/musicas/')({
-  component: Musicas,
-})
 
 
 const EDITOR_ROLES = ['SUPER_ADMIN', 'ADMIN', 'MAESTRO']
 const DELETE_ROLES = ['SUPER_ADMIN', 'ADMIN','MAESTRO']
 const CREATE_ROLES = ['SUPER_ADMIN', 'ADMIN','MAESTRO']
 
-function Musicas() {
-  const { state: authState } = useAuth()
-  const roles = authState.profile?.funcoes ?? []
-  const canEdit = roles.some((role) => EDITOR_ROLES.includes(role))
-  const canDelete = roles.some((role) => DELETE_ROLES.includes(role))
-   const canCreate = roles.some((role) => CREATE_ROLES.includes(role))
+export function MusicasPage() {
+    const { state: authState } = useAuth()
+
+  const canEdit =  EDITOR_ROLES.includes(authState.currentRole ?? "")
+  const canDelete = DELETE_ROLES.includes(authState.currentRole ?? "")
+  const canCreate = CREATE_ROLES.includes(authState.currentRole ?? "")
 
 
   const [searchInput, setSearchInput] = useState('')
@@ -99,7 +91,7 @@ function Musicas() {
           <Button onClick={() => setCreating(true)}>
             <PlusIcon />
             Adicionar música
-        </Button>
+          </Button>
         )}
      </div>
 

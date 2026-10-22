@@ -1,16 +1,16 @@
 import type { Member } from '#/api/member'
 import type { ResponsavelDoMembro } from '#/api/member-responsaveis'
 import {
-    AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-    AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '#/components/ui/alert-dialog'
 import { Button } from '#/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '#/components/ui/dialog'
 import { Spinner } from '#/components/ui/spinner'
 import { useMemberResponsaveis } from '#/hooks/use-member-responsaveis'
 
+import { mensagemDeErro } from '#/lib/registrar-membro'
 import { relacaoDeLabel, type RelacaoValue } from '#/lib/relacao-responsavel'
-import { mensagemDeErro } from '#/routes/_auth/dashboard/_layout.membros/registrar-membro'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

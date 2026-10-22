@@ -5,7 +5,7 @@ import { useListRoles } from '#/hooks/use-list-roles';
 
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/_auth/dashboard/_layout/funcoes/')({
+export const Route = createFileRoute('/_auth/_admin/dashboard/_layout/funcoes/')({
   component: Papeis,
 })
 

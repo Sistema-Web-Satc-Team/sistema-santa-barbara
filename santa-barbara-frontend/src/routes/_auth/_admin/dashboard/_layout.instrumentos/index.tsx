@@ -1,5 +1,5 @@
-import { INSTRUMENT_TYPES, normalizeInstrumentType } from '#/api/instrumento'
 import type { Instrumento, InstrumentoInput } from '#/api/instrumento'
+import { INSTRUMENT_TYPES, normalizeInstrumentType } from '#/api/instrumento'
 import { InstrumentCard } from '#/components/business/instrument-card'
 import { InstrumentDeleteDialog } from '#/components/business/instrument-delete-dialog'
 import { InstrumentFormDialog } from '#/components/business/instrument-form-dialog'
@@ -22,7 +22,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react'
 import { useRef, useState } from 'react'
 
-export const Route = createFileRoute('/_auth/dashboard/_layout/instrumentos/')({
+export const Route = createFileRoute('/_auth/_admin/dashboard/_layout/instrumentos/')({
   component: Instrumentos,
 })
 
@@ -39,7 +39,7 @@ function Instrumentos() {
   const searchTermRef = useRef('')
 
   const canManage =
-    authState.profile?.funcoes.some((role) => MANAGER_ROLES.includes(role)) ??
+    authState.profile?.funcoes.some((role) => MANAGER_ROLES.includes(role.code)) ??
     false
 
   const page = filters.page ?? 0

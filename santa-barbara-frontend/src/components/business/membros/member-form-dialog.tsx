@@ -1,14 +1,14 @@
 import { Button } from '#/components/ui/button';
 import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
 } from '#/components/ui/dialog';
 import { useAppForm } from '#/lib/form';
 import { ehMenor } from '#/lib/idade';
-import { mensagemDeErro, ResponsavelCriadoError } from '#/routes/_auth/dashboard/_layout.membros/registrar-membro';
+import { mensagemDeErro, ResponsavelCriadoError } from '#/lib/registrar-membro';
 import { useRef } from 'react';
 import { toast } from 'sonner';
 import { formMemberSchema, memberDefaultValues, type MemberFormValues } from '../../../schemas/form-schema-member';

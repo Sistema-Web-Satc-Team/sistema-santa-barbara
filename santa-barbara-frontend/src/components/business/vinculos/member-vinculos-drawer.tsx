@@ -2,8 +2,8 @@
 import type { Member } from '#/api/member'
 import type { Vinculo } from '#/api/member-vinculos'
 import {
-    AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-    AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '#/components/ui/alert-dialog'
 import { Button } from '#/components/ui/button'
 import { Sheet, SheetContent } from '#/components/ui/sheet'
@@ -12,7 +12,7 @@ import { TooltipProvider } from '#/components/ui/tooltip'
 import { useMemberVinculos } from '#/hooks/use-member-vinculos'
 import { exibirData, partsParaISO } from '#/lib/datas'
 
-import { mensagemDeErro } from '#/routes/_auth/dashboard/_layout.membros/registrar-membro'
+import { mensagemDeErro } from '#/lib/registrar-membro'
 import { Plus } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { toast } from 'sonner'

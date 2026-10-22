@@ -1,5 +1,6 @@
 import { api } from "#/lib/axios";
 import type { UUID } from "node:crypto";
+import type { Role } from "./funcoes";
 
 export interface LoginRequest {
   login: string;
@@ -21,7 +22,7 @@ export interface MeProfileResponse {
   dataNascimento: string,
   sexo: string,
   idade: number,
-  funcoes: string[],
+  funcoes: Role[],
   avatarURL: string
 }
 

@@ -12,7 +12,7 @@ import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { mensagemDeErro } from '../_layout.membros/registrar-membro'
+import { mensagemDeErro } from '../../../../../lib/registrar-membro'
 
 const PAGE_SIZE = 20
 
@@ -22,7 +22,7 @@ const searchSchema = z.object({
   page: z.number().int().min(0).catch(0),
 })
 
-export const Route = createFileRoute('/_auth/dashboard/_layout/convites/')({
+export const Route = createFileRoute('/_auth/_admin/dashboard/_layout/convites/')({
   validateSearch: (s: Record<string, unknown>) => searchSchema.parse(s),
   component: ConvitesPage,
 })
