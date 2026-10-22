@@ -68,7 +68,7 @@ public class MusicaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public MusicaResponse cadastrar(
             @Valid @RequestBody MusicaRequest dto
     ) {
