@@ -7,6 +7,7 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.parameters.P;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,4 +28,7 @@ public interface FuncaoRepository extends Repository<Funcao, Long> {
            OR f.code = :term
     """)
     Optional<Funcao> findFuncaoByCodeOrNome(@Param("term") String term);
+
+
+    List<Funcao> findByCodeIn(Collection<String> codes);
 }

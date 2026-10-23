@@ -1,5 +1,6 @@
 package br.org.bandasantabarbara.application.dtos.profile;
 
+import br.org.bandasantabarbara.application.dtos.membros.FuncaoResponse;
 import br.org.bandasantabarbara.model.Membro;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -67,7 +68,7 @@ public record PerfilResponse(
                 description = "Funções atualmente vinculadas ao usuário.",
                 example = "[\"MAESTRO\", \"MUSICO_BANDA\"]"
         )
-        List<String> funcoes,
+        List<FuncaoResponse> funcoes,
 
 
         @Schema(
