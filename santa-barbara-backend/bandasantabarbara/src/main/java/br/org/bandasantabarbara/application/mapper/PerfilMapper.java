@@ -2,16 +2,24 @@ package br.org.bandasantabarbara.application.mapper;
 
 import br.org.bandasantabarbara.application.dtos.profile.PerfilRequest;
 import br.org.bandasantabarbara.application.dtos.profile.PerfilResponse;
+import br.org.bandasantabarbara.model.Funcao;
 import br.org.bandasantabarbara.model.Membro;
 import org.springframework.stereotype.Component;
 
+import javax.management.relation.Role;
 import java.util.List;
 
 @Component
 public class PerfilMapper {
 
+    private FuncaoMapper funcaoMapper;
 
-    public PerfilResponse toResponse(Membro membro, String nomeUsuario, List<String> papeis, String avatarURL) {
+    public PerfilMapper(FuncaoMapper funcaoMapper) {
+        this.funcaoMapper = funcaoMapper;
+    }
+
+
+    public PerfilResponse toResponse(Membro membro, String nomeUsuario, List<Funcao> papeis, String avatarURL) {
 
         return new PerfilResponse(
                 membro.getId(),
@@ -23,7 +31,7 @@ public class PerfilMapper {
                 membro.getDataNascimento(),
                 membro.getSexo(),
                 membro.getIdade(),
-                papeis,
+                papeis.stream().map(this.funcaoMapper::toResponse).toList(),
                 avatarURL
         );
 
