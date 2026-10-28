@@ -17,7 +17,7 @@ public class Funcao {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Getter
-    private int id;
+    private Integer id;
 
     @Column(name = "code", length = 32, nullable = false)
     @Getter
