@@ -74,3 +74,5 @@ certs/**
 **/.certs/**
 
 **/\"classpath\"/**
+**/storage/**
+**storage**

@@ -1,6 +1,5 @@
 package br.org.bandasantabarbara.integration;
 
-import br.org.bandasantabarbara.exception.NotFoundException;
 import br.org.bandasantabarbara.model.Horario;
 import br.org.bandasantabarbara.repositories.HorarioRepository;
 import jakarta.persistence.EntityManager;
@@ -12,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+
 import java.time.LocalTime;
 
 @SpringBootTest

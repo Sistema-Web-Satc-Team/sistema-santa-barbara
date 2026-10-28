@@ -26,7 +26,7 @@ public class ObterFotoPerfilUseCase {
     public InputStream open(UUID fileId, UUID membroId) {
         var membro = this.membroRepository.findByFileIdWithFile(fileId).orElseThrow(() -> new NotFoundException("Foto perfil não encontrada."));
 
-        if (membro.getId() != membroId) {
+        if (!membro.getId().equals(membroId)) {
             throw new NotFoundException("Foto perfil não encontrada.");
         }
 
