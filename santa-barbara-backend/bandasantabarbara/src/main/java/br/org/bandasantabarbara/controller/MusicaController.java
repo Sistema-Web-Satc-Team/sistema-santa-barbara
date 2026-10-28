@@ -11,9 +11,6 @@ import br.org.bandasantabarbara.application.usecase.partitura.AdicionarPartitura
 import br.org.bandasantabarbara.application.usecase.partitura.AtualizarPartituraUseCase;
 import br.org.bandasantabarbara.application.usecase.partitura.ListarPartiturasMusicaUseCase;
 import br.org.bandasantabarbara.application.usecase.partitura.RemoverPartituraUseCase;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Encoding;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
