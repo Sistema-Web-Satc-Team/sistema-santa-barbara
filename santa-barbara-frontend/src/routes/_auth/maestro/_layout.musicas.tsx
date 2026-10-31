@@ -6,5 +6,5 @@ export const Route = createFileRoute('/_auth/maestro/_layout/musicas')({
 })
 
 function Musicas() {
-  return <MusicasPage />
+  return <MusicasPage permitirRemocao />
 }
