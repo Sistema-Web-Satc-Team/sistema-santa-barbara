@@ -37,7 +37,7 @@ export function MusicTable({ musicas, canEdit, canDelete, onOpen, onDelete }: Mu
           <TableRow>
             <TableHead>Música</TableHead>
             <TableHead>Gêneros</TableHead>
-            {canEdit && <TableHead className="text-right">Ações</TableHead>}
+            <TableHead className="text-right">{canEdit ? 'Ações' : 'Partituras'}</TableHead>
           </TableRow>
         </TableHeader>
 
@@ -68,12 +68,10 @@ export function MusicTable({ musicas, canEdit, canDelete, onOpen, onDelete }: Mu
                 </div>
               </TableCell>
 
-              {canEdit && (
-                <TableCell>
-                  <div className="flex items-center justify-end gap-2">
-                    <MusicSheetActions />
-
-
+              <TableCell>
+                <div className="flex items-center justify-end gap-2">
+                  <MusicSheetActions musica={musica} canAdd={canEdit} />
+                  {canEdit && (
                     <DropdownMenu modal={false}>
                       <DropdownMenuTrigger asChild>
                         <Button
@@ -101,9 +99,9 @@ export function MusicTable({ musicas, canEdit, canDelete, onOpen, onDelete }: Mu
                         )}
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  </div>
-                </TableCell>
-              )}
+                  )}
+                </div>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
