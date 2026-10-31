@@ -25,9 +25,10 @@ const CREATE_ROLES = ['SUPER_ADMIN', 'ADMIN','MAESTRO']
 export function MusicasPage() {
     const { state: authState } = useAuth()
 
-  const canEdit =  EDITOR_ROLES.includes(authState.currentRole ?? "")
-  const canDelete = DELETE_ROLES.includes(authState.currentRole ?? "")
-  const canCreate = CREATE_ROLES.includes(authState.currentRole ?? "")
+  const roles = authState.profile?.funcoes ?? []
+  const canEdit = roles.some((role) => EDITOR_ROLES.includes(role))
+  const canDelete = roles.some((role) => DELETE_ROLES.includes(role))
+  const canCreate = roles.some((role) => CREATE_ROLES.includes(role))
 
 
   const [searchInput, setSearchInput] = useState('')
