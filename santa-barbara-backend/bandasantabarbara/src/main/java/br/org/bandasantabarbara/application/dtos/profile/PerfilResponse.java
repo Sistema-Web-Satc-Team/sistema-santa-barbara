@@ -1,7 +1,7 @@
 package br.org.bandasantabarbara.application.dtos.profile;
 
 import br.org.bandasantabarbara.application.dtos.membros.FuncaoResponse;
-import br.org.bandasantabarbara.model.Membro;
+import br.org.bandasantabarbara.model.membro.Membro;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;

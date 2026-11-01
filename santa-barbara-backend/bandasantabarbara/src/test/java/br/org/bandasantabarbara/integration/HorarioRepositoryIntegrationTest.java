@@ -1,7 +1,7 @@
 package br.org.bandasantabarbara.integration;
 
-import br.org.bandasantabarbara.model.Horario;
-import br.org.bandasantabarbara.repositories.HorarioRepository;
+import br.org.bandasantabarbara.model.turma.Horario;
+import br.org.bandasantabarbara.repositories.turma.HorarioRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Assertions;

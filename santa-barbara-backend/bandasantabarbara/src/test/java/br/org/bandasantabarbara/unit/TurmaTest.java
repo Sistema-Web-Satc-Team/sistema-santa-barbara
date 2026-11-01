@@ -1,10 +1,10 @@
 package br.org.bandasantabarbara.unit;
 
 import br.org.bandasantabarbara.exception.BadRequestException;
-import br.org.bandasantabarbara.model.Horario;
-import br.org.bandasantabarbara.model.Sala;
-import br.org.bandasantabarbara.model.Turma;
-import br.org.bandasantabarbara.repositories.StatusTurma;
+import br.org.bandasantabarbara.model.turma.Horario;
+import br.org.bandasantabarbara.model.turma.Sala;
+import br.org.bandasantabarbara.model.turma.Turma;
+import br.org.bandasantabarbara.model.turma.StatusTurma;
 import org.junit.jupiter.api.Assertions;
 import org.assertj.core.api.*;
 import org.junit.jupiter.api.Test;

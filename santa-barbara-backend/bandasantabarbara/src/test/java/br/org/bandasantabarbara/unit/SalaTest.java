@@ -1,7 +1,8 @@
 package br.org.bandasantabarbara.unit;
 
 import br.org.bandasantabarbara.exception.BadRequestException;
-import br.org.bandasantabarbara.model.Sala;
+import br.org.bandasantabarbara.model.turma.Sala;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 

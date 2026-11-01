@@ -1,7 +1,7 @@
 package br.org.bandasantabarbara.application.services.storage;
 
-import br.org.bandasantabarbara.model.StoredFile;
-import br.org.bandasantabarbara.repositories.StoredFileRepository;
+import br.org.bandasantabarbara.model.storage.StoredFile;
+import br.org.bandasantabarbara.repositories.storage.StoredFileRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
