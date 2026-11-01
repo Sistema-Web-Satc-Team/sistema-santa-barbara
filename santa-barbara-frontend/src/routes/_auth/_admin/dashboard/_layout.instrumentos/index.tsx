@@ -39,7 +39,7 @@ function Instrumentos() {
   const searchTermRef = useRef('')
 
   const canManage =
-    authState.profile?.funcoes.some((role) => MANAGER_ROLES.includes(role)) ??
+    authState.profile?.funcoes.some((role) => MANAGER_ROLES.includes(role.code)) ??
     false
 
   const page = filters.page ?? 0

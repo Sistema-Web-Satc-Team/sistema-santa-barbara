@@ -29,10 +29,10 @@ interface MusicasPageProps {
 export function MusicasPage({ permitirRemocao = false }: MusicasPageProps) {
     const { state: authState } = useAuth()
 
-  const roles = authState.profile?.funcoes ?? []
-  const canEdit = roles.some((role) => EDITOR_ROLES.includes(role))
-  const canDelete = permitirRemocao && roles.some((role) => DELETE_ROLES.includes(role))
-  const canCreate = roles.some((role) => CREATE_ROLES.includes(role))
+  const role = authState.currentRole;
+  const canEdit = EDITOR_ROLES.includes(role ?? "")
+  const canDelete = permitirRemocao && DELETE_ROLES.includes(role ?? "")
+  const canCreate = CREATE_ROLES.includes(role ?? "")
 
 
   const [searchInput, setSearchInput] = useState('')
@@ -49,7 +49,7 @@ export function MusicasPage({ permitirRemocao = false }: MusicasPageProps) {
   }, [searchInput])
 
   const { musicas, totalElements, state, actions } = useListMusicas(search)
- const { create, update, remove } = useMusicaMutations()
+  const { create, update, remove } = useMusicaMutations()
 
   const sentinel = useInfiniteScroll({
     onLoadMore: actions.loadMore,
