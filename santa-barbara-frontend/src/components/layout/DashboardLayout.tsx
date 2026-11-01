@@ -68,6 +68,18 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                     >Perfil</DropdownMenuLabel>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator className='p-0 m-0' />
+
+                {state.profile && state.profile.funcoes.length > 1 && (
+                    <DropdownMenuGroup className="p-0">
+                        <DropdownMenuLabel
+                            className="px-2 py-2 font-normal text-foreground transition-colors hover:bg-primary/10 cursor-pointer"
+                            onClick={() => navigate({ to: "/", replace: true })}
+                        >
+                            Mudar de função
+                        </DropdownMenuLabel>
+                    </DropdownMenuGroup>
+                )}
+
                 <DropdownMenuGroup>
                     <DropdownMenuLabel
                     onClick={async () => {

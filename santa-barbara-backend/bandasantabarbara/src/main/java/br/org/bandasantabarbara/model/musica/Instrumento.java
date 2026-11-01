@@ -1,11 +1,12 @@
 package br.org.bandasantabarbara.model.musica;
 
 
+import java.time.LocalDateTime;
+
 import br.org.bandasantabarbara.exception.BadRequestException;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.util.Locale;
 
 @Entity
 @Table(name = "instrumento")
@@ -39,10 +40,23 @@ public class Instrumento {
     @Getter
     private String descricao;
 
+    @Column(name = "criado_em", nullable = false, updatable = false)
+    @Getter
+    private LocalDateTime criadoEm;
 
-    protected Instrumento() { }
+    @Column(name = "atualizado_em", nullable = false, updatable = true)
+    @Getter
+    private LocalDateTime atualizadoEm;
+
+
+
+    protected Instrumento() { 
+        this.criadoEm = LocalDateTime.now();
+        this.atualizadoEm = LocalDateTime.now();
+    }
 
     public Instrumento(String nome, Instrumento.TipoInstrumentoEnum tipo) {
+        this();
         this.setNome(nome);
         this.setTipo(tipo);
     }
@@ -53,6 +67,7 @@ public class Instrumento {
         }
 
         this.nome = nome.trim().toLowerCase();
+        this.atualizadoEm = LocalDateTime.now();
     }
 
     public void setDescricao(String descricao) {
@@ -61,6 +76,7 @@ public class Instrumento {
         }
 
         this.descricao = descricao.trim().toLowerCase();
+        this.atualizadoEm = LocalDateTime.now();
     }
 
     public void setTipo(Instrumento.TipoInstrumentoEnum tipo) {
@@ -69,5 +85,6 @@ public class Instrumento {
         }
 
         this.tipo = tipo;
+        this.atualizadoEm = LocalDateTime.now();
     }
 }

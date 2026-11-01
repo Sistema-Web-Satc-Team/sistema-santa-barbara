@@ -7,7 +7,7 @@ import { DashboardLayout } from '#/components/layout/DashboardLayout'
 export const Route = createFileRoute('/_auth/_admin/dashboard/_layout')({
   component: Layout,
   beforeLoad: ({ context }) => {
-    if (!context.profile.funcoes.some((funcao) => funcao === 'SUPER_ADMIN' || funcao === 'ADMIN')) {
+    if (!context.profile.funcoes.some((funcao) => funcao.code === 'SUPER_ADMIN' || funcao.code === 'ADMIN')) {
       throw redirect({ to: '/' })
     }
   },

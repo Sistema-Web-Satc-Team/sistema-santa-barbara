@@ -48,7 +48,7 @@ export function MusicasPage({ permitirRemocao = false }: MusicasPageProps) {
   }, [searchInput])
 
   const { musicas, totalElements, state, actions } = useListMusicas(search)
- const { create, update, remove } = useMusicaMutations()
+  const { create, update, remove } = useMusicaMutations()
 
   const sentinel = useInfiniteScroll({
     onLoadMore: actions.loadMore,

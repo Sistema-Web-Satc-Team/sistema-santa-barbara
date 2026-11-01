@@ -228,7 +228,7 @@ public class Membro implements Persistable<UUID> {
 
     // Membro
     public List<MembroVinculo> getVinculosAbertos() {
-        return vinculos.stream().filter(v -> !v.estaEncerrado()).toList();
+        return vinculos.stream().filter(v -> !v.estaCancelado() && !v.estaEncerrado()).toList();
     }
 
 
