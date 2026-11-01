@@ -30,5 +30,8 @@ public class InstrumentoTurma {
     public InstrumentoTurma(Turma turma, Instrumento instrumento) {
         this.turma = turma;
         this.instrumento = instrumento;
+        if (turma.getId() != null && instrumento.getId() > 0) {
+            this.id = new InstrumentoTurmaId(turma.getId(), instrumento.getId());
+        }
     }
 }

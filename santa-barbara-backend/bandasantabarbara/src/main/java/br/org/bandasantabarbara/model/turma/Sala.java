@@ -49,4 +49,9 @@ public class Sala {
 
         this.capacidade = capacidade;
     }
+
+    public void atualizar(String code, Integer capacidade) {
+        setCode(code);
+        setCapacidade(capacidade);
+    }
 }

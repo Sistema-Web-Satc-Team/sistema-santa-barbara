@@ -6,7 +6,6 @@ import br.org.bandasantabarbara.model.turma.Sala;
 import br.org.bandasantabarbara.model.turma.Turma;
 import br.org.bandasantabarbara.model.turma.StatusTurma;
 import org.junit.jupiter.api.Assertions;
-import org.assertj.core.api.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -35,7 +34,7 @@ public class TurmaTest {
         Assertions.assertEquals(dataInicio, turma.getDataInicio());
         Assertions.assertEquals(dataFim, turma.getDataFim());
 
-        Assertions.assertEquals("Turma - 01", turma.getNome());
+        Assertions.assertEquals("turma - 01", turma.getNome());
         assertThat(turma.getSala())
                 .usingRecursiveComparison()
                 .isEqualTo(new Sala("1.10", 10));
@@ -47,7 +46,7 @@ public class TurmaTest {
 
     @Test
     public void naoDevePermitirDataFimSemDataInicio() {
-        var turma = new Turma("Turma - 01", new Sala("1.10", 10));
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
 
         Assertions.assertThrows(BadRequestException.class, () -> {
             turma.agendarPeriodo(null, LocalDate.now().plusMonths(3));
@@ -56,7 +55,7 @@ public class TurmaTest {
 
     @Test
     public void naoDevePermitirDataFimAnteriorADataInicio() {
-        var turma = new Turma("Turma - 01", new Sala("1.10", 10));
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
 
         Assertions.assertThrows(BadRequestException.class, () -> {
             turma.agendarPeriodo(LocalDate.now().plusMonths(4), LocalDate.now().plusMonths(3));
@@ -65,7 +64,7 @@ public class TurmaTest {
 
     @Test
     public void naoDevePermitirDataInicioNoPassado() {
-        var turma = new Turma("Turma - 01", new Sala("1.10", 10));
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
 
         Assertions.assertThrows(BadRequestException.class, () -> {
             turma.agendarPeriodo(LocalDate.now().minusDays(1), null);
@@ -74,7 +73,7 @@ public class TurmaTest {
 
     @Test
     public void deveMostrarQueTurmaEstaEmPlanejamentoQuandoDataInicioEhNulaOuEstaNoFuturo() {
-        var turma = new Turma("Turma - 01", new Sala("1.10", 10));
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
         turma.agendarPeriodo(LocalDate.now().plusDays(5), null);
 
         Assertions.assertEquals(StatusTurma.PLANEJAMENTO, turma.getStatus());
@@ -82,7 +81,7 @@ public class TurmaTest {
 
     @Test
     public void deveMostrarQueTurmaEncerrouAutomaticamente() {
-        var turma = new Turma("Turma - 01", new Sala("1.10", 10));
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
         var dataHoje = LocalDate.now();
         turma.agendarPeriodo(dataHoje, dataHoje);
 
@@ -93,7 +92,7 @@ public class TurmaTest {
 
     @Test
     public void deveMostrarQueTurmaEncerrouManualmente() {
-        var turma = new Turma("Turma - 01", new Sala("1.10", 10));
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
         turma.agendarPeriodo(LocalDate.now(), null);
 
         turma.terminar();
@@ -103,7 +102,7 @@ public class TurmaTest {
 
     @Test
     public void deveMostrarQueTurmaEstaEmAndamento() {
-        var turma = new Turma("Turma - 01", new Sala("1.10", 10));
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
         turma.agendarPeriodo(LocalDate.now(), LocalDate.now().plusDays(1));
 
         Assertions.assertEquals(StatusTurma.EM_ANDAMENTO, turma.getStatus());
@@ -112,7 +111,7 @@ public class TurmaTest {
 
     @Test
     public void deveMostrarQueTurmaCancelou() {
-        var turma = new Turma("Turma - 01", new Sala("1.10", 10));
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
         turma.agendarPeriodo(LocalDate.now().plusDays(2), null);
 
         turma.terminar();
@@ -122,11 +121,33 @@ public class TurmaTest {
 
     @Test
     public void deveMostrarQueTurmaInterrompeu() {
-        var turma = new Turma("Turma - 01", new Sala("1.10", 10));
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
         turma.agendarPeriodo(LocalDate.now(), LocalDate.now().plusDays(4));
 
         turma.terminar();
 
         Assertions.assertEquals(StatusTurma.INTERROMPIDA, turma.getStatus());
+    }
+
+    @Test
+    public void deveImpedirHorarioForaDoTurno() {
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
+        turma.setTurno(Turma.EnumTipoTurno.MATUTINO);
+
+        Horario horario = new Horario();
+        horario.setSegunda(LocalTime.of(11, 30), LocalTime.of(12, 30));
+
+        Assertions.assertThrows(BadRequestException.class, () -> turma.setHorario(horario));
+    }
+
+    @Test
+    public void deveAceitarHorarioNoTurnoNoturno() {
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
+        turma.setTurno(Turma.EnumTipoTurno.NOTURNO);
+
+        Horario horario = new Horario();
+        horario.setSegunda(LocalTime.of(18, 0), LocalTime.of(20, 0));
+
+        Assertions.assertDoesNotThrow(() -> turma.setHorario(horario));
     }
 }

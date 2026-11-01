@@ -1,6 +1,7 @@
 package br.org.bandasantabarbara.application.dtos.turmas;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 
 @Schema(
     description = "Contrato para cadastro de turma.",
@@ -21,18 +23,20 @@ import jakarta.validation.constraints.NotNull;
       "dataInicio": "2026-11-01",
       "dataFim": "2026-12-15",
       "nome": "Turma de Clarinete",
+      "turno": "NOTURNO",
       "horarios": [
         {
-          "diaSemana": "SEGUNDA",
-          "horaInicio": "19:00",
-          "horaFim": "22:00"
+          "diaDaSemana": "SEGUNDA",
+          "inicio": "19:00",
+          "fim": "22:00"
         },
         {
-          "diaSemana": "QUARTA",
-          "horaInicio": "19:00",
-          "horaFim": "22:00"
+          "diaDaSemana": "QUARTA",
+          "inicio": "19:00",
+          "fim": "22:00"
         }
-      ]
+      ],
+      "idsInstrumentos": [1, 2]
     }
     """
 )
@@ -51,6 +55,7 @@ public record CriarTurmaRequestDTO(
     )
     Integer numeroVagas,
 
+    @NotNull(message = "A data de início é obrigatória.")
     @FutureOrPresent(message = "A data de inicio precisa ser a partir da data de hoje.")
     @Schema(
         description = "Data de início das aulas (pode ser hoje ou data futura).", 
@@ -58,7 +63,8 @@ public record CriarTurmaRequestDTO(
     )
     LocalDate dataInicio,
 
-    @FutureOrPresent(message = "A data de inicio precisa ser a partir da data de hoje.")
+    @NotNull(message = "A data de fim planejada é obrigatória.")
+    @FutureOrPresent(message = "A data de fim precisa ser a partir da data de hoje.")
     @Schema(
         description = "Data de encerramento das aulas.", 
         example = "2026-12-15"
@@ -72,21 +78,33 @@ public record CriarTurmaRequestDTO(
     )
     String nome,
 
-    @NotBlank(message = "O turno da turma deve ser definido.")
+    @NotNull(message = "O turno da turma deve ser definido.")
     @Valid
     @Schema(
-        description = "Turno da turma."
+        description = "Turno: MATUTINO (06:00–12:00), VESPERTINO (13:00–18:00), NOTURNO (18:00–23:00), INTEGRAL (06:00–18:00) ou CONTRATURNO (sem janela fixa, definida pela instituição)."
     )
-    @JsonDeserialize(using = DayOfWeekDeserializer.class)
+    @JsonDeserialize(using = EnumTipoTurnoDeserializer.class)
     EnumTipoTurno turno,
 
     @Valid
+    @NotEmpty(message = "A turma deve ter ao menos um horário.")
     @Schema(
         description = "Lista com os dias e horários em que as aulas acontecerão."
     )
-    @JsonDeserialize(using = DayOfWeekDeserializer.class)
-    List<HorarioRequestDTO> horarios
+    List<HorarioRequestDTO> horarios,
+
+    @Schema(description = "IDs dos instrumentos ensinados na turma, quando aplicável.")
+    List<Integer> idsInstrumentos
 ) {
+    public CriarTurmaRequestDTO(
+        String codigoSala,
+        Integer numeroVagas,
+        LocalDate dataInicio,
+        LocalDate dataFim,
+        String nome,
+        EnumTipoTurno turno,
+        List<HorarioRequestDTO> horarios
+    ) {
+        this(codigoSala, numeroVagas, dataInicio, dataFim, nome, turno, horarios, new ArrayList<>());
+    }
 }
-
-

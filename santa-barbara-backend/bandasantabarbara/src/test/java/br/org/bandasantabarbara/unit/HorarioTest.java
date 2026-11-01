@@ -51,19 +51,17 @@ public class HorarioTest {
     public void NaoPodeColidirHorarios() {
         Horario horario = new Horario();
 
-        horario.setSegunda(LocalTime.of(10,0),LocalTime.of(11,0));
-
+        horario.setSegunda(LocalTime.of(12,0),LocalTime.of(13,0));
 
         assertThrows(BadRequestException.class, () -> {
-            horario.setSegunda(LocalTime.of(10,0),LocalTime.of(11,0));
+            horario.setSegunda(LocalTime.of(12,0),LocalTime.of(13,0));
         });
 
         assertThrows(BadRequestException.class, () -> {
-            horario.setSegunda(LocalTime.of(10,30),LocalTime.of(10,45));
+            horario.setSegunda(LocalTime.of(12,30),LocalTime.of(14,0));
         });
 
 
     }
-
 
 }

@@ -1,16 +1,15 @@
 package br.org.bandasantabarbara.model.turma;
 
+import br.org.bandasantabarbara.exception.BadRequestException;
 import br.org.bandasantabarbara.model.ensino.Professor;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "professor_turma")
 @Getter
-@Setter
 public class ProfessorTurma {
 
     @Id
@@ -44,5 +43,16 @@ public class ProfessorTurma {
         this.turma = turma;
         this.professor = professor;
         this.dataEntrada = dataEntrada;
+    }
+
+    public void encerrarPorTerminoDaTurma(LocalDate dataSaida) {
+        if (!"ATIVO".equals(status)) {
+            throw new BadRequestException("O vínculo do professor não está ativo.");
+        }
+        if (dataSaida.isBefore(dataEntrada)) {
+            throw new BadRequestException("A data de saída não pode ser anterior à entrada.");
+        }
+        this.status = "ENCERRADO";
+        this.dataSaida = dataSaida;
     }
 }

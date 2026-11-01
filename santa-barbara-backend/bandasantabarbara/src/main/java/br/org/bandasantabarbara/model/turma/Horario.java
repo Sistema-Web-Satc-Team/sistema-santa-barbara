@@ -7,6 +7,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.*;
+import lombok.Getter;
+
 import java.util.stream.Collectors;
 
 @Entity
@@ -17,8 +19,12 @@ public class Horario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_horario")
+    @OneToMany(
+        mappedBy = "horario",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    @Getter
     private final List<HorarioIntervalo> intervalos = new ArrayList<>();
 
     public Horario() {}
@@ -53,6 +59,10 @@ public class Horario {
     }
 
     private void adicionarHorario(DayOfWeek dia, LocalTime inicio, LocalTime fim) {
+        if (dia == null || inicio == null || fim == null || !inicio.isBefore(fim)) {
+            throw new BadRequestException("O horário deve ter dia, início e fim válidos.");
+        }
+
         List<HorarioIntervalo> horariosDoDia = filtrarPorDia(dia);
 
         for (HorarioIntervalo existente : horariosDoDia) {
@@ -63,7 +73,10 @@ public class Horario {
             }
         }
 
-        this.intervalos.add(new HorarioIntervalo(dia, inicio, fim));
+        HorarioIntervalo intervalo = new HorarioIntervalo(dia, inicio, fim);
+        intervalo.setHorario(this);
+
+        this.intervalos.add(intervalo);
     }
 
     public void adicionar(DayOfWeek dia, LocalTime inicio, LocalTime fim) {

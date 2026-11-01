@@ -1,16 +1,15 @@
 package br.org.bandasantabarbara.model.turma;
 
+import br.org.bandasantabarbara.exception.BadRequestException;
 import br.org.bandasantabarbara.model.ensino.Aluno;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "matricula_aluno_turma")
 @Getter
-@Setter
 public class MatriculaAlunoTurma {
 
     @Id
@@ -44,5 +43,28 @@ public class MatriculaAlunoTurma {
         this.turma = turma;
         this.aluno = aluno;
         this.dataMatricula = dataMatricula;
+    }
+
+    public boolean estaAtiva() {
+        return "ATIVO".equals(status);
+    }
+
+    public void desistir(LocalDate dataSaida) {
+        encerrar("DESISTENTE", dataSaida);
+    }
+
+    public void encerrarPorTerminoDaTurma(LocalDate dataSaida) {
+        encerrar("ENCERRADO", dataSaida);
+    }
+
+    private void encerrar(String novoStatus, LocalDate dataSaida) {
+        if (!estaAtiva()) {
+            throw new BadRequestException("A matrícula não está ativa.");
+        }
+        if (dataSaida.isBefore(dataMatricula)) {
+            throw new BadRequestException("A data de saída não pode ser anterior à matrícula.");
+        }
+        this.status = novoStatus;
+        this.dataSaida = dataSaida;
     }
 }
