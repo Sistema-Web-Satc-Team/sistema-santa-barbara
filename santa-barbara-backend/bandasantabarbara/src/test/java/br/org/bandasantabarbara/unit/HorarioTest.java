@@ -1,8 +1,9 @@
 package br.org.bandasantabarbara.unit;
 
 import br.org.bandasantabarbara.exception.BadRequestException;
-import br.org.bandasantabarbara.model.Horario;
-import br.org.bandasantabarbara.model.HorarioIntervalo;
+import br.org.bandasantabarbara.model.turma.Horario;
+import br.org.bandasantabarbara.model.turma.HorarioIntervalo;
+
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;

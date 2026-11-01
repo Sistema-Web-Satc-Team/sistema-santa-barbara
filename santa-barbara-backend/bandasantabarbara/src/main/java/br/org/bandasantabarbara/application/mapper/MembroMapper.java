@@ -3,7 +3,8 @@ package br.org.bandasantabarbara.application.mapper;
 import br.org.bandasantabarbara.application.dtos.membros.MembroRequest;
 import br.org.bandasantabarbara.application.dtos.membros.MembroResponse;
 import br.org.bandasantabarbara.application.services.storage.FileService;
-import br.org.bandasantabarbara.model.Membro;
+import br.org.bandasantabarbara.model.membro.Membro;
+
 import org.springframework.stereotype.Component;
 
 

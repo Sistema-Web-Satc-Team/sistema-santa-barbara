@@ -1,0 +1,1 @@
+CREATE INDEX idx_horario_intervalo_id_horario ON horario_intervalo (id_horario);

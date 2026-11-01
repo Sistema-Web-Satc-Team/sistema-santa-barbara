@@ -3,8 +3,9 @@ package br.org.bandasantabarbara.application.mapper;
 import br.org.bandasantabarbara.application.dtos.instrumentos.InstrumentoRequest;
 import br.org.bandasantabarbara.application.dtos.instrumentos.InstrumentoResponse;
 import br.org.bandasantabarbara.application.dtos.membros.FuncaoResponse;
-import br.org.bandasantabarbara.model.Funcao;
-import br.org.bandasantabarbara.model.Instrumento;
+import br.org.bandasantabarbara.model.membro.Funcao;
+import br.org.bandasantabarbara.model.musica.Instrumento;
+
 import org.springframework.stereotype.Component;
 
 @Component

@@ -2,8 +2,9 @@ package br.org.bandasantabarbara.application.mapper;
 
 import br.org.bandasantabarbara.application.dtos.profile.PerfilRequest;
 import br.org.bandasantabarbara.application.dtos.profile.PerfilResponse;
-import br.org.bandasantabarbara.model.Funcao;
-import br.org.bandasantabarbara.model.Membro;
+import br.org.bandasantabarbara.model.membro.Funcao;
+import br.org.bandasantabarbara.model.membro.Membro;
+
 import org.springframework.stereotype.Component;
 
 import javax.management.relation.Role;

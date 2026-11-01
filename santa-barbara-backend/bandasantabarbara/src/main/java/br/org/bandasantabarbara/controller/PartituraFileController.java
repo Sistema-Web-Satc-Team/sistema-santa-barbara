@@ -1,7 +1,9 @@
 package br.org.bandasantabarbara.controller;
 
-import br.org.bandasantabarbara.application.usecase.partitura.PegarArquivoPartituraUseCase;
-import br.org.bandasantabarbara.application.services.storage.FileService; // se precisar dos metadados do arquivo
+import br.org.bandasantabarbara.application.services.musica.PartituraService;
+import br.org.bandasantabarbara.application.services.storage.FileService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
@@ -19,26 +21,28 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/partituras")
+@Tag(name = "Partituras", description = "Download dos arquivos de partituras.")
 public class PartituraFileController {
 
-    private final PegarArquivoPartituraUseCase pegarArquivoPartituraUseCase;
+    private final PartituraService partituraService;
     private final FileService fileService;
 
     public PartituraFileController(
-            PegarArquivoPartituraUseCase pegarArquivoPartituraUseCase,
+            PartituraService partituraService,
             FileService fileService
     ) {
-        this.pegarArquivoPartituraUseCase = pegarArquivoPartituraUseCase;
+        this.partituraService = partituraService;
         this.fileService = fileService;
     }
 
     @GetMapping("/files/{id}")
+    @Operation(summary = "Baixar arquivo de partitura", description = "Retorna o arquivo associado à partitura.")
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'MAESTRO', 'ALUNO', 'MUSICO_BANDA', 'PROFESSOR')")
     public ResponseEntity<Resource> download(@PathVariable UUID id) {
 
 
         var fileMetadata = this.fileService.getMetadata(id);
-        var inputStream = this.pegarArquivoPartituraUseCase.open(id);
+        var inputStream = this.partituraService.abrirPartitura(id);
 
         ContentDisposition disposition = ContentDisposition.inline()
                 .filename(fileMetadata.getFilename(), StandardCharsets.UTF_8)

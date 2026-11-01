@@ -3,7 +3,7 @@ package br.org.bandasantabarbara.integration;
 
 import br.org.bandasantabarbara.application.dtos.sala.SalaRequestDTO;
 import br.org.bandasantabarbara.application.dtos.sala.SalaResponseDTO;
-import br.org.bandasantabarbara.application.services.sala.SalaService;
+import br.org.bandasantabarbara.application.services.turma.SalaService;
 import br.org.bandasantabarbara.exception.ConflictException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

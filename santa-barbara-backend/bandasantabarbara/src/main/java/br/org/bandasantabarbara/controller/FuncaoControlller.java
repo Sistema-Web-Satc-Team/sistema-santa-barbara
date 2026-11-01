@@ -2,9 +2,12 @@ package br.org.bandasantabarbara.controller;
 
 
 import br.org.bandasantabarbara.application.dtos.membros.FuncaoResponse;
-import br.org.bandasantabarbara.application.services.funcoes.FuncaoService;
+import br.org.bandasantabarbara.application.services.membro.FuncaoService;
 import br.org.bandasantabarbara.exception.NotFoundException;
-import br.org.bandasantabarbara.model.Funcao;
+import br.org.bandasantabarbara.model.membro.Funcao;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -16,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("funcoes")
+@Tag(name = "Funções", description = "Consulta das funções disponíveis para vínculos.")
 public class FuncaoControlller {
 
 
@@ -27,6 +31,7 @@ public class FuncaoControlller {
 
 
     @GetMapping
+    @Operation(summary = "Listar funções", description = "Lista as funções que podem ser atribuídas conforme o papel do solicitante.")
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public List<FuncaoResponse> listarFuncoes(@AuthenticationPrincipal Jwt jwt) {
         List<String> papeis = jwt.getClaim("papeis");

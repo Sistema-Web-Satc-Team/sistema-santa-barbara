@@ -3,8 +3,9 @@ package br.org.bandasantabarbara.application.mapper;
 
 import br.org.bandasantabarbara.application.dtos.musicas.MusicaRequest;
 import br.org.bandasantabarbara.application.dtos.musicas.MusicaResponse;
-import br.org.bandasantabarbara.model.Genero;
-import br.org.bandasantabarbara.model.Musica;
+import br.org.bandasantabarbara.model.musica.Genero;
+import br.org.bandasantabarbara.model.musica.Musica;
+
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;

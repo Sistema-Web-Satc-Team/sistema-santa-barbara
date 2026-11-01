@@ -1,6 +1,6 @@
 package br.org.bandasantabarbara.application.dtos.convite;
 
-import br.org.bandasantabarbara.application.services.convite.EnumTipoCanal;
+import br.org.bandasantabarbara.application.services.membro.convite.EnumTipoCanal;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record CanalDTO(

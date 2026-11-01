@@ -1,7 +1,8 @@
 package br.org.bandasantabarbara.application.mapper;
 
 import br.org.bandasantabarbara.application.dtos.membros.responsaveis.ResponsavelResponse;
-import br.org.bandasantabarbara.model.MembroResponsavel;
+import br.org.bandasantabarbara.model.membro.MembroResponsavel;
+
 import org.springframework.stereotype.Component;
 
 @Component

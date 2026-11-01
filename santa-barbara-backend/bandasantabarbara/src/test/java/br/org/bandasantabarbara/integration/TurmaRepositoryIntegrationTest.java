@@ -1,11 +1,11 @@
 package br.org.bandasantabarbara.integration;
 
 
-import br.org.bandasantabarbara.model.Horario;
-import br.org.bandasantabarbara.model.Sala;
-import br.org.bandasantabarbara.model.Turma;
-import br.org.bandasantabarbara.repositories.StatusTurma;
-import br.org.bandasantabarbara.repositories.TurmaRepository;
+import br.org.bandasantabarbara.model.turma.Horario;
+import br.org.bandasantabarbara.model.turma.Sala;
+import br.org.bandasantabarbara.model.turma.Turma;
+import br.org.bandasantabarbara.model.turma.StatusTurma;
+import br.org.bandasantabarbara.repositories.turma.TurmaRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.assertj.core.api.Assertions;

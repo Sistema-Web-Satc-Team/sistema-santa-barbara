@@ -5,6 +5,7 @@ import br.org.bandasantabarbara.application.dtos.MessageResponse;
 import br.org.bandasantabarbara.application.dtos.exception.BadRequestExceptionDTO;
 import br.org.bandasantabarbara.application.dtos.exception.EnumBadRequestExceptionDTO;
 import br.org.bandasantabarbara.exception.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -130,7 +131,13 @@ public class GlobalExceptionHandler {
                 .body(new MessageResponse("Ocorreu um erro interno no servidor."));
     }
 
-    public record DadosErroValidacao(String campo, String mensagem) {
+    @Schema(description = "Erro de validação associado a um campo da requisição.")
+    public record DadosErroValidacao(
+            @Schema(description = "Nome do campo inválido.", example = "email")
+            String campo,
+            @Schema(description = "Motivo da validação falha.", example = "deve ser um endereço de e-mail válido")
+            String mensagem
+    ) {
         public DadosErroValidacao(FieldError erro) {
             this(erro.getField(), erro.getDefaultMessage());
         }
