@@ -70,13 +70,16 @@ public class MembroVinculo {
 
     // Construtores
 
-    protected  MembroVinculo() { }
+    protected  MembroVinculo() {
+        this.criadoEm = Instant.now();
+        this.atualizadoEm = Instant.now();
+    }
 
     public MembroVinculo(Membro membro, Funcao funcao, LocalDate dataInicio) {
+        this(); 
         this.membro = membro;
         this.funcao = funcao;
         this.dataInicio = dataInicio;
-        this.criadoEm = Instant.now();
     }
 
     public void cancelar() {
