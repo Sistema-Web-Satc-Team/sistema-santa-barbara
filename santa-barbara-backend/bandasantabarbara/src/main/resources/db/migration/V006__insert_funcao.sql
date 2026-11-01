@@ -51,5 +51,11 @@ INSERT INTO funcao (
     'Responsável',
     'Responsável do aluno ou pessoa menor de idade.',
     'DOMINIO'
+),
+(
+    'PRESIDENTE',
+    'Presidente da banda',
+    'Responsável pela gestão e organização da banda.',
+    'DOMINIO'
 );
 

@@ -3,8 +3,13 @@ CREATE TABLE membro_vinculo (
     id_funcao INT NOT NULL,
     id_membro UUID NOT NULL,
 
-    data_inicio TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    data_termino TIMESTAMP NULL,
+    data_inicio DATE NOT NULL DEFAULT CURRENT_DATE,
+    data_termino DATE NULL,
+
+    criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deletado_em TIMESTAMP NULL,
+    
 
     CONSTRAINT pk_membro_vinculo PRIMARY KEY (id),
 

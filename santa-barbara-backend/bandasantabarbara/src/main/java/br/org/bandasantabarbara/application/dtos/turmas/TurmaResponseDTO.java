@@ -1,8 +1,10 @@
 package br.org.bandasantabarbara.application.dtos.turmas;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import br.org.bandasantabarbara.application.dtos.sala.SalaResponseDTO;
+import br.org.bandasantabarbara.model.turma.StatusTurma;
 import br.org.bandasantabarbara.model.turma.Turma.EnumTipoTurno;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -52,10 +54,22 @@ public record TurmaResponseDTO(
     )
     EnumTipoTurno turno,
 
+    @Schema(description = "Status atual calculado a partir das datas planejadas e do encerramento efetivo.")
+    StatusTurma status,
+
     @Schema(description = "Horários semanais da turma.")
     HorarioResponseDTO horarios,
 
     @Schema(description = "Sala física vinculada à turma.")
-    SalaResponseDTO sala
+    SalaResponseDTO sala,
+
+    @Schema(description = "Histórico de matrículas dos alunos vinculados à turma.")
+    List<MatriculaResponseDTO> matriculas,
+
+    @Schema(description = "Histórico de vínculos dos professores associados à turma.")
+    List<ProfessorTurmaResponseDTO> professores,
+
+    @Schema(description = "Instrumentos ensinados pela turma.")
+    List<String> instrumentos
 
 ) {}

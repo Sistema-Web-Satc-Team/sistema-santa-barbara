@@ -41,11 +41,11 @@ public class TurmaRepositoryIntegrationTest {
         Sala sala = new Sala("1.10", 10);
         entityManager.persist(sala);
 
-        Turma turmaPlanejada = new Turma("Turma Planejamento", sala);
+        Turma turmaPlanejada = new Turma("turma planejamento", sala);
         turmaPlanejada.agendarPeriodo(LocalDate.now().plusDays(5), null);
         entityManager.persist(turmaPlanejada);
 
-        Turma turmaEmAndamento = new Turma("Turma Andamento", sala);
+        Turma turmaEmAndamento = new Turma("turma andamento", sala);
         turmaEmAndamento.agendarPeriodo(LocalDate.now(), LocalDate.now().plusDays(5));
         entityManager.persist(turmaEmAndamento);
 
@@ -64,11 +64,11 @@ public class TurmaRepositoryIntegrationTest {
         Sala sala = new Sala("1.10", 10);
         entityManager.persist(sala);
 
-        Turma turmaPlanejada = new Turma("Turma Planejamento", sala);
+        Turma turmaPlanejada = new Turma("turma planejamento", sala);
         turmaPlanejada.agendarPeriodo(LocalDate.now().plusDays(5), null);
         entityManager.persist(turmaPlanejada);
 
-        Turma turmaEmAndamento = new Turma("Turma Andamento", sala);
+        Turma turmaEmAndamento = new Turma("turma andamento", sala);
         turmaEmAndamento.agendarPeriodo(LocalDate.now(), LocalDate.now().plusDays(5));
         entityManager.persist(turmaEmAndamento);
 
@@ -95,7 +95,7 @@ public class TurmaRepositoryIntegrationTest {
         Sala sala = new Sala("1.10", 10);
         entityManager.persist(sala);
 
-        Turma turmaPlanejada = new Turma("Turma Planejamento", sala);
+        Turma turmaPlanejada = new Turma("turma planejamento", sala);
         turmaPlanejada.agendarPeriodo(LocalDate.now().plusDays(5), null);
 
         var horarioTurmaPlanejada = new Horario();
@@ -103,7 +103,7 @@ public class TurmaRepositoryIntegrationTest {
 
         entityManager.persist(turmaPlanejada);
 
-        Turma turmaEmAndamento = new Turma("Turma Andamento", sala);
+        Turma turmaEmAndamento = new Turma("turma andamento", sala);
         turmaEmAndamento.agendarPeriodo(LocalDate.now(), LocalDate.now().plusDays(14));
 
         var horarioTurmaEmAndamento = new Horario();

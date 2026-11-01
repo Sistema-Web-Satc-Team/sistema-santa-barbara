@@ -26,6 +26,7 @@ import br.org.bandasantabarbara.application.dtos.turmas.TurmaResponseDTO;
 import br.org.bandasantabarbara.application.services.turma.SalaService;
 import br.org.bandasantabarbara.application.services.turma.TurmaService;
 import br.org.bandasantabarbara.exception.BadRequestException;
+import br.org.bandasantabarbara.exception.ConflictException;
 import br.org.bandasantabarbara.model.turma.Turma.EnumTipoTurno;
 
 @SpringBootTest  
@@ -93,7 +94,7 @@ public class TurmaServiceIntegrationTest {
             12,
             currentDate.plusDays(7),
             currentDate.plusDays(14),
-            "Aulas de clarinete.",
+            "aulas de clarinete.",
             tipoTurno,
             dtoHorarios
         );
@@ -134,7 +135,7 @@ public class TurmaServiceIntegrationTest {
             200,
             currentDate.plusDays(7),
             currentDate.plusDays(14),
-            "Aulas de clarinete.",
+            "aulas de clarinete.",
             tipoTurno,
             dtoHorarios
         );
@@ -145,6 +146,36 @@ public class TurmaServiceIntegrationTest {
         .isInstanceOf(BadRequestException.class)
         .hasMessageContaining("vagas não pode exceder a capacidade máxima da sala")
         .hasNoCause();
+    }
+
+    @Test
+    public void naoDeveReservarSalaParaPeriodosSobrepostos() {
+        cadastrarSalas();
+
+        LocalDate inicio = LocalDate.now().plusDays(7);
+        LocalDate fim = LocalDate.now().plusDays(14);
+
+        turmaService.criar(new CriarTurmaRequestDTO(
+            "1.10",
+            12,
+            inicio,
+            fim,
+            "turma um",
+            EnumTipoTurno.MATUTINO,
+            List.of(new HorarioRequestDTO(DayOfWeek.MONDAY, LocalTime.of(10, 0), LocalTime.of(11, 0)))
+        ));
+
+        Assertions.assertThatThrownBy(() -> turmaService.criar(new CriarTurmaRequestDTO(
+            "1.10",
+            12,
+            inicio,
+            fim,
+            "turma dois",
+            EnumTipoTurno.MATUTINO,
+            List.of(new HorarioRequestDTO(DayOfWeek.MONDAY, LocalTime.of(11, 0), LocalTime.of(12, 0)))
+        )))
+        .isInstanceOf(ConflictException.class)
+        .hasMessageContaining("sala já está alocada");
     }
 
 
@@ -194,7 +225,7 @@ public class TurmaServiceIntegrationTest {
             12,
             currentDate.plusDays(7),
             currentDate.plusDays(14),
-            "Aulas de clarinete.",
+            "aulas de clarinete.",
             tipoTurno,
             dtoHorarios
         ));
@@ -204,7 +235,7 @@ public class TurmaServiceIntegrationTest {
             15,
             currentDate.plusDays(7),
             currentDate.plusDays(14),
-            "Aulas de clarinete.",
+            "aulas de clarinete.",
             tipoTurno,
             dtoHorarios
         ));
@@ -214,7 +245,7 @@ public class TurmaServiceIntegrationTest {
             20,
             currentDate.plusDays(7),
             currentDate.plusDays(14),
-            "Aulas de clarinete.",
+            "aulas de clarinete.",
             tipoTurno,
             dtoHorarios
         ));
@@ -254,7 +285,7 @@ public class TurmaServiceIntegrationTest {
 
         CriarTurmaRequestDTO criarDto = new CriarTurmaRequestDTO(
             "1.10", 12, currentDate.plusDays(7), currentDate.plusDays(14),
-            "Turma Original", EnumTipoTurno.MATUTINO, dtoHorarios
+            "turma original", EnumTipoTurno.MATUTINO, dtoHorarios
         );
         TurmaResponseDTO turmaCriada = turmaService.criar(criarDto);
 
@@ -263,9 +294,13 @@ public class TurmaServiceIntegrationTest {
             18,                             
             currentDate.plusDays(10),       
             currentDate.plusDays(20),       
-            "Turma atualizada",            
+            "turma atualizada",
             EnumTipoTurno.VESPERTINO,      
-            dtoHorarios                    
+            List.of(new HorarioRequestDTO(
+                DayOfWeek.MONDAY,
+                LocalTime.of(13, 0),
+                LocalTime.of(14, 30)
+            ))
         );
 
 
@@ -291,7 +326,7 @@ public class TurmaServiceIntegrationTest {
 
         CriarTurmaRequestDTO criarDto = new CriarTurmaRequestDTO(
             "1.10", 12, currentDate.plusDays(7), currentDate.plusDays(14),
-            "Turma Validação Vagas", EnumTipoTurno.MATUTINO, dtoHorarios
+            "turma validação vagas", EnumTipoTurno.MATUTINO, dtoHorarios
         );
         TurmaResponseDTO turmaCriada = turmaService.criar(criarDto);
 

@@ -3,14 +3,29 @@ package br.org.bandasantabarbara.repositories.turma;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.time.LocalDate;
 
 import br.org.bandasantabarbara.model.turma.ProfessorTurma;
 import br.org.bandasantabarbara.repositories.ensino.ProfessorInstrumentoProjection;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ProfessorTurmaRepository extends JpaRepository<ProfessorTurma, Long> {
+
+    boolean existsByTurma_IdAndProfessor_IdAndStatus(Long turmaId, UUID professorId, String status);
+
+    @Modifying
+    @Query(
+        value = """
+            UPDATE professor_turma
+            SET status = 'ENCERRADO', data_saida = :dataSaida
+            WHERE id_turma = :turmaId AND status = 'ATIVO'
+            """,
+        nativeQuery = true
+    )
+    int encerrarVinculosAtivos(@Param("turmaId") Long turmaId, @Param("dataSaida") LocalDate dataSaida);
 
     @Query(
         value = """

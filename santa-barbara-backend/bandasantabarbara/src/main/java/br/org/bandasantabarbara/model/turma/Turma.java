@@ -1,6 +1,7 @@
 package br.org.bandasantabarbara.model.turma;
 
 import br.org.bandasantabarbara.exception.BadRequestException;
+import br.org.bandasantabarbara.model.musica.Instrumento;
 import br.org.bandasantabarbara.model.turma.StatusTurma;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,8 +9,10 @@ import lombok.Setter;
 import org.hibernate.annotations.Formula;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "turma")
@@ -48,20 +51,23 @@ public class Turma {
     @Getter @Setter
     private Sala sala;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "horario_id")
     @Getter @Setter
     private Horario horario;
 
     @OneToMany(mappedBy = "turma")
+    @BatchSize(size = 50)
     @Getter
     private List<MatriculaAlunoTurma> matriculas = new ArrayList<>();
 
     @OneToMany(mappedBy = "turma")
+    @BatchSize(size = 50)
     @Getter
     private List<ProfessorTurma> professores = new ArrayList<>();
 
     @OneToMany(mappedBy = "turma")
+    @BatchSize(size = 50)
     @Getter
     private List<InstrumentoTurma> instrumentos = new ArrayList<>();
 
@@ -155,11 +161,93 @@ public class Turma {
         this.dataFim = fim;
     }
 
+    public void atualizarPeriodo(LocalDate inicio, LocalDate fim) {
+        if (inicio == null && fim != null) {
+            throw new BadRequestException("Não é possível definir uma data de fim sem ter um início.");
+        }
+        if (inicio != null && fim != null && inicio.isAfter(fim)) {
+            throw new BadRequestException("A data de fim deve ocorrer após a data de início.");
+        }
+        this.dataInicio = inicio;
+        this.dataFim = fim;
+    }
+
     public void terminar() {
         if (this.dataTermino != null) {
             throw new BadRequestException("Não é possível terminar uma turma já terminou.");
         }
         this.dataTermino = LocalDate.now();
+    }
+
+    public boolean permiteNovasMatriculas() {
+        return dataTermino == null && (dataFim == null || LocalDate.now().isBefore(dataFim));
+    }
+
+    public void definirInstrumentos(List<Instrumento> novosInstrumentos) {
+        instrumentos.clear();
+        novosInstrumentos.stream()
+            .map(instrumento -> new InstrumentoTurma(this, instrumento))
+            .forEach(instrumentos::add);
+    }
+
+    public void setTurno(EnumTipoTurno turno) {
+        if (turno == null) {
+            throw new BadRequestException("O turno da turma deve ser definido.");
+        }
+
+        validarHorarioTurno(this.horario, turno);
+        this.turno = turno;
+    }
+
+    public void setHorario(Horario horario) {
+        validarHorarioTurno(horario, this.turno);
+        this.horario = horario;
+    }
+
+    public void configurarHorario(EnumTipoTurno turno, Horario horario) {
+        validarHorarioTurno(horario, turno);
+        this.turno = turno;
+        this.horario = horario;
+    }
+
+    private void validarHorarioTurno(Horario horario, EnumTipoTurno turno) {
+        if (horario == null || turno == null) {
+            return;
+        }
+
+        for (HorarioIntervalo intervalo : horario.getIntervalos()) {
+            LocalTime inicioMinimo;
+            LocalTime fimMaximo;
+
+            switch (turno) {
+                case MATUTINO -> {
+                    inicioMinimo = LocalTime.of(6, 0);
+                    fimMaximo = LocalTime.of(12, 0);
+                }
+                case VESPERTINO -> {
+                    inicioMinimo = LocalTime.of(13, 0);
+                    fimMaximo = LocalTime.of(18, 0);
+                }
+                case NOTURNO -> {
+                    inicioMinimo = LocalTime.of(18, 0);
+                    fimMaximo = LocalTime.of(23, 0);
+                }
+                case INTEGRAL -> {
+                    inicioMinimo = LocalTime.of(6, 0);
+                    fimMaximo = LocalTime.of(18, 0);
+                }
+                case CONTRATURNO -> {
+                    continue;
+                }
+                default -> throw new BadRequestException("Turno inválido.");
+            }
+
+            if (intervalo.getInicio().isBefore(inicioMinimo) || intervalo.getFim().isAfter(fimMaximo)) {
+                throw new BadRequestException(
+                    "O horário da turma deve estar dentro do turno " + turno + "."
+                );
+            }
+        }
     }
 
     public StatusTurma getStatus() {

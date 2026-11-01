@@ -6,14 +6,33 @@ import java.util.Collection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import jakarta.persistence.LockModeType;
 
 import br.org.bandasantabarbara.model.ensino.Aluno;
 
 @Repository
 public interface AlunoRepository extends JpaRepository<Aluno, UUID> {
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT a FROM Aluno a WHERE a.id = :id")
+    java.util.Optional<Aluno> findByIdForUpdate(@Param("id") UUID id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+        SELECT a FROM Aluno a
+        WHERE a.id IN (
+            SELECT matricula.aluno.id
+            FROM MatriculaAlunoTurma matricula
+            WHERE matricula.turma.id = :turmaId
+                AND matricula.status = 'ATIVO'
+        )
+        ORDER BY a.id
+    """)
+    java.util.List<Aluno> findActiveStudentsByTurmaForUpdate(@Param("turmaId") Long turmaId);
 
     @Query(
         value = """
