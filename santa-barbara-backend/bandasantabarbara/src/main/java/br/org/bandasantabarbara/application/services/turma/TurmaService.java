@@ -138,9 +138,9 @@ public class TurmaService {
             validarPeriodo(turma.getDataInicio(), turma.getDataFim());
             validarPeriodoConfigurado(turma);
         }
-        if (turma.getDataInicio() != null && turma.getDataFim() != null) {
+        /*if (turma.getDataInicio() != null && turma.getDataFim() != null) {
             validarConflitoSala(sala, turma.getDataInicio(), turma.getDataFim(), id);
-        }
+        }*/
         turmaRepository.saveAndFlush(turma);
 
         if ((alterandoHorario || definindoPeriodo)
@@ -179,6 +179,15 @@ public class TurmaService {
     public TurmaResponseDTO buscarPorId(Long id) {
         Turma turma = turmaRepository.findDetailsById(id)
             .orElseThrow(() -> new NotFoundException("Turma não encontrada."));
+
+        turmaRepository.findWithMatriculasById(id)
+            .orElseThrow(() -> new NotFoundException("Turma não encontrada."));
+        turmaRepository.findWithProfessoresById(id)
+            .orElseThrow(() -> new NotFoundException("Turma não encontrada."));
+
+        turma = turmaRepository.findWithInstrumentosById(id)
+            .orElseThrow(() -> new NotFoundException("Turma não encontrada."));
+
         return turmaMapper.toResponse(turma);
     }
 
@@ -392,11 +401,11 @@ public class TurmaService {
         }
     }
 
-    private void validarConflitoSala(Sala sala, LocalDate inicio, LocalDate fim, Long turmaId) {
+    /*private void validarConflitoSala(Sala sala, LocalDate inicio, LocalDate fim, Long turmaId) {
         if (turmaRepository.existsRoomConflict(sala.getId(), inicio, fim, turmaId)) {
             throw new ConflictException("A sala já está alocada a outra turma nesse período.");
         }
-    }
+    }*/
 
     private List<Instrumento> buscarInstrumentos(List<Integer> ids) {
         if (ids == null || ids.isEmpty()) {
