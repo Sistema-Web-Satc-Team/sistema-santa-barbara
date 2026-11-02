@@ -5,6 +5,14 @@ import br.org.bandasantabarbara.model.turma.Horario;
 import br.org.bandasantabarbara.model.turma.Sala;
 import br.org.bandasantabarbara.model.turma.Turma;
 import br.org.bandasantabarbara.model.turma.StatusTurma;
+import br.org.bandasantabarbara.model.turma.MatriculaAlunoTurma;
+import br.org.bandasantabarbara.model.turma.ProfessorTurma;
+import br.org.bandasantabarbara.model.ensino.Aluno;
+import br.org.bandasantabarbara.model.ensino.Professor;
+import br.org.bandasantabarbara.application.dtos.turmas.AtualizarTurmaRequestDTO;
+import br.org.bandasantabarbara.application.dtos.turmas.CriarTurmaRequestDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -149,5 +157,66 @@ public class TurmaTest {
         horario.setSegunda(LocalTime.of(18, 0), LocalTime.of(20, 0));
 
         Assertions.assertDoesNotThrow(() -> turma.setHorario(horario));
+    }
+
+    @Test
+    public void desistirDeveRegistrarStatusDesistido() {
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
+        Aluno aluno = new Aluno();
+        MatriculaAlunoTurma matricula = new MatriculaAlunoTurma(turma, aluno, LocalDate.now());
+
+        matricula.desistir(LocalDate.now());
+
+        assertThat(matricula.getStatus()).isEqualTo("DESISTIDO");
+    }
+
+    @Test
+    public void transferirDevePreservarStatusEJustificativa() {
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
+        Aluno aluno = new Aluno();
+        MatriculaAlunoTurma matricula = new MatriculaAlunoTurma(turma, aluno, LocalDate.now());
+
+        matricula.transferir(LocalDate.now(), "Solicitação do aluno");
+
+        assertThat(matricula.getStatus()).isEqualTo("TRANSFERIDO");
+        assertThat(matricula.getJustificativaMudancaStatus()).isEqualTo("Solicitação do aluno");
+    }
+
+    @Test
+    public void substituirProfessorDeveLiberarVinculoAtivo() {
+        var turma = new Turma("turma - 01", new Sala("1.10", 10));
+        Professor professor = new Professor();
+        ProfessorTurma vinculo = new ProfessorTurma(turma, professor, LocalDate.now());
+
+        vinculo.substituir(LocalDate.now());
+
+        assertThat(vinculo.getStatus()).isEqualTo("SUBSTITUIDO");
+        assertThat(vinculo.getDataSaida()).isEqualTo(LocalDate.now());
+    }
+
+    @Test
+    public void dtoIgnoraStatusEnviadoNoBodyDeCriacaoOuAtualizacao() throws Exception {
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        String corpoCriacao = """
+            {
+              "codigoSala": "1.10",
+              "numeroVagas": 10,
+              "dataInicio": "2099-01-01",
+              "dataFim": "2099-02-01",
+              "nome": "Turma",
+              "turno": "NOTURNO",
+              "horarios": [{"diaDaSemana": "MONDAY", "inicio": "19:00", "fim": "20:00"}],
+              "status": "CANCELADO"
+            }
+            """;
+        String corpoAtualizacao = """
+            {"nome": "Turma atualizada", "status": "CANCELADO"}
+            """;
+
+        CriarTurmaRequestDTO criacao = mapper.readValue(corpoCriacao, CriarTurmaRequestDTO.class);
+        AtualizarTurmaRequestDTO atualizacao = mapper.readValue(corpoAtualizacao, AtualizarTurmaRequestDTO.class);
+
+        assertThat(criacao.nome()).isEqualTo("Turma");
+        assertThat(atualizacao.nome()).isEqualTo("Turma atualizada");
     }
 }

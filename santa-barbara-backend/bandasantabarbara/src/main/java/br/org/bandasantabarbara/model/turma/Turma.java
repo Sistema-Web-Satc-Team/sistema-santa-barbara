@@ -2,7 +2,6 @@ package br.org.bandasantabarbara.model.turma;
 
 import br.org.bandasantabarbara.exception.BadRequestException;
 import br.org.bandasantabarbara.model.musica.Instrumento;
-import br.org.bandasantabarbara.model.turma.StatusTurma;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +11,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "turma")
@@ -42,7 +40,7 @@ public class Turma {
 
 
     @Column(name = "turno")
-    @Getter @Setter 
+    @Getter 
     @Enumerated(EnumType.STRING)
     private EnumTipoTurno turno;
 
@@ -51,23 +49,20 @@ public class Turma {
     @Getter @Setter
     private Sala sala;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "horario_id")
-    @Getter @Setter
+    @Getter 
     private Horario horario;
 
     @OneToMany(mappedBy = "turma")
-    @BatchSize(size = 50)
     @Getter
     private List<MatriculaAlunoTurma> matriculas = new ArrayList<>();
 
     @OneToMany(mappedBy = "turma")
-    @BatchSize(size = 50)
     @Getter
     private List<ProfessorTurma> professores = new ArrayList<>();
 
     @OneToMany(mappedBy = "turma")
-    @BatchSize(size = 50)
     @Getter
     private List<InstrumentoTurma> instrumentos = new ArrayList<>();
 
@@ -254,7 +249,7 @@ public class Turma {
         LocalDate hoje = LocalDate.now();
 
         if (this.dataTermino != null) {
-            if (this.dataTermino.isBefore(this.dataInicio)) {
+            if (this.dataInicio != null && this.dataTermino.isBefore(this.dataInicio)) {
                 return StatusTurma.CANCELADO;
             }
 
@@ -286,6 +281,18 @@ public class Turma {
 
         this.numeroVagas = numeroVagas;
     }
+
+    // Campos de contagem de alunos e professores ativos, que são calculados em tempo de execução e não persistidos no banco de dados.
+
+    @Transient
+    @Getter
+    @Setter
+    private Long numeroDeProfessoresAtivos;
+
+    @Transient
+    @Getter
+    @Setter
+    private Long numeroDeAlunosAtivos;
 
 
 }

@@ -13,6 +13,7 @@ import java.util.Optional;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 
 
 public interface TurmaRepository extends JpaRepository<Turma, Long> {
@@ -22,7 +23,7 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
         value = """
             SELECT t FROM Turma t
             JOIN FETCH t.sala
-            JOIN FETCH t.horario
+            LEFT JOIN FETCH t.horario
             WHERE :status IS NULL OR t.status = :status
         """,
         countQuery = """
@@ -35,8 +36,34 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
             Pageable pageable
     );
 
-    @EntityGraph(attributePaths = {"sala", "horario", "horario.intervalos", "instrumentos.instrumento"})
-    @Query("SELECT t FROM Turma t WHERE t.id = :id")
+
+    @Query(
+        value = """
+            SELECT t FROM Turma t
+            JOIN FETCH t.sala
+            JOIN FETCH t.instrumentos
+            WHERE :status IS NULL OR t.status = :status
+        """,
+        countQuery = """
+            SELECT COUNT(t) FROM Turma t
+            WHERE :status IS NULL OR t.status = :status
+        """
+    )
+    Page<Turma> findAllWithSalaAndOptionalFilters(
+            @Param("status") StatusTurma status,
+            Pageable pageable
+    );
+
+
+
+    // @EntityGraph(attributePaths = {"sala", "horario", "horario.intervalos", "instrumentos.instrumento"})
+    @Query("""
+        SELECT t FROM Turma t 
+            JOIN FETCH t.sala
+            LEFT JOIN FETCH t.horario
+            LEFT JOIN FETCH t.instrumentos
+        WHERE t.id = :id
+    """)
     Optional<Turma> findDetailsById(@Param("id") Long id);
 
     @Query(
@@ -72,4 +99,16 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
     boolean existsBySala_Id(Integer salaId);
 
     boolean existsBySala_IdAndNumeroVagasGreaterThan(Integer salaId, Integer capacidade);
+
+    @Modifying
+    @Query(
+        value = """
+            UPDATE turma
+            SET data_termino = data_fim
+            WHERE data_termino IS NULL
+                AND data_fim <= CURRENT_DATE
+            """,
+        nativeQuery = true
+    )
+    int encerrarTurmasVencidas();
 }

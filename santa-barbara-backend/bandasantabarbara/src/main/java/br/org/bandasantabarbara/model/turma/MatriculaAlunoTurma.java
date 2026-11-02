@@ -12,6 +12,13 @@ import java.time.LocalDate;
 @Getter
 public class MatriculaAlunoTurma {
 
+    public enum EnumStatusMatricula {
+        ATIVO,
+        DESISTIDO,
+        TRANSFERIDO,
+        ENCERRADO
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +32,8 @@ public class MatriculaAlunoTurma {
     private Aluno aluno;
 
     @Column(nullable = false)
-    private String status = "ATIVO";
+    @Enumerated(EnumType.STRING)
+    private EnumStatusMatricula status = EnumStatusMatricula.ATIVO;
 
     @Column(name = "justificativa_mudanca_status", columnDefinition = "TEXT")
     private String justificativaMudancaStatus;
@@ -46,18 +54,27 @@ public class MatriculaAlunoTurma {
     }
 
     public boolean estaAtiva() {
-        return "ATIVO".equals(status);
+        return EnumStatusMatricula.ATIVO == status;
+    }
+
+    public void definirJustificativa(String justificativa) {
+        this.justificativaMudancaStatus = justificativa;
     }
 
     public void desistir(LocalDate dataSaida) {
-        encerrar("DESISTENTE", dataSaida);
+        encerrar(EnumStatusMatricula.DESISTIDO, dataSaida);
+    }
+
+    public void transferir(LocalDate dataSaida, String justificativa) {
+        encerrar(EnumStatusMatricula.TRANSFERIDO, dataSaida);
+        this.justificativaMudancaStatus = justificativa;
     }
 
     public void encerrarPorTerminoDaTurma(LocalDate dataSaida) {
-        encerrar("ENCERRADO", dataSaida);
+        encerrar(EnumStatusMatricula.ENCERRADO, dataSaida);
     }
 
-    private void encerrar(String novoStatus, LocalDate dataSaida) {
+    private void encerrar(EnumStatusMatricula novoStatus, LocalDate dataSaida) {
         if (!estaAtiva()) {
             throw new BadRequestException("A matrícula não está ativa.");
         }

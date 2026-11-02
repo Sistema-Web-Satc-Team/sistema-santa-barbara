@@ -10,10 +10,13 @@ import br.org.bandasantabarbara.application.dtos.PageResponse;
 import br.org.bandasantabarbara.application.dtos.professores.ProfessorResponse;
 import br.org.bandasantabarbara.application.mapper.PageMapper;
 import br.org.bandasantabarbara.application.mapper.ProfessorMapper;
+import br.org.bandasantabarbara.application.mapper.TurmaMapper;
+
 import br.org.bandasantabarbara.repositories.ensino.ProfessorInstrumentoProjection;
 import br.org.bandasantabarbara.repositories.ensino.ProfessorProjection;
 import br.org.bandasantabarbara.repositories.ensino.ProfessorRepository;
 import br.org.bandasantabarbara.repositories.turma.ProfessorTurmaRepository;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,17 +28,20 @@ public class ProfessorService {
     private final ProfessorTurmaRepository professorTurmaRepository;
     private final ProfessorMapper professorMapper;
     private final PageMapper pageMapper;
+    private final TurmaMapper turmaMapper;
 
     public ProfessorService(
             ProfessorRepository professorRepository,
             ProfessorTurmaRepository professorTurmaRepository,
             ProfessorMapper professorMapper,
-            PageMapper pageMapper
+            PageMapper pageMapper,
+            TurmaMapper turmaMapper
     ) {
         this.professorRepository = professorRepository;
         this.professorTurmaRepository = professorTurmaRepository;
         this.professorMapper = professorMapper;
         this.pageMapper = pageMapper;
+        this.turmaMapper = turmaMapper;
     }
 
     @Transactional(readOnly = true)
@@ -102,4 +108,5 @@ public class ProfessorService {
 
         return pageMapper.toResponse(resultado);
     }
+
 }

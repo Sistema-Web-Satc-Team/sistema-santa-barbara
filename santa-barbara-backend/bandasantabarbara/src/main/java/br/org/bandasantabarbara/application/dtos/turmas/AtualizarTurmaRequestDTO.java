@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.org.bandasantabarbara.model.turma.Turma.EnumTipoTurno;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,6 +13,7 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Positive;
 
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record AtualizarTurmaRequestDTO (
 
     @Schema(

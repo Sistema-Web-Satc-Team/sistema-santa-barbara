@@ -10,7 +10,11 @@ public record ProfessorTurmaResponseDTO(
     UUID idProfessor,
     Long idTurma,
     String status,
+    String nome,
+    String telefone,
+    String email,
     LocalDate dataEntrada,
-    LocalDate dataSaida
+    LocalDate dataSaida,
+    String justificativa
 ) {
 }

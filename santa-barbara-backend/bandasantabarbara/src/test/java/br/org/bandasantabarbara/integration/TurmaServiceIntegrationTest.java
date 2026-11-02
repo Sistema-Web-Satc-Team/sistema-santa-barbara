@@ -1,21 +1,7 @@
 package br.org.bandasantabarbara.integration;
 
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import br.org.bandasantabarbara.application.dtos.PageResponse;
 import br.org.bandasantabarbara.application.dtos.sala.SalaRequestDTO;
@@ -23,326 +9,155 @@ import br.org.bandasantabarbara.application.dtos.turmas.AtualizarTurmaRequestDTO
 import br.org.bandasantabarbara.application.dtos.turmas.CriarTurmaRequestDTO;
 import br.org.bandasantabarbara.application.dtos.turmas.HorarioRequestDTO;
 import br.org.bandasantabarbara.application.dtos.turmas.TurmaResponseDTO;
+import br.org.bandasantabarbara.application.dtos.turmas.TurmaResponseResumidoDTO;
 import br.org.bandasantabarbara.application.services.turma.SalaService;
 import br.org.bandasantabarbara.application.services.turma.TurmaService;
 import br.org.bandasantabarbara.exception.BadRequestException;
-import br.org.bandasantabarbara.exception.ConflictException;
-import br.org.bandasantabarbara.model.turma.Turma.EnumTipoTurno;
+import br.org.bandasantabarbara.model.turma.StatusTurma;
+import br.org.bandasantabarbara.model.turma.Turma;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest  
-@ActiveProfiles ("test")
-@Transactional 
-public class TurmaServiceIntegrationTest {
-    
-    @Autowired 
+@SpringBootTest
+@ActiveProfiles("test")
+@Transactional
+class TurmaServiceIntegrationTest {
+
+    @Autowired
     private TurmaService turmaService;
 
     @Autowired
     private SalaService salaService;
 
+    @Test
+    void postCriaTurmaBasicaSemPeriodoOuHorario() {
+        cadastrarSala("sala-post", 12);
 
-    private void cadastrarSalas() {
-        salaService.cadastrar(
-            new SalaRequestDTO(
-                "1.10", 
-                12
-            )
-        );
+        TurmaResponseDTO turma = turmaService.criar(new CriarTurmaRequestDTO(
+            "sala-post",
+            12,
+            "aulas de clarinete",
+            Turma.EnumTipoTurno.MATUTINO,
+            null
+        ));
 
-        salaService.cadastrar(
-            new SalaRequestDTO(
-                "1.11", 
-                15
-            )
-        );
-
-        salaService.cadastrar(
-            new SalaRequestDTO(
-                "1.12", 
-                20
-            )
-        );
-
+        assertThat(turma.nome()).isEqualTo("aulas de clarinete");
+        assertThat(turma.numeroVagas()).isEqualTo(12);
+        assertThat(turma.dataInicio()).isNull();
+        assertThat(turma.dataFim()).isNull();
+        assertThat(turma.horarios()).isNull();
+        assertThat(turma.status()).isEqualTo(StatusTurma.PLANEJAMENTO);
     }
 
     @Test
-    public void deveCriarUmaTurmaComDataInicioEFimEHorario() {
-        
-        cadastrarSalas();
+    void naoPermiteVagasAcimaDaCapacidadeNoPost() {
+        cadastrarSala("sala-capacidade", 12);
 
-        //
-        // Como ele é o teste de cadastro de turma
-        // ele deve ser explicito cada passo.
-        //
-
-        List<HorarioRequestDTO> dtoHorarios = new ArrayList<>();
-
-        var currentTime = LocalTime.of(10, 00);
-        var currentDate = LocalDate.now();
-
-        EnumTipoTurno tipoTurno = EnumTipoTurno.MATUTINO;
-
-
-        dtoHorarios.add(new HorarioRequestDTO(
-            DayOfWeek.MONDAY,
-            currentTime,
-            currentTime.plusMinutes(90)
-        ));
-
-        CriarTurmaRequestDTO turmaRequestDTO = new CriarTurmaRequestDTO(
-            "1.10",
-            12,
-            currentDate.plusDays(7),
-            currentDate.plusDays(14),
-            "aulas de clarinete.",
-            tipoTurno,
-            dtoHorarios
-        );
-
-        TurmaResponseDTO turmaResponseDTO = turmaService.criar(turmaRequestDTO);
-
-        Assertions.assertThat(turmaResponseDTO.nome()).isEqualTo("aulas de clarinete."); 
-        Assertions.assertThat(turmaResponseDTO.numeroVagas()).isEqualTo(12);
-        Assertions.assertThat(turmaResponseDTO.dataInicio()).isEqualTo(currentDate.plusDays(7));
-        Assertions.assertThat(turmaResponseDTO.dataFim()).isEqualTo(currentDate.plusDays(14));
-        Assertions.assertThat(turmaResponseDTO.dataTermino()).isNull();
-        Assertions.assertThat(turmaResponseDTO.sala().code()).isEqualTo("1.10");
-        Assertions.assertThat(turmaResponseDTO.sala().capacidade()).isGreaterThanOrEqualTo(12);
-        Assertions.assertThat(turmaResponseDTO.turno()).isEqualTo(tipoTurno);
-
-        Assertions.assertThat(turmaResponseDTO.horarios().segunda()).isNotEmpty();
-    }
-
-    @Test 
-    public void naoDeveCriarTurmaComVagasMaiorQueCapacidade() {
-        cadastrarSalas();
-
-        List<HorarioRequestDTO> dtoHorarios = new ArrayList<>();
-
-        var currentTime = LocalTime.of(10, 00);
-        var currentDate = LocalDate.now();
-
-        EnumTipoTurno tipoTurno = EnumTipoTurno.MATUTINO;
-
-        dtoHorarios.add(new HorarioRequestDTO(
-            DayOfWeek.MONDAY,
-            currentTime,
-            currentTime.plusMinutes(90)
-        ));
-
-        CriarTurmaRequestDTO turmaRequestDTO = new CriarTurmaRequestDTO(
-            "1.10",
-            200,
-            currentDate.plusDays(7),
-            currentDate.plusDays(14),
-            "aulas de clarinete.",
-            tipoTurno,
-            dtoHorarios
-        );
-
-        Assertions.assertThatThrownBy(() -> {
-            this.turmaService.criar(turmaRequestDTO);
-        })
-        .isInstanceOf(BadRequestException.class)
-        .hasMessageContaining("vagas não pode exceder a capacidade máxima da sala")
-        .hasNoCause();
-    }
-
-    @Test
-    public void naoDeveReservarSalaParaPeriodosSobrepostos() {
-        cadastrarSalas();
-
-        LocalDate inicio = LocalDate.now().plusDays(7);
-        LocalDate fim = LocalDate.now().plusDays(14);
-
-        turmaService.criar(new CriarTurmaRequestDTO(
-            "1.10",
-            12,
-            inicio,
-            fim,
-            "turma um",
-            EnumTipoTurno.MATUTINO,
-            List.of(new HorarioRequestDTO(DayOfWeek.MONDAY, LocalTime.of(10, 0), LocalTime.of(11, 0)))
-        ));
-
-        Assertions.assertThatThrownBy(() -> turmaService.criar(new CriarTurmaRequestDTO(
-            "1.10",
-            12,
-            inicio,
-            fim,
-            "turma dois",
-            EnumTipoTurno.MATUTINO,
-            List.of(new HorarioRequestDTO(DayOfWeek.MONDAY, LocalTime.of(11, 0), LocalTime.of(12, 0)))
+        assertThatThrownBy(() -> turmaService.criar(new CriarTurmaRequestDTO(
+            "sala-capacidade",
+            13,
+            "turma inválida",
+            Turma.EnumTipoTurno.MATUTINO,
+            null
         )))
-        .isInstanceOf(ConflictException.class)
-        .hasMessageContaining("sala já está alocada");
+            .isInstanceOf(BadRequestException.class)
+            .hasMessageContaining("vagas não pode exceder a capacidade máxima da sala");
     }
 
-
-    private void criarTurmas() {
-        this.cadastrarSalas();
-
-        List<HorarioRequestDTO> dtoHorarios = new ArrayList<>();
-
-        var currentTime = LocalTime.of(10, 00);
-        var currentDate = LocalDate.now();
-
-        EnumTipoTurno tipoTurno = EnumTipoTurno.MATUTINO;
-
-        dtoHorarios.add(new HorarioRequestDTO(
-            DayOfWeek.MONDAY,
-            currentTime,
-            currentTime.plusMinutes(90)
-        ));
-
-        dtoHorarios.add(new HorarioRequestDTO(
-            DayOfWeek.FRIDAY,
-            currentTime,
-            currentTime.plusMinutes(90)
-        ));
-
-        dtoHorarios.add(new HorarioRequestDTO(
-            DayOfWeek.THURSDAY,
-            currentTime,
-            currentTime.plusMinutes(90)
-        ));
-
-        dtoHorarios.add(new HorarioRequestDTO(
-            DayOfWeek.WEDNESDAY,
-            currentTime,
-            currentTime.plusMinutes(90)
-        ));
-
-        dtoHorarios.add(new HorarioRequestDTO(
-            DayOfWeek.TUESDAY,
-            currentTime,
-            currentTime.plusMinutes(90)
-        ));
-
-
-        turmaService.criar(new CriarTurmaRequestDTO(
-            "1.10",
+    @Test
+    void patchDePeriodoExigeHorarioEParticipantesAtivos() {
+        cadastrarSala("sala-periodo", 12);
+        TurmaResponseDTO turma = turmaService.criar(new CriarTurmaRequestDTO(
+            "sala-periodo",
             12,
-            currentDate.plusDays(7),
-            currentDate.plusDays(14),
-            "aulas de clarinete.",
-            tipoTurno,
-            dtoHorarios
+            "turma sem configuração",
+            Turma.EnumTipoTurno.MATUTINO,
+            null
         ));
+        LocalDate inicio = LocalDate.now().plusDays(7);
 
-        turmaService.criar(new CriarTurmaRequestDTO(
-            "1.11",
-            15,
-            currentDate.plusDays(7),
-            currentDate.plusDays(14),
-            "aulas de clarinete.",
-            tipoTurno,
-            dtoHorarios
-        ));
-
-         turmaService.criar(new CriarTurmaRequestDTO(
-            "1.12",
-            20,
-            currentDate.plusDays(7),
-            currentDate.plusDays(14),
-            "aulas de clarinete.",
-            tipoTurno,
-            dtoHorarios
-        ));
-
+        assertThatThrownBy(() -> turmaService.atualizar(turma.id(), new AtualizarTurmaRequestDTO(
+            null,
+            null,
+            inicio,
+            inicio.plusDays(7),
+            null,
+            null,
+            null
+        )))
+            .isInstanceOf(BadRequestException.class)
+            .hasMessageContaining("Defina ao menos um horário");
     }
 
+    @Test
+    void patchPodeConfigurarHorarioAntesDoPeriodo() {
+        cadastrarSala("sala-patch-horario", 12);
+        TurmaResponseDTO criada = turmaService.criar(new CriarTurmaRequestDTO(
+            "sala-patch-horario",
+            12,
+            "turma em planejamento",
+            Turma.EnumTipoTurno.MATUTINO,
+            null
+        ));
 
-    @Test 
-    public void deveListarTodasAsTurmasComPaginacao() {
-        this.criarTurmas();
-
-        Pageable pageable = PageRequest.of(
-            0,
-            10,
-            Sort.by("nome").ascending()
-        );
-
-        PageResponse<TurmaResponseDTO> turmasPage = this.turmaService.listar(
-            pageable
-        );
-
-        Assertions.assertThat(turmasPage.content().size()).isEqualTo(3);
-        Assertions.assertThat(turmasPage.totalElements()).isEqualTo(3);
-        Assertions.assertThat(turmasPage.page()).isEqualTo(0);
-        Assertions.assertThat(turmasPage.totalPages()).isEqualTo(1);
-        Assertions.assertThat(turmasPage.size()).isEqualTo(10);
-    }
-
-    @Test 
-    public void deveAtualizarDadosDeUmaTurmaComSucesso() {
-        cadastrarSalas();
-
-
-        var currentDate = LocalDate.now();
-        List<HorarioRequestDTO> dtoHorarios = new ArrayList<>();
-        dtoHorarios.add(new HorarioRequestDTO(DayOfWeek.MONDAY, LocalTime.of(10, 0), LocalTime.of(11, 30)));
-
-        CriarTurmaRequestDTO criarDto = new CriarTurmaRequestDTO(
-            "1.10", 12, currentDate.plusDays(7), currentDate.plusDays(14),
-            "turma original", EnumTipoTurno.MATUTINO, dtoHorarios
-        );
-        TurmaResponseDTO turmaCriada = turmaService.criar(criarDto);
-
-        AtualizarTurmaRequestDTO atualizarDto = new AtualizarTurmaRequestDTO(
-            "1.12",                       
-            18,                             
-            currentDate.plusDays(10),       
-            currentDate.plusDays(20),       
-            "turma atualizada",
-            EnumTipoTurno.VESPERTINO,      
+        TurmaResponseDTO atualizada = turmaService.atualizar(criada.id(), new AtualizarTurmaRequestDTO(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
             List.of(new HorarioRequestDTO(
                 DayOfWeek.MONDAY,
-                LocalTime.of(13, 0),
-                LocalTime.of(14, 30)
+                LocalTime.of(10, 0),
+                LocalTime.of(11, 0)
             ))
-        );
+        ));
 
-
-        TurmaResponseDTO turmaAtualizada = turmaService.atualizar(turmaCriada.id(), atualizarDto);
-
-        Assertions.assertThat(turmaAtualizada.id()).isEqualTo(turmaCriada.id());
-        Assertions.assertThat(turmaAtualizada.nome()).isEqualTo("turma atualizada");
-        Assertions.assertThat(turmaAtualizada.numeroVagas()).isEqualTo(18);
-        Assertions.assertThat(turmaAtualizada.sala().code()).isEqualTo("1.12");
-        Assertions.assertThat(turmaAtualizada.dataInicio()).isEqualTo(currentDate.plusDays(10));
-        Assertions.assertThat(turmaAtualizada.dataFim()).isEqualTo(currentDate.plusDays(20));
-        Assertions.assertThat(turmaAtualizada.turno()).isEqualTo(EnumTipoTurno.VESPERTINO);
+        assertThat(atualizada.horarios().segunda()).hasSize(1);
+        assertThat(atualizada.dataInicio()).isNull();
+        assertThat(atualizada.status()).isEqualTo(StatusTurma.PLANEJAMENTO);
     }
 
     @Test
-    public void naoDeveAtualizarTurmaComVagasMaiorQueCapacidadeDaSala() {
-        cadastrarSalas();
+    void listaTurmasPaginadas() {
+        cadastrarSala("sala-pagina-a", 12);
+        cadastrarSala("sala-pagina-b", 15);
+        cadastrarSala("sala-pagina-c", 20);
+        turmaService.criar(turma("sala-pagina-a", 12, "clarinete"));
+        turmaService.criar(turma("sala-pagina-b", 15, "flauta"));
+        turmaService.criar(turma("sala-pagina-c", 20, "violino"));
 
-
-        var currentDate = LocalDate.now();
-        List<HorarioRequestDTO> dtoHorarios = new ArrayList<>();
-        dtoHorarios.add(new HorarioRequestDTO(DayOfWeek.MONDAY, LocalTime.of(10, 0), LocalTime.of(11, 30)));
-
-        CriarTurmaRequestDTO criarDto = new CriarTurmaRequestDTO(
-            "1.10", 12, currentDate.plusDays(7), currentDate.plusDays(14),
-            "turma validação vagas", EnumTipoTurno.MATUTINO, dtoHorarios
-        );
-        TurmaResponseDTO turmaCriada = turmaService.criar(criarDto);
-
-        AtualizarTurmaRequestDTO atualizarDto = new AtualizarTurmaRequestDTO(
-            "1.10",
-            500,  
-            null, null, null, null, null  
+        PageResponse<TurmaResponseResumidoDTO> pagina = turmaService.listar(
+            PageRequest.of(0, 10, Sort.by("nome").ascending())
         );
 
-        Assertions.assertThatThrownBy(() -> {
-            this.turmaService.atualizar(turmaCriada.id(), atualizarDto);
-        })
-        .isInstanceOf(BadRequestException.class)
-        .hasMessageContaining("vagas não pode exceder a capacidade máxima da sala")
-        .hasNoCause();
+        assertThat(pagina.content()).hasSize(3);
+        assertThat(pagina.totalElements()).isEqualTo(3);
+        assertThat(pagina.page()).isZero();
+        assertThat(pagina.totalPages()).isEqualTo(1);
     }
 
+    private CriarTurmaRequestDTO turma(String codigoSala, int vagas, String nome) {
+        return new CriarTurmaRequestDTO(
+            codigoSala,
+            vagas,
+            nome,
+            Turma.EnumTipoTurno.MATUTINO,
+            null
+        );
+    }
 
+    private void cadastrarSala(String codigo, int capacidade) {
+        salaService.cadastrar(new SalaRequestDTO(codigo, capacidade));
+    }
 }
