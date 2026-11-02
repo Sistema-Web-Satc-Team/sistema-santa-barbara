@@ -4,7 +4,7 @@ import { GenreMultiSelect } from '#/components/business/genre-multi-select'
 import { MusicCreateDialog } from '#/components/business/music-create-dialog'
 import { MusicDeleteDialog } from '#/components/business/music-delete-dialog'
 import { MusicDetailsDialog } from '#/components/business/music-details-dialog'
-import { MusicTable } from '#/components/business/music-table'
+import { MusicList } from '#/components/business/music-list'
 import { Button } from '#/components/ui/button'
 import { Field, FieldLabel } from '#/components/ui/field'
 import { Input } from '#/components/ui/input'
@@ -29,11 +29,10 @@ interface MusicasPageProps {
 export function MusicasPage({ permitirRemocao = false }: MusicasPageProps) {
     const { state: authState } = useAuth()
 
-  const roles = authState.profile?.funcoes ?? []
-  const canEdit = roles.some((role) => EDITOR_ROLES.includes(role))
-  const canDelete = permitirRemocao && roles.some((role) => DELETE_ROLES.includes(role))
-  const canCreate = roles.some((role) => CREATE_ROLES.includes(role))
-
+  const currentRole = authState.currentRole
+  const canEdit = currentRole !== null && EDITOR_ROLES.includes(currentRole)
+  const canDelete = permitirRemocao && currentRole !== null && DELETE_ROLES.includes(currentRole)
+  const canCreate = currentRole !== null && CREATE_ROLES.includes(currentRole)
 
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
@@ -83,7 +82,7 @@ export function MusicasPage({ permitirRemocao = false }: MusicasPageProps) {
 
   return (
     <>
-      <div className="mb-8 flex flex-row items-start">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start">
         <div className="mr-auto">
           <h2 className="text-3xl font-bold">Músicas</h2>
           {!state.isLoading && !state.isError && (
@@ -93,13 +92,12 @@ export function MusicasPage({ permitirRemocao = false }: MusicasPageProps) {
           )}
         </div>
         {canCreate && (
-          <Button onClick={() => setCreating(true)}>
+          <Button className="w-full sm:w-auto" onClick={() => setCreating(true)}>
             <PlusIcon />
             Adicionar música
           </Button>
         )}
      </div>
-
 
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end">
         <Field className="min-w-0 flex-1">
@@ -139,7 +137,7 @@ export function MusicasPage({ permitirRemocao = false }: MusicasPageProps) {
             : 'Não existem músicas cadastradas.'}
         </div>
       ) : (
-        <MusicTable
+        <MusicList
           musicas={visibleMusicas}
           canEdit={canEdit}
           canDelete={canDelete}
@@ -147,7 +145,6 @@ export function MusicasPage({ permitirRemocao = false }: MusicasPageProps) {
           onDelete={setDeleting}
         />
       )}
-
 
       <div ref={sentinel} className="flex h-16 items-center justify-center">
         {state.isFetchingNextPage && <Spinner />}

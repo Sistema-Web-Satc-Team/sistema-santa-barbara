@@ -39,8 +39,8 @@ function Instrumentos() {
   const searchTermRef = useRef('')
 
   const canManage =
-    authState.profile?.funcoes.some((role) => MANAGER_ROLES.includes(role)) ??
-    false
+    authState.currentRole !== null &&
+    MANAGER_ROLES.includes(authState.currentRole)
 
   const page = filters.page ?? 0
   const totalPages = data?.totalPages ?? 1
@@ -91,9 +91,9 @@ function Instrumentos() {
 
   return (
     <>
-      <div className="flex flex-row mb-8">
-        <h2 className="text-3xl font-bold mr-auto">Instrumentos</h2>
-        <Button onClick={openCreate}>
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+        <h2 className="mr-auto text-3xl font-bold">Instrumentos</h2>
+        <Button className="w-full sm:w-auto" onClick={openCreate}>
           <PlusIcon />
           Novo instrumento
         </Button>

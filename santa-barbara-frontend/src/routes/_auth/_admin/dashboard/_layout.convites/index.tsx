@@ -64,12 +64,12 @@ function ConvitesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
           <h1 className="text-2xl font-bold">Convites</h1>
           <p className="text-sm text-muted-foreground">Acompanhe e envie convites de acesso ao sistema.</p>
         </div>
-        <Button onClick={() => setDialogAberto(true)}>
+        <Button className="w-full sm:w-auto" onClick={() => setDialogAberto(true)}>
           <Plus /> Convidar membro
         </Button>
       </div>

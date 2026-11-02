@@ -73,13 +73,13 @@ function Login() {
 
 
   return (
-    <div className='w-full flex items-center justify-center min-h-screen'>
+    <div className='flex min-h-screen w-full items-center justify-center px-4 py-8'>
       <form
         onSubmit={(e) => {
           e.preventDefault()
           form.handleSubmit()
         }}
-        className="flex flex-col min-w-112.5 border px-6 py-12 rounded-lg"
+        className="flex w-full max-w-md min-w-0 flex-col rounded-lg border px-6 py-10 sm:py-12"
       >
         <h2 className="text-2xl font-bold mx-auto mb-1 text-primary">Login</h2>
         <h3 className="text-md font-light mb-12 mx-auto text-primary/70">Bem-vindo a Banda Santa Bárbara!</h3>

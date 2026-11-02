@@ -13,7 +13,7 @@ export function HomeLayout({ children } : { children?: React.ReactNode}) {
           />
           {children}
         </header>
-        <main className='px-16'>
+        <main className='px-4 sm:px-6 lg:px-16'>
           <Outlet />
         </main>
     </>

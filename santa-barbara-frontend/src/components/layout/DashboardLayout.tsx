@@ -1,6 +1,6 @@
 import { UserProfile } from '#/components/business/user-profile'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '#/components/ui/dropdown-menu'
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarInset, SidebarMenu, SidebarProvider } from '#/components/ui/sidebar'
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarInset, SidebarMenu, SidebarProvider, SidebarTrigger } from '#/components/ui/sidebar'
 import { Spinner } from '#/components/ui/spinner'
 import { useAuth } from '#/hooks/use-auth'
 import { Outlet, useNavigate } from '@tanstack/react-router'
@@ -93,6 +93,10 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
         <SidebarInset className="flex flex-col flex-1 min-w-0">
             <main className="flex-1 min-w-0 p-4 md:p-8">
+                <div className="mb-4 flex items-center gap-2 md:hidden">
+                    <SidebarTrigger aria-label="Abrir menu de navegação" className="size-9" />
+                    <span className="text-sm font-medium">Menu</span>
+                </div>
                 <Outlet />
             </main>
         </SidebarInset>
