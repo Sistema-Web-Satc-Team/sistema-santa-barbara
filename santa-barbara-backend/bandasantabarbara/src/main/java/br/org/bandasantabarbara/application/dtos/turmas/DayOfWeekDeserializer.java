@@ -18,6 +18,8 @@ public class DayOfWeekDeserializer extends JsonDeserializer<DayOfWeek> {
         DeserializationContext context
     ) throws IOException {
 
+        System.out.println("ENTROU NO DAY OF WEEK DESERIALIZER");
+
         String valor = parser.getText()
             .trim()
             .toUpperCase(Locale.ROOT)

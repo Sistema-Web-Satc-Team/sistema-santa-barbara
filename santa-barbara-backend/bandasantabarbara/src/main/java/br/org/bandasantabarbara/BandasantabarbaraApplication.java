@@ -6,11 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.TimeZone;
 
 @SpringBootApplication
 @EnableAsync
+@EnableScheduling
 @EntityScan(basePackages = "br.org.bandasantabarbara.model")
 @EnableJpaRepositories(basePackages = "br.org.bandasantabarbara.repositories")
 public class BandasantabarbaraApplication {

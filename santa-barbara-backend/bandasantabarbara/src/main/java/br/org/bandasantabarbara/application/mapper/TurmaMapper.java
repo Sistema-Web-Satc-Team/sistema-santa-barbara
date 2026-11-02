@@ -8,16 +8,15 @@ import org.springframework.stereotype.Component;
 
 import br.org.bandasantabarbara.application.dtos.turmas.AtualizarTurmaRequestDTO;
 import br.org.bandasantabarbara.application.dtos.turmas.CriarTurmaRequestDTO;
+import br.org.bandasantabarbara.application.dtos.turmas.GradeTurmaResponseDTO;
 import br.org.bandasantabarbara.application.dtos.turmas.HorarioResponseDTO;
 import br.org.bandasantabarbara.application.dtos.turmas.IntervaloHorarioResponseDTO;
-import br.org.bandasantabarbara.application.dtos.turmas.MatriculaResponseDTO;
-import br.org.bandasantabarbara.application.dtos.turmas.ProfessorTurmaResponseDTO;
 import br.org.bandasantabarbara.application.dtos.turmas.TurmaResponseDTO;
+import br.org.bandasantabarbara.application.dtos.turmas.TurmaResponseResumidoDTO;
 import br.org.bandasantabarbara.application.services.turma.HorarioFactory;
 import br.org.bandasantabarbara.model.turma.Horario;
 import br.org.bandasantabarbara.model.turma.HorarioIntervalo;
 import br.org.bandasantabarbara.model.turma.MatriculaAlunoTurma;
-import br.org.bandasantabarbara.model.turma.ProfessorTurma;
 import br.org.bandasantabarbara.model.turma.Sala;
 import br.org.bandasantabarbara.model.turma.Turma;
 
@@ -25,16 +24,22 @@ import br.org.bandasantabarbara.model.turma.Turma;
 public class TurmaMapper {
 
     private final SalaMapper salaMapper;
+    private final MatriculaMapper matriculaMapper;
+    private final ProfessorTurmaMapper professorTurmaMapper;
 
-    public TurmaMapper(SalaMapper salaMapper) {
+    public TurmaMapper(
+        SalaMapper salaMapper,
+        MatriculaMapper matriculaMapper,
+        ProfessorTurmaMapper professorTurmaMapper
+    ) {
         this.salaMapper = salaMapper;
+        this.matriculaMapper = matriculaMapper;
+        this.professorTurmaMapper = professorTurmaMapper;
     }
     
     public Turma toEntity(CriarTurmaRequestDTO dto, Sala sala) {
         Turma turma = new Turma(dto.nome(), sala);
 
-        turma.agendarPeriodo(dto.dataInicio(), dto.dataFim());
-        turma.setHorario(HorarioFactory.criarApartirDe(dto.horarios()));
         turma.setNumeroVagas(dto.numeroVagas());
         turma.setTurno(dto.turno());
 
@@ -70,10 +75,26 @@ public class TurmaMapper {
         }
     }
 
+    // Temos um problema grave abaixo que será mantido temporáriamente
+    // Esse método pode ter o problema N+1, ou pior N+M+1 uma vez que
+    // se o método utilizado no service buscar a penas horários ou salas
+    // e não buscar as matriculas e professores, o método abaixo vai disparar queries adicionais para cada turma.
+    // A solução seria criar um método no repository que busque todas as informações necessárias de uma vez só, 
+    // mas isso é um pouco mais complexo e não será feito agora.
     public TurmaResponseDTO toResponse(Turma turma) {
+        var matriculasAtivas = turma.getMatriculas().stream()
+            .filter(MatriculaAlunoTurma::estaAtiva)
+            .toList();
+
+        var professoresAtivos = turma.getProfessores().stream()
+            .filter(vinculo -> "ATIVO".equals(vinculo.getStatus()))
+            .toList();
+
         return new TurmaResponseDTO(
             turma.getId(),
             turma.getNome(),
+            matriculasAtivas.size(),
+            professoresAtivos.size(),
             turma.getNumeroVagas(),
             turma.getDataInicio(),
             turma.getDataFim(),
@@ -82,37 +103,45 @@ public class TurmaMapper {
             turma.getStatus(),
             converterHorario(turma.getHorario()),
             salaMapper.toResponse(turma.getSala()),
-            turma.getMatriculas().stream()
-                .map(this::converterMatricula)
+            matriculasAtivas.stream()
+                .map(matriculaMapper::toTurmaAlunoResponse)
                 .toList(),
-            turma.getProfessores().stream()
-                .map(this::converterVinculoProfessor)
+            professoresAtivos.stream()
+                .map(professorTurmaMapper::toTurmaResponse)
                 .toList(),
+            turma.getInstrumentos().stream()
+                .map(it -> it.getInstrumento().getNome())
+                .toList()
+        );
+    }
+
+    // método mais leve e ideal para listagem de turmas, sem trazer informações detalhadas de alunos e professores
+    public TurmaResponseResumidoDTO toResponseResumido(Turma turma) {
+        return new TurmaResponseResumidoDTO(
+            turma.getId(),
+            turma.getNome(),
+            turma.getNumeroDeAlunosAtivos(),
+            turma.getNumeroDeProfessoresAtivos(),
+            turma.getNumeroVagas(),
+            turma.getDataInicio(),
+            turma.getDataFim(),
+            turma.getDataTermino(),
+            turma.getTurno(),
+            turma.getStatus(),
+            salaMapper.toResponse(turma.getSala()),
             turma.getInstrumentos().stream()
                 .map(instrumentoTurma -> instrumentoTurma.getInstrumento().getNome())
                 .toList()
         );
     }
 
-    private MatriculaResponseDTO converterMatricula(MatriculaAlunoTurma matricula) {
-        return new MatriculaResponseDTO(
-            matricula.getId(),
-            matricula.getAluno().getId(),
-            matricula.getTurma().getId(),
-            matricula.getStatus(),
-            matricula.getDataMatricula(),
-            matricula.getDataSaida()
-        );
-    }
-
-    private ProfessorTurmaResponseDTO converterVinculoProfessor(ProfessorTurma vinculo) {
-        return new ProfessorTurmaResponseDTO(
-            vinculo.getId(),
-            vinculo.getProfessor().getId(),
-            vinculo.getTurma().getId(),
-            vinculo.getStatus(),
-            vinculo.getDataEntrada(),
-            vinculo.getDataSaida()
+    public GradeTurmaResponseDTO toGradeResponse(Turma turma) {
+        return new GradeTurmaResponseDTO(
+            turma.getId(),
+            turma.getNome(),
+            turma.getDataTermino(),
+            turma.getTurno(),
+            converterHorario(turma.getHorario())
         );
     }
 

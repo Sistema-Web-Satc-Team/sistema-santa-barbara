@@ -23,6 +23,10 @@ public record TurmaResponseDTO(
     )
     String nome,
 
+    Integer numeroDeAlunos,
+
+    Integer numeroDeProfessores,
+
     @Schema(
         description = "Quantidade máxima de alunos permitida.",
         example = "12"
@@ -63,11 +67,11 @@ public record TurmaResponseDTO(
     @Schema(description = "Sala física vinculada à turma.")
     SalaResponseDTO sala,
 
-    @Schema(description = "Histórico de matrículas dos alunos vinculados à turma.")
-    List<MatriculaResponseDTO> matriculas,
+    @Schema(description = "Alunos com matrícula ativa na turma.")
+    List<TurmaAlunoResponseDTO> alunos,
 
-    @Schema(description = "Histórico de vínculos dos professores associados à turma.")
-    List<ProfessorTurmaResponseDTO> professores,
+    @Schema(description = "Professores com vínculo ativo na turma.")
+    List<TurmaProfessorResponseDTO> professores,
 
     @Schema(description = "Instrumentos ensinados pela turma.")
     List<String> instrumentos

@@ -13,13 +13,59 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import jakarta.persistence.LockModeType;
 
 public interface MatriculaAlunoTurmaRepository extends JpaRepository<MatriculaAlunoTurma, Long> {
 
+    @Query("""
+        SELECT 
+            m.turma.id AS idTurma,
+            COUNT(m) AS quantidade
+        FROM MatriculaAlunoTurma m
+        WHERE m.turma.id IN :idsTurmas
+        AND m.status = 'ATIVO'
+        GROUP BY m.turma.id
+    """)
+    List<ContagemPorTurma> contarMatriculasAtivasPorTurmas(
+        Collection<Long> idsTurmas
+    );
+
+    @EntityGraph(attributePaths = {"turma", "aluno.membro"})
+    @Query("""
+        SELECT m FROM MatriculaAlunoTurma m
+        WHERE :status IS NULL OR m.status = :status
+    """)
+    Page<MatriculaAlunoTurma> listarPorStatus(
+        @Param("status") String status,
+        Pageable pageable
+    );
+
+    @EntityGraph(attributePaths = {"turma", "aluno.membro"})
+    @Query("""
+        SELECT m FROM MatriculaAlunoTurma m
+        WHERE m.aluno.id = :alunoId
+            AND (:status IS NULL OR m.status = :status)
+    """)
+    Page<MatriculaAlunoTurma> listarPorAlunoEStatus(
+        @Param("alunoId") UUID alunoId,
+        @Param("status") String status,
+        Pageable pageable
+    );
+
+    @EntityGraph(attributePaths = {"turma", "aluno.membro"})
+    @Query("SELECT m FROM MatriculaAlunoTurma m WHERE m.id = :id")
+    Optional<MatriculaAlunoTurma> buscarDetalhePorId(@Param("id") Long id);
+
     boolean existsByTurma_IdAndAluno_IdAndStatus(Long turmaId, UUID alunoId, String status);
 
     long countByTurma_IdAndStatus(Long turmaId, String status);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT m FROM MatriculaAlunoTurma m WHERE m.id = :id")
+    Optional<MatriculaAlunoTurma> findByIdForUpdate(@Param("id") Long id);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT m FROM MatriculaAlunoTurma m WHERE m.id = :id AND m.status = 'ATIVO'")
@@ -36,6 +82,21 @@ public interface MatriculaAlunoTurmaRepository extends JpaRepository<MatriculaAl
     )
     int encerrarMatriculasAtivas(@Param("turmaId") Long turmaId, @Param("dataSaida") LocalDate dataSaida);
 
+    @Modifying
+    @Query(
+        value = """
+            UPDATE matricula_aluno_turma mat
+            SET status = 'ENCERRADO', data_saida = t.data_fim
+            FROM turma t
+            WHERE mat.id_turma = t.id
+                AND mat.status = 'ATIVO'
+                AND t.data_termino IS NULL
+                AND t.data_fim <= CURRENT_DATE
+            """,
+        nativeQuery = true
+    )
+    int encerrarMatriculasDeTurmasVencidas();
+
     @Query(
         value = """
             SELECT EXISTS (
@@ -49,6 +110,7 @@ public interface MatriculaAlunoTurmaRepository extends JpaRepository<MatriculaAl
                 WHERE mat.id_aluno = :alunoId
                     AND mat.status = 'ATIVO'
                     AND mat.id_turma <> :turmaId
+                    AND (:turmaOrigemId IS NULL OR mat.id_turma <> :turmaOrigemId)
                     AND outra_turma.data_inicio <= :dataFim
                     AND (
                         COALESCE(outra_turma.data_termino, outra_turma.data_fim) IS NULL
@@ -64,6 +126,7 @@ public interface MatriculaAlunoTurmaRepository extends JpaRepository<MatriculaAl
     boolean existsScheduleConflict(
         @Param("alunoId") UUID alunoId,
         @Param("turmaId") Long turmaId,
+        @Param("turmaOrigemId") Long turmaOrigemId,
         @Param("horarioId") Long horarioId,
         @Param("dataInicio") LocalDate dataInicio,
         @Param("dataFim") LocalDate dataFim
