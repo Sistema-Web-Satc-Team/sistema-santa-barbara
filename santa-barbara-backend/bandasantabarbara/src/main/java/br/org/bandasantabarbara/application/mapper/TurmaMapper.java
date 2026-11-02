@@ -87,7 +87,7 @@ public class TurmaMapper {
             .toList();
 
         var professoresAtivos = turma.getProfessores().stream()
-            .filter(vinculo -> "ATIVO".equals(vinculo.getStatus()))
+            .filter(vinculo -> "ATIVO".equals(vinculo.getStatus().toString()))
             .toList();
 
         return new TurmaResponseDTO(

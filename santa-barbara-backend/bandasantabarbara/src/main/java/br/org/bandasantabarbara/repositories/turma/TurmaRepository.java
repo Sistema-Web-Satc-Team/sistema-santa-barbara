@@ -58,13 +58,38 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
 
     // @EntityGraph(attributePaths = {"sala", "horario", "horario.intervalos", "instrumentos.instrumento"})
     @Query("""
-        SELECT t FROM Turma t 
+        SELECT t FROM Turma t
             JOIN FETCH t.sala
             LEFT JOIN FETCH t.horario
-            LEFT JOIN FETCH t.instrumentos
         WHERE t.id = :id
     """)
     Optional<Turma> findDetailsById(@Param("id") Long id);
+
+    @Query("""
+        SELECT DISTINCT t FROM Turma t
+            LEFT JOIN FETCH t.professores pt
+            LEFT JOIN FETCH pt.professor p
+            LEFT JOIN FETCH p.membro
+        WHERE t.id = :id
+    """)
+    Optional<Turma> findWithProfessoresById(@Param("id") Long id);
+
+    @Query("""
+        SELECT DISTINCT t FROM Turma t
+            LEFT JOIN FETCH t.matriculas mt
+            LEFT JOIN FETCH mt.aluno a
+            LEFT JOIN FETCH a.membro
+        WHERE t.id = :id
+    """)
+    Optional<Turma> findWithMatriculasById(@Param("id") Long id);
+
+    @Query("""
+        SELECT DISTINCT t FROM Turma t
+            LEFT JOIN FETCH t.instrumentos it
+            LEFT JOIN FETCH it.instrumento
+        WHERE t.id = :id
+    """)
+    Optional<Turma> findWithInstrumentosById(@Param("id") Long id);
 
     @Query(
         value = """

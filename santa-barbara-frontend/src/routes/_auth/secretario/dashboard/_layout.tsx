@@ -1,7 +1,7 @@
 import { DashboardLayout } from '#/components/layout/DashboardLayout'
 import { SidebarMenuButton, SidebarMenuItem } from '#/components/ui/sidebar'
 import { createFileRoute, Link, useLocation } from '@tanstack/react-router'
-import { GraduationCap, Mail, Music2, Users, UserSquare2 } from 'lucide-react'
+import { GraduationCap, Mail, Music2, School, Users, UserSquare2 } from 'lucide-react'
 
 export const Route = createFileRoute('/_auth/secretario/dashboard/_layout')({
   component: Layout,
@@ -55,6 +55,15 @@ function Layout() {
           <Link to="/secretario/dashboard/convites" search={{ page: 0 }}>
             <Mail />
             <span>Convidar Membros</span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+
+      <SidebarMenuItem>
+        <SidebarMenuButton asChild isActive={pathname === "/dashboard/membros/turmas"}>
+          <Link to="/secretario/dashboard/turmas">
+            <School />
+            <span>Turmas</span>
           </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>

@@ -13,8 +13,10 @@ import br.org.bandasantabarbara.application.dtos.turmas.TurmaResponseResumidoDTO
 import br.org.bandasantabarbara.application.services.turma.SalaService;
 import br.org.bandasantabarbara.application.services.turma.TurmaService;
 import br.org.bandasantabarbara.exception.BadRequestException;
+import br.org.bandasantabarbara.model.musica.Instrumento;
 import br.org.bandasantabarbara.model.turma.StatusTurma;
 import br.org.bandasantabarbara.model.turma.Turma;
+import jakarta.persistence.EntityManager;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -37,6 +39,31 @@ class TurmaServiceIntegrationTest {
 
     @Autowired
     private SalaService salaService;
+
+    @Autowired
+    private EntityManager entityManager;
+
+    @Test
+    void buscarPorIdListaInstrumentosAssociadosMesmoAposRecarregarTurma() {
+        cadastrarSala("sala-detalhe-instrumentos", 12);
+        Instrumento instrumento = new Instrumento("Clarinete", Instrumento.TipoInstrumentoEnum.SOPRO);
+        entityManager.persist(instrumento);
+        entityManager.flush();
+
+        TurmaResponseDTO criada = turmaService.criar(new CriarTurmaRequestDTO(
+            "sala-detalhe-instrumentos",
+            12,
+            "turma com instrumentos",
+            Turma.EnumTipoTurno.MATUTINO,
+            List.of(instrumento.getId())
+        ));
+        entityManager.flush();
+        entityManager.clear();
+
+        TurmaResponseDTO turma = turmaService.buscarPorId(criada.id());
+
+        assertThat(turma.instrumentos()).containsExactly("clarinete");
+    }
 
     @Test
     void postCriaTurmaBasicaSemPeriodoOuHorario() {
