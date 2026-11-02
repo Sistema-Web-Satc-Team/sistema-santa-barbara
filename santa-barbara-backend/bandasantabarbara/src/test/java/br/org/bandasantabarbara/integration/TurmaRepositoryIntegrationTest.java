@@ -100,6 +100,7 @@ public class TurmaRepositoryIntegrationTest {
 
         var horarioTurmaPlanejada = new Horario();
         horarioTurmaPlanejada.setSegunda(LocalTime.of(19,0),LocalTime.of(20,0));
+        turmaPlanejada.setHorario(horarioTurmaPlanejada);
 
         entityManager.persist(turmaPlanejada);
 
@@ -108,6 +109,7 @@ public class TurmaRepositoryIntegrationTest {
 
         var horarioTurmaEmAndamento = new Horario();
         horarioTurmaEmAndamento.setTerca(LocalTime.of(19,0),LocalTime.of(20,0));
+        turmaEmAndamento.setHorario(horarioTurmaEmAndamento);
 
         entityManager.persist(turmaEmAndamento);
 

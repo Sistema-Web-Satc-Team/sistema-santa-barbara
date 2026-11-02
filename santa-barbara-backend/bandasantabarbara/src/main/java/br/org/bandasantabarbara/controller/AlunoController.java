@@ -5,6 +5,7 @@ import br.org.bandasantabarbara.application.dtos.alunos.AlunoResponse;
 import br.org.bandasantabarbara.application.dtos.turmas.MatriculaResponseDTO;
 import br.org.bandasantabarbara.application.services.ensino.AlunoService;
 import br.org.bandasantabarbara.application.services.turma.MatriculaService;
+import br.org.bandasantabarbara.model.turma.MatriculaAlunoTurma;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,7 +57,7 @@ public class AlunoController {
     public PageResponse<MatriculaResponseDTO> listarMatriculas(
         @PathVariable UUID idAluno,
         @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-        @RequestParam(required = false) String status,
+        @RequestParam(required = false) MatriculaAlunoTurma.EnumStatusMatricula status,
         @AuthenticationPrincipal Jwt jwt
     ) {
         UUID membroId = UUID.fromString(jwt.getSubject());

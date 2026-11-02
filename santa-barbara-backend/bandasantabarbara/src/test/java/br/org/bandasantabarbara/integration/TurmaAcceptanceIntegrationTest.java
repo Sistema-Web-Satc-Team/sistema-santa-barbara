@@ -18,6 +18,7 @@ import br.org.bandasantabarbara.exception.ConflictException;
 import br.org.bandasantabarbara.model.ensino.Aluno;
 import br.org.bandasantabarbara.model.ensino.Professor;
 import br.org.bandasantabarbara.model.membro.Membro;
+import br.org.bandasantabarbara.model.turma.MatriculaAlunoTurma;
 import br.org.bandasantabarbara.model.turma.ProfessorTurma;
 import br.org.bandasantabarbara.model.turma.Turma;
 import br.org.bandasantabarbara.repositories.turma.MatriculaAlunoTurmaRepository;
@@ -362,7 +363,10 @@ class TurmaAcceptanceIntegrationTest {
         ).id();
         Professor anterior = entityManager.find(
             Professor.class,
-            professorTurmaRepository.findFirstByTurma_IdAndStatus(turmaId, "ATIVO").orElseThrow()
+            professorTurmaRepository.findFirstByTurma_IdAndStatus(
+                turmaId,
+                ProfessorTurma.EnumStatusTurma.ATIVO
+            ).orElseThrow()
                 .getProfessor().getId()
         );
         Professor novo = cadastrarProfessor(cadastrarMembro("professor-novo"));
@@ -371,12 +375,12 @@ class TurmaAcceptanceIntegrationTest {
 
         assertThat(novoVinculo.idProfessor()).isEqualTo(novo.getId());
         assertThat(novoVinculo.status()).isEqualTo("ATIVO");
-        assertThat(novoVinculo.justificativa()).isEqualTo("motivo");
-        assertThat(professorTurmaRepository.findFirstByTurma_IdAndStatus(turmaId, "SUBSTITUIDO"))
-            .get()
-            .extracting(ProfessorTurma::getProfessor)
-            .extracting(Professor::getId)
-            .isEqualTo(anterior.getId());
+        ProfessorTurma vinculoAnterior = professorTurmaRepository.findFirstByTurma_IdAndStatus(
+            turmaId,
+            ProfessorTurma.EnumStatusTurma.SUBSTITUIDO
+        ).orElseThrow();
+        assertThat(vinculoAnterior.getProfessor().getId()).isEqualTo(anterior.getId());
+        assertThat(vinculoAnterior.getJustificativa()).isEqualTo("motivo");
     }
 
     @Test
@@ -400,7 +404,8 @@ class TurmaAcceptanceIntegrationTest {
 
         assertThat(transferida.idTurma()).isEqualTo(turmaDestinoId);
         assertThat(transferida.status()).isEqualTo("ATIVO");
-        assertThat(matriculaRepository.findById(matricula.id()).orElseThrow().getStatus()).isEqualTo("TRANSFERIDO");
+        assertThat(matriculaRepository.findById(matricula.id()).orElseThrow().getStatus())
+            .isEqualTo(MatriculaAlunoTurma.EnumStatusMatricula.TRANSFERIDO);
     }
 
     @Test

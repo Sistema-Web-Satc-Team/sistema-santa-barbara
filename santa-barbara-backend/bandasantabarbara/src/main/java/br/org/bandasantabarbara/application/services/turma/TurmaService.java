@@ -50,7 +50,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TurmaService {
 
-    private static final String STATUS_ATIVO = "ATIVO";
+    private static final MatriculaAlunoTurma.EnumStatusMatricula STATUS_MATRICULA_ATIVA =
+        MatriculaAlunoTurma.EnumStatusMatricula.ATIVO;
+    private static final ProfessorTurma.EnumStatusTurma STATUS_PROFESSOR_ATIVO =
+        ProfessorTurma.EnumStatusTurma.ATIVO;
 
     private final TurmaRepository turmaRepository;
     private final SalaService salaService;
@@ -121,7 +124,7 @@ public class TurmaService {
         Integer vagas = dto.numeroVagas() != null ? dto.numeroVagas() : turma.getNumeroVagas();
         validarCapacidade(vagas, sala);
 
-        long matriculasAtivas = matriculaRepository.countByTurma_IdAndStatus(id, STATUS_ATIVO);
+        long matriculasAtivas = matriculaRepository.countByTurma_IdAndStatus(id, STATUS_MATRICULA_ATIVA);
         if (vagas < matriculasAtivas) {
             throw new ConflictException("O número de vagas não pode ser menor que as matrículas ativas.");
         }
@@ -248,17 +251,17 @@ public class TurmaService {
             .orElseThrow(() -> new NotFoundException("Professor não encontrado."));
 
         if (professorTurmaRepository.existsByTurma_IdAndProfessor_IdAndStatus(
-            idTurma, idProfessor, STATUS_ATIVO
+            idTurma, idProfessor, STATUS_PROFESSOR_ATIVO
         )) {
             throw new ConflictException("O professor já possui um vínculo ativo com esta turma.");
         }
 
         if (matriculaRepository.existsByTurma_IdAndAluno_IdAndStatus(
-            idTurma, idProfessor, STATUS_ATIVO
+            idTurma, idProfessor, STATUS_MATRICULA_ATIVA
         )) {
             throw new ConflictException("Um professor não pode ser aluno da mesma turma.");
         }
-        if (professorTurmaRepository.countByTurma_IdAndStatus(idTurma, STATUS_ATIVO) >= 1) {
+        if (professorTurmaRepository.countByTurma_IdAndStatus(idTurma, STATUS_PROFESSOR_ATIVO) >= 1) {
             throw new ConflictException("A turma já possui o número máximo de professores permitidos.");
         }
         validarConflitoHorarioProfessor(idProfessor, turma);
@@ -283,17 +286,28 @@ public class TurmaService {
     public ProfessorTurmaResponseDTO substituirProfessor(Long idTurma, UUID idNovoProfessor, String justificativa) {
         Turma turma = buscarTurmaParaAtualizacao(idTurma);
         podeSubstituirProfessor(turma);
-        ProfessorTurma vinculoAtual = professorTurmaRepository.findFirstByTurma_IdAndStatus(idTurma, STATUS_ATIVO)
+        ProfessorTurma vinculoAtual = professorTurmaRepository.findFirstByTurma_IdAndStatus(
+            idTurma,
+            STATUS_PROFESSOR_ATIVO
+        )
             .orElseThrow(() -> new ConflictException("Não há professor ativo para substituir nesta turma."));
         if (vinculoAtual.getProfessor().getId().equals(idNovoProfessor)) {
             throw new ConflictException("O novo professor deve ser diferente do professor atual.");
         }
         Professor novoProfessor = professorRepository.findByIdForUpdate(idNovoProfessor)
             .orElseThrow(() -> new NotFoundException("Professor não encontrado."));
-        if (matriculaRepository.existsByTurma_IdAndAluno_IdAndStatus(idTurma, idNovoProfessor, STATUS_ATIVO)) {
+        if (matriculaRepository.existsByTurma_IdAndAluno_IdAndStatus(
+            idTurma,
+            idNovoProfessor,
+            STATUS_MATRICULA_ATIVA
+        )) {
             throw new ConflictException("Um professor não pode ser aluno da mesma turma.");
         }
-        if (professorTurmaRepository.existsByTurma_IdAndProfessor_IdAndStatus(idTurma, idNovoProfessor, STATUS_ATIVO)) {
+        if (professorTurmaRepository.existsByTurma_IdAndProfessor_IdAndStatus(
+            idTurma,
+            idNovoProfessor,
+            STATUS_PROFESSOR_ATIVO
+        )) {
             throw new ConflictException("O novo professor já possui um vínculo ativo com esta turma.");
         }
         validarConflitoHorarioProfessor(idNovoProfessor, turma);
@@ -370,10 +384,10 @@ public class TurmaService {
         if (turma.getHorario() == null || turma.getHorario().getIntervalos().isEmpty()) {
             throw new BadRequestException("Defina ao menos um horário antes de configurar o período da turma.");
         }
-        if (matriculaRepository.countByTurma_IdAndStatus(turma.getId(), STATUS_ATIVO) == 0) {
+        if (matriculaRepository.countByTurma_IdAndStatus(turma.getId(), STATUS_MATRICULA_ATIVA) == 0) {
             throw new BadRequestException("Matricule ao menos um aluno antes de configurar o período da turma.");
         }
-        if (professorTurmaRepository.countByTurma_IdAndStatus(turma.getId(), STATUS_ATIVO) == 0) {
+        if (professorTurmaRepository.countByTurma_IdAndStatus(turma.getId(), STATUS_PROFESSOR_ATIVO) == 0) {
             throw new BadRequestException("Vincule ao menos um professor antes de configurar o período da turma.");
         }
     }

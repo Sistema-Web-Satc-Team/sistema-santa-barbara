@@ -39,7 +39,7 @@ public interface MatriculaAlunoTurmaRepository extends JpaRepository<MatriculaAl
         WHERE :status IS NULL OR m.status = :status
     """)
     Page<MatriculaAlunoTurma> listarPorStatus(
-        @Param("status") String status,
+        @Param("status") MatriculaAlunoTurma.EnumStatusMatricula status,
         Pageable pageable
     );
 
@@ -51,7 +51,7 @@ public interface MatriculaAlunoTurmaRepository extends JpaRepository<MatriculaAl
     """)
     Page<MatriculaAlunoTurma> listarPorAlunoEStatus(
         @Param("alunoId") UUID alunoId,
-        @Param("status") String status,
+        @Param("status") MatriculaAlunoTurma.EnumStatusMatricula status,
         Pageable pageable
     );
 
@@ -59,9 +59,13 @@ public interface MatriculaAlunoTurmaRepository extends JpaRepository<MatriculaAl
     @Query("SELECT m FROM MatriculaAlunoTurma m WHERE m.id = :id")
     Optional<MatriculaAlunoTurma> buscarDetalhePorId(@Param("id") Long id);
 
-    boolean existsByTurma_IdAndAluno_IdAndStatus(Long turmaId, UUID alunoId, String status);
+    boolean existsByTurma_IdAndAluno_IdAndStatus(
+        Long turmaId,
+        UUID alunoId,
+        MatriculaAlunoTurma.EnumStatusMatricula status
+    );
 
-    long countByTurma_IdAndStatus(Long turmaId, String status);
+    long countByTurma_IdAndStatus(Long turmaId, MatriculaAlunoTurma.EnumStatusMatricula status);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT m FROM MatriculaAlunoTurma m WHERE m.id = :id")
