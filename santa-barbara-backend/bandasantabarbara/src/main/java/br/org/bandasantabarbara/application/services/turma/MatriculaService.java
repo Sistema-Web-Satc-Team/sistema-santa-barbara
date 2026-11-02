@@ -13,6 +13,7 @@ import br.org.bandasantabarbara.exception.ConflictException;
 import br.org.bandasantabarbara.exception.NotFoundException;
 import br.org.bandasantabarbara.model.ensino.Aluno;
 import br.org.bandasantabarbara.model.turma.MatriculaAlunoTurma;
+import br.org.bandasantabarbara.model.turma.ProfessorTurma;
 import br.org.bandasantabarbara.model.turma.StatusTurma;
 import br.org.bandasantabarbara.model.turma.Turma;
 import br.org.bandasantabarbara.repositories.ensino.AlunoRepository;
@@ -28,7 +29,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MatriculaService {
 
-    private static final String STATUS_ATIVO = "ATIVO";
+    private static final MatriculaAlunoTurma.EnumStatusMatricula STATUS_ATIVO =
+        MatriculaAlunoTurma.EnumStatusMatricula.ATIVO;
+    private static final ProfessorTurma.EnumStatusTurma STATUS_PROFESSOR_ATIVO =
+        ProfessorTurma.EnumStatusTurma.ATIVO;
 
     private final MatriculaAlunoTurmaRepository matriculaRepository;
     private final TurmaRepository turmaRepository;
@@ -65,7 +69,7 @@ public class MatriculaService {
             throw new ConflictException("O aluno já possui uma matrícula ativa nesta turma.");
         }
         if (professorTurmaRepository.existsByTurma_IdAndProfessor_IdAndStatus(
-            turma.getId(), aluno.getId(), STATUS_ATIVO
+            turma.getId(), aluno.getId(), STATUS_PROFESSOR_ATIVO
         )) {
             throw new ConflictException("Um professor não pode ser aluno da mesma turma.");
         }
@@ -78,14 +82,21 @@ public class MatriculaService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<MatriculaResponseDTO> listar(Pageable pageable, String status) {
+    public PageResponse<MatriculaResponseDTO> listar(
+        Pageable pageable,
+        MatriculaAlunoTurma.EnumStatusMatricula status
+    ) {
         return pageMapper.toResponse(
             matriculaRepository.listarPorStatus(status, pageable).map(matriculaMapper::toResponse)
         );
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<MatriculaResponseDTO> listarDoAluno(UUID idAluno, Pageable pageable, String status) {
+    public PageResponse<MatriculaResponseDTO> listarDoAluno(
+        UUID idAluno,
+        Pageable pageable,
+        MatriculaAlunoTurma.EnumStatusMatricula status
+    ) {
         return pageMapper.toResponse(
             matriculaRepository.listarPorAlunoEStatus(idAluno, status, pageable).map(matriculaMapper::toResponse)
         );

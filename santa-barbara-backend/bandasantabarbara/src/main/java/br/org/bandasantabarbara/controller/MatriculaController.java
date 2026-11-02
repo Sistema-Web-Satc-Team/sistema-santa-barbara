@@ -8,6 +8,7 @@ import br.org.bandasantabarbara.application.dtos.turmas.DesistirMatriculaRequest
 import br.org.bandasantabarbara.application.dtos.turmas.NovaMatriculaResponseDTO;
 import br.org.bandasantabarbara.application.dtos.turmas.TransferirMatriculaRequestDTO;
 import br.org.bandasantabarbara.application.services.turma.MatriculaService;
+import br.org.bandasantabarbara.model.turma.MatriculaAlunoTurma;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -49,7 +50,7 @@ public class MatriculaController {
     @Operation(summary = "Listar matrículas", description = "Lista matrículas paginadas, com filtro opcional por status.")
     public PageResponse<MatriculaResponseDTO> listar(
         @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-        @RequestParam(required = false) String status
+        @RequestParam(required = false) MatriculaAlunoTurma.EnumStatusMatricula status
     ) {
         return matriculaService.listar(pageable, status);
     }

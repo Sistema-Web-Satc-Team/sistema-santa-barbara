@@ -10,6 +10,7 @@ import br.org.bandasantabarbara.application.dtos.turmas.MatriculaResponseDTO;
 import br.org.bandasantabarbara.application.dtos.turmas.ProfessorTurmaResponseDTO;
 import br.org.bandasantabarbara.application.dtos.turmas.TurmaResponseDTO;
 import br.org.bandasantabarbara.application.services.ensino.ProfessorService;
+import br.org.bandasantabarbara.model.turma.ProfessorTurma;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -63,7 +64,7 @@ public class ProfessorController {
     public PageResponse<ProfessorTurmaResponseDTO> listarTurmas(
         @PathVariable UUID idProfessor,
         @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-        @RequestParam(required = false) String status,
+        @RequestParam(required = false) ProfessorTurma.EnumStatusTurma status,
         @AuthenticationPrincipal Jwt jwt
     ) {
         UUID membroId = UUID.fromString(jwt.getSubject());

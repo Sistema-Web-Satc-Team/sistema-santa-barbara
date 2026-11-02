@@ -41,7 +41,7 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
         value = """
             SELECT t FROM Turma t
             JOIN FETCH t.sala
-            JOIN FETCH t.instrumentos
+            LEFT JOIN FETCH t.instrumentos
             WHERE :status IS NULL OR t.status = :status
         """,
         countQuery = """

@@ -21,11 +21,15 @@ import java.util.Optional;
 
 public interface ProfessorTurmaRepository extends JpaRepository<ProfessorTurma, Long> {
 
-    boolean existsByTurma_IdAndProfessor_IdAndStatus(Long turmaId, UUID professorId, String status);
+    boolean existsByTurma_IdAndProfessor_IdAndStatus(
+        Long turmaId,
+        UUID professorId,
+        ProfessorTurma.EnumStatusTurma status
+    );
 
-    long countByTurma_IdAndStatus(Long turmaId, String status);
+    long countByTurma_IdAndStatus(Long turmaId, ProfessorTurma.EnumStatusTurma status);
 
-    Optional<ProfessorTurma> findFirstByTurma_IdAndStatus(Long turmaId, String status);
+    Optional<ProfessorTurma> findFirstByTurma_IdAndStatus(Long turmaId, ProfessorTurma.EnumStatusTurma status);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
@@ -204,7 +208,7 @@ public interface ProfessorTurmaRepository extends JpaRepository<ProfessorTurma, 
     """)
     Page<ProfessorTurma> listarPorProfessorEStatus(
             @Param("idProfessor") UUID idProfessor,
-            @Param("status") String status,
+            @Param("status") ProfessorTurma.EnumStatusTurma status,
             Pageable pageable
     );
 

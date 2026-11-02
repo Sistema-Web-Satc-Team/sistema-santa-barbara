@@ -11,6 +11,7 @@ import br.org.bandasantabarbara.application.dtos.turmas.MatriculaResponseDTO;
 import br.org.bandasantabarbara.application.dtos.turmas.ProfessorTurmaResponseDTO;
 import br.org.bandasantabarbara.application.mapper.PageMapper;
 import br.org.bandasantabarbara.application.mapper.ProfessorTurmaMapper;
+import br.org.bandasantabarbara.model.turma.ProfessorTurma;
 import br.org.bandasantabarbara.repositories.turma.ProfessorTurmaRepository;
 
 @Service 
@@ -28,7 +29,11 @@ public class ProfessorTurmaService {
     
 
     @Transactional(readOnly = true)
-    public PageResponse<ProfessorTurmaResponseDTO> listarDoProfessor(UUID idProfessor, Pageable pageable, String status) {
+    public PageResponse<ProfessorTurmaResponseDTO> listarDoProfessor(
+        UUID idProfessor,
+        Pageable pageable,
+        ProfessorTurma.EnumStatusTurma status
+    ) {
         return pageMapper.toResponse(
             professorTurmaRepository.listarPorProfessorEStatus(idProfessor, status, pageable).map(professorTurmaMapper::toResponse)
         );

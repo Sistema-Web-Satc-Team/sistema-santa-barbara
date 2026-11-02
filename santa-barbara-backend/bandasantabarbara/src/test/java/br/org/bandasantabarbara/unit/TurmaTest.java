@@ -167,7 +167,7 @@ public class TurmaTest {
 
         matricula.desistir(LocalDate.now());
 
-        assertThat(matricula.getStatus()).isEqualTo("DESISTIDO");
+        assertThat(matricula.getStatus()).isEqualTo(MatriculaAlunoTurma.EnumStatusMatricula.DESISTIDO);
     }
 
     @Test
@@ -178,7 +178,7 @@ public class TurmaTest {
 
         matricula.transferir(LocalDate.now(), "Solicitação do aluno");
 
-        assertThat(matricula.getStatus()).isEqualTo("TRANSFERIDO");
+        assertThat(matricula.getStatus()).isEqualTo(MatriculaAlunoTurma.EnumStatusMatricula.TRANSFERIDO);
         assertThat(matricula.getJustificativaMudancaStatus()).isEqualTo("Solicitação do aluno");
     }
 
@@ -190,7 +190,7 @@ public class TurmaTest {
 
         vinculo.substituir(LocalDate.now());
 
-        assertThat(vinculo.getStatus()).isEqualTo("SUBSTITUIDO");
+        assertThat(vinculo.getStatus()).isEqualTo(ProfessorTurma.EnumStatusTurma.SUBSTITUIDO);
         assertThat(vinculo.getDataSaida()).isEqualTo(LocalDate.now());
     }
 
