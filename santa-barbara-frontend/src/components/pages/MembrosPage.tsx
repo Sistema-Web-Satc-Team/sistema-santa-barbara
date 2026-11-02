@@ -42,11 +42,11 @@ export function MembrosPage() {
     return (
         <>
 
-            <div className="flex flex-row mb-8">
-                <h2 className="text-3xl font-bold mr-auto">Membros</h2>
+            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+                <h2 className="mr-auto text-3xl font-bold">Membros</h2>
 
-                <div>
-                    <Button onClick={() => setIsOpen(true)} className="text-primary-foreground font-semibold">
+                <div className="w-full sm:w-auto">
+                    <Button onClick={() => setIsOpen(true)} className="w-full text-primary-foreground font-semibold sm:w-auto">
                         <UserPlus />
                         Novo Membro
                     </Button>

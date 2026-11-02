@@ -1,4 +1,5 @@
-import { fetchUserProfile, login, logout, updateUserProfile, type LoginRequest, type MeUpdateRequest } from "#/api/auth";
+import type { LoginRequest, MeUpdateRequest } from "#/api/auth";
+import { fetchUserProfile, login, logout, updateUserProfile } from "#/api/auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
@@ -19,6 +20,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         refetchOnWindowFocus: false,
     })
 
+    React.useEffect(() => {
+        if (currentRole === null && user?.funcoes.length === 1) {
+            setCurrentRole(user.funcoes[0])
+        }
+    }, [currentRole, user])
+
 
     const updateMutation = useMutation({
         mutationFn: updateUserProfile,
@@ -30,6 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const logoutMutation = useMutation({
         mutationFn: logout,
         onSuccess: () => {
+            setCurrentRole(null);
             queryClient.setQueryData(['user-profile'], null);
             queryClient.invalidateQueries({ queryKey: ['user-profile'] });
         }
@@ -38,6 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const loginMutation = useMutation({
         mutationFn: login,
         onSuccess: () => {
+            setCurrentRole(null);
             queryClient.invalidateQueries({ queryKey: ['user-profile'] });
         }
     })
@@ -48,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         state: {
             profile: user ?? null,
             isLoading,
-            error: error as Error | null,
+            error,
             isUpdating: updateMutation.isPending,
             currentRole,
             loggedIn: () => { return user != null; }

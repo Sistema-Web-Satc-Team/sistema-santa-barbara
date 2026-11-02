@@ -32,14 +32,16 @@ export function PartituraCard({ partitura }: PartituraCardProps) {
       link.remove()
       window.setTimeout(() => URL.revokeObjectURL(url), 1000)
     } catch (error) {
-      toast.error(getErrorMessage(error, 'Não foi possível baixar a partitura.'))
+      toast.error(
+        getErrorMessage(error, 'Não foi possível baixar a partitura.'),
+      )
     } finally {
       setIsDownloading(false)
     }
   }
 
   return (
-    <article className="flex min-w-0 items-start gap-3 rounded-lg border p-4">
+    <article className="flex min-w-0 flex-col gap-3 rounded-lg border p-4 sm:flex-row sm:items-start">
       <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-muted">
         <FileTextIcon className="size-5 text-muted-foreground" aria-hidden />
       </div>
@@ -71,6 +73,7 @@ export function PartituraCard({ partitura }: PartituraCardProps) {
         type="button"
         variant="outline"
         size="sm"
+        className="w-full sm:w-auto"
         disabled={isDownloading || !partitura.partituraUrl}
         onClick={() => void handleDownload()}
       >
