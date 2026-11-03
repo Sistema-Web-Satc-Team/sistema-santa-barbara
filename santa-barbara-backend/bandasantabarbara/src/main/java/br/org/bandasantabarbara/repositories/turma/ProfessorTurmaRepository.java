@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 import br.org.bandasantabarbara.model.turma.ProfessorTurma;
 import br.org.bandasantabarbara.model.turma.StatusTurma;
+import br.org.bandasantabarbara.model.turma.MatriculaAlunoTurma;
 import br.org.bandasantabarbara.repositories.ensino.ProfessorInstrumentoProjection;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,89 @@ import java.util.Optional;
 
 public interface ProfessorTurmaRepository extends JpaRepository<ProfessorTurma, Long> {
 
+    @Query("""
+        SELECT
+            turma.id AS turmaId,
+            turma.nome AS turma,
+            membroProfessor.nome AS professor,
+            sala.code AS sala,
+            turma.turno AS turno
+        FROM ProfessorTurma vinculo
+        JOIN vinculo.turma turma
+        JOIN turma.sala sala
+        JOIN vinculo.professor professor
+        JOIN professor.membro membroProfessor
+        WHERE professor.id = :professorId
+            AND vinculo.status = :statusProfessor
+            AND vinculo.dataEntrada <= CURRENT_DATE
+            AND (vinculo.dataSaida IS NULL OR vinculo.dataSaida > CURRENT_DATE)
+            AND turma.dataInicio IS NOT NULL
+            AND turma.dataInicio <= CURRENT_DATE
+            AND (turma.dataFim IS NULL OR turma.dataFim > CURRENT_DATE)
+            AND turma.dataTermino IS NULL
+        ORDER BY turma.nome
+    """)
+    List<AlunoTurmaProjection> listarTurmasAtuaisDoProfessor(
+        @Param("professorId") UUID professorId,
+        @Param("statusProfessor") ProfessorTurma.EnumStatusTurma statusProfessor
+    );
+
+    @Query("""
+        SELECT DISTINCT
+            matricula.turma.id AS turmaId,
+            membroAluno.nome AS aluno
+        FROM MatriculaAlunoTurma matricula
+        JOIN matricula.aluno aluno
+        JOIN aluno.membro membroAluno
+        WHERE matricula.turma.id IN :turmaIds
+            AND matricula.status = :status
+            AND matricula.dataMatricula <= CURRENT_DATE
+            AND (matricula.dataSaida IS NULL OR matricula.dataSaida > CURRENT_DATE)
+        ORDER BY matricula.turma.id, membroAluno.nome
+    """)
+    List<ProfessorTurmaAlunoProjection> listarAlunosAtivosPorTurmas(
+        @Param("turmaIds") Collection<Long> turmaIds,
+        @Param("status") MatriculaAlunoTurma.EnumStatusMatricula status
+    );
+
+    @Query("""
+        SELECT DISTINCT
+            instrumentoTurma.turma.id AS turmaId,
+            instrumento.nome AS instrumento
+        FROM InstrumentoTurma instrumentoTurma
+        JOIN instrumentoTurma.instrumento instrumento
+        WHERE instrumentoTurma.turma.id IN :turmaIds
+        ORDER BY instrumentoTurma.turma.id, instrumento.nome
+    """)
+    List<AlunoTurmaInstrumentoProjection> listarInstrumentosPorTurmas(
+        @Param("turmaIds") Collection<Long> turmaIds
+    );
+
+    @Query("""
+        SELECT
+            turma.id AS turmaId,
+            intervalo.diaSemana AS diaDaSemana,
+            intervalo.inicio AS inicio,
+            intervalo.fim AS fim
+        FROM ProfessorTurma vinculo
+        JOIN vinculo.turma turma
+        JOIN turma.horario horario
+        JOIN horario.intervalos intervalo
+        WHERE vinculo.professor.id = :professorId
+            AND vinculo.status = :status
+            AND vinculo.dataEntrada <= CURRENT_DATE
+            AND (vinculo.dataSaida IS NULL OR vinculo.dataSaida > CURRENT_DATE)
+            AND turma.dataInicio IS NOT NULL
+            AND turma.dataInicio <= CURRENT_DATE
+            AND (turma.dataFim IS NULL OR turma.dataFim > CURRENT_DATE)
+            AND turma.dataTermino IS NULL
+        ORDER BY turma.id, intervalo.diaSemana, intervalo.inicio
+    """)
+    List<AlunoTurmaHorarioProjection> listarHorariosAtuaisDoProfessor(
+        @Param("professorId") UUID professorId,
+        @Param("status") ProfessorTurma.EnumStatusTurma status
+    );
+
     boolean existsByTurma_IdAndProfessor_IdAndStatus(
         Long turmaId,
         UUID professorId,
@@ -30,6 +114,12 @@ public interface ProfessorTurmaRepository extends JpaRepository<ProfessorTurma, 
     long countByTurma_IdAndStatus(Long turmaId, ProfessorTurma.EnumStatusTurma status);
 
     Optional<ProfessorTurma> findFirstByTurma_IdAndStatus(Long turmaId, ProfessorTurma.EnumStatusTurma status);
+
+    Optional<ProfessorTurma> findFirstByTurma_IdAndProfessor_IdAndStatus(
+        Long turmaId,
+        UUID professorId,
+        ProfessorTurma.EnumStatusTurma status
+    );
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""

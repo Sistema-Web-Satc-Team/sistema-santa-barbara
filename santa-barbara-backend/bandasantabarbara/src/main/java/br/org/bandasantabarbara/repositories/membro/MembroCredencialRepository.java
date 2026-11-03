@@ -14,6 +14,8 @@ import java.util.UUID;
 public interface MembroCredencialRepository extends Repository<MembroCredencial, UUID> {
     MembroCredencial save(MembroCredencial membroCredencial);
 
+    boolean existsByIdMembro(UUID idMembro);
+
     @EntityGraph(attributePaths = "membro")
     @Query("SELECT c FROM MembroCredencial c WHERE c.idMembro = :id")
     Optional<MembroCredencial> findByIdWithMembro(@Param("id") UUID id);

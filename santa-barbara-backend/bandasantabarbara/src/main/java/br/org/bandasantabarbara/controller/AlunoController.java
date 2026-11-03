@@ -2,13 +2,17 @@ package br.org.bandasantabarbara.controller;
 
 import br.org.bandasantabarbara.application.dtos.PageResponse;
 import br.org.bandasantabarbara.application.dtos.alunos.AlunoResponse;
+import br.org.bandasantabarbara.application.dtos.alunos.AlunoTurmaResponse;
+import br.org.bandasantabarbara.application.dtos.alunos.AlunoTurmaHorarioResponse;
 import br.org.bandasantabarbara.application.dtos.turmas.MatriculaResponseDTO;
 import br.org.bandasantabarbara.application.services.ensino.AlunoService;
 import br.org.bandasantabarbara.application.services.turma.MatriculaService;
+import br.org.bandasantabarbara.exception.ForbiddenException;
 import br.org.bandasantabarbara.model.turma.MatriculaAlunoTurma;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/alunos")
@@ -80,6 +85,34 @@ public class AlunoController {
         }
 
         throw new SecurityException("Acesso negado: você não tem permissão para acessar as matrículas deste aluno.");
+    }
+
+
+    @GetMapping("/{idAluno}/turmas-atuais")
+    @PreAuthorize("hasAnyAuthority('ALUNO', 'RESPONSAVEL')")
+    public List<AlunoTurmaResponse> listarTurmasAtuaisDoAluno(
+        @PathVariable UUID idAluno,
+        @AuthenticationPrincipal Jwt jwt
+    ) {
+        UUID membroId = UUID.fromString(jwt.getSubject());
+        if (!alunoService.podeVisualizarTurmas(membroId, idAluno)) {
+            throw new ForbiddenException("Acesso negado: você não pode consultar as turmas deste aluno.");
+        }
+        return alunoService.listarTurmasAtuais(idAluno);
+    }
+
+    @GetMapping("/{idAluno}/turmas-atuais/horarios")
+    @PreAuthorize("hasAnyAuthority('ALUNO', 'RESPONSAVEL')")
+    public PageResponse<AlunoTurmaHorarioResponse> listarHorariosAtuaisDoAluno(
+        @PathVariable UUID idAluno,
+        @PageableDefault(page = 0, size = 20) Pageable pageable,
+        @AuthenticationPrincipal Jwt jwt
+    ) {
+        UUID membroId = UUID.fromString(jwt.getSubject());
+        if (!alunoService.podeVisualizarTurmas(membroId, idAluno)) {
+            throw new ForbiddenException("Acesso negado: você não pode consultar os horários deste aluno.");
+        }
+        return alunoService.listarHorariosAtuais(idAluno, pageable);
     }
 
 }

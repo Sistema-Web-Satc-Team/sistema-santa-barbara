@@ -6,10 +6,13 @@ import java.util.UUID;
 
 import br.org.bandasantabarbara.application.dtos.PageResponse;
 import br.org.bandasantabarbara.application.dtos.professores.ProfessorResponse;
+import br.org.bandasantabarbara.application.dtos.professores.ProfessorTurmaAtualResponse;
+import br.org.bandasantabarbara.application.dtos.professores.ProfessorTurmaHorarioResponse;
 import br.org.bandasantabarbara.application.dtos.turmas.MatriculaResponseDTO;
 import br.org.bandasantabarbara.application.dtos.turmas.ProfessorTurmaResponseDTO;
 import br.org.bandasantabarbara.application.dtos.turmas.TurmaResponseDTO;
 import br.org.bandasantabarbara.application.services.ensino.ProfessorService;
+import br.org.bandasantabarbara.exception.ForbiddenException;
 import br.org.bandasantabarbara.model.turma.ProfessorTurma;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -89,6 +92,37 @@ public class ProfessorController {
         }
 
         throw new SecurityException("Acesso negado: você não tem permissão para acessar as turmas deste professor.");
+    }
+
+    @GetMapping("/{idProfessor}/turmas-atuais")
+    @Operation(summary = "Listar turmas atuais do professor")
+    @PreAuthorize("hasAuthority('PROFESSOR')")
+    public PageResponse<ProfessorTurmaAtualResponse> listarTurmasAtuais(
+        @PathVariable UUID idProfessor,
+        @PageableDefault(page = 0, size = 20) Pageable pageable,
+        @AuthenticationPrincipal Jwt jwt
+    ) {
+        validarAcessoDoProfessor(idProfessor, jwt);
+        return professorService.listarTurmasAtuais(idProfessor, pageable);
+    }
+
+    @GetMapping("/{idProfessor}/turmas-atuais/horarios")
+    @Operation(summary = "Listar horários atuais do professor")
+    @PreAuthorize("hasAuthority('PROFESSOR')")
+    public PageResponse<ProfessorTurmaHorarioResponse> listarHorariosAtuais(
+        @PathVariable UUID idProfessor,
+        @PageableDefault(page = 0, size = 20) Pageable pageable,
+        @AuthenticationPrincipal Jwt jwt
+    ) {
+        validarAcessoDoProfessor(idProfessor, jwt);
+        return professorService.listarHorariosAtuais(idProfessor, pageable);
+    }
+
+    private void validarAcessoDoProfessor(UUID idProfessor, Jwt jwt) {
+        UUID membroId = UUID.fromString(jwt.getSubject());
+        if (!membroId.equals(idProfessor)) {
+            throw new ForbiddenException("Acesso negado: você só pode consultar suas próprias turmas.");
+        }
     }
 
 }
