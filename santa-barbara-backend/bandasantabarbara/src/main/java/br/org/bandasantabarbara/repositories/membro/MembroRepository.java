@@ -7,8 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import jakarta.persistence.LockModeType;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -17,6 +19,10 @@ import java.util.*;
 
 @Repository
 public interface MembroRepository extends JpaRepository<Membro, UUID>, JpaSpecificationExecutor<Membro> {
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT m FROM Membro m WHERE m.id = :id")
+    Optional<Membro> findByIdForUpdate(@Param("id") UUID id);
 
     @Query("SELECT m FROM Membro m WHERE m.id IN :ids")
     Collection<Membro> findAllByIds(@Param("ids") Set<UUID> ids);

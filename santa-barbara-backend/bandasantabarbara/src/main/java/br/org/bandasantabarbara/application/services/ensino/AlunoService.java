@@ -4,17 +4,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.time.DayOfWeek;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.bandasantabarbara.application.dtos.PageResponse;
 import br.org.bandasantabarbara.application.dtos.alunos.AlunoResponse;
+import br.org.bandasantabarbara.application.dtos.alunos.AlunoHorarioIntervaloResponse;
+import br.org.bandasantabarbara.application.dtos.alunos.AlunoTurmaHorarioResponse;
+import br.org.bandasantabarbara.application.dtos.alunos.AlunoTurmaResponse;
 import br.org.bandasantabarbara.application.mapper.AlunoMapper;
 import br.org.bandasantabarbara.application.mapper.PageMapper;
 import br.org.bandasantabarbara.model.membro.MembroResponsavel;
+import br.org.bandasantabarbara.model.turma.MatriculaAlunoTurma;
+import br.org.bandasantabarbara.model.turma.ProfessorTurma;
+import br.org.bandasantabarbara.repositories.turma.AlunoTurmaColegaProjection;
+import br.org.bandasantabarbara.repositories.turma.AlunoTurmaInstrumentoProjection;
+import br.org.bandasantabarbara.repositories.turma.AlunoTurmaHorarioProjection;
+import br.org.bandasantabarbara.repositories.turma.AlunoTurmaProjection;
 import br.org.bandasantabarbara.repositories.ensino.AlunoInstrumentoProjection;
 import br.org.bandasantabarbara.repositories.ensino.AlunoProjection;
 import br.org.bandasantabarbara.repositories.ensino.AlunoRepository;
@@ -118,5 +129,118 @@ public class AlunoService {
         ));
 
         return pageMapper.toResponse(resultado);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean podeVisualizarTurmas(UUID idVisualizador, UUID idAluno) {
+        return idVisualizador.equals(idAluno)
+                || membroResponsavelRepository.existsByResponsavel_IdAndMembroMenor_Id(idVisualizador, idAluno);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AlunoTurmaResponse> listarTurmasAtuais(UUID idAluno) {
+        List<AlunoTurmaProjection> turmas = matriculaAlunoTurmaRepository.listarTurmasAtuaisDoAluno(
+                idAluno,
+                MatriculaAlunoTurma.EnumStatusMatricula.ATIVO,
+                ProfessorTurma.EnumStatusTurma.ATIVO
+        );
+
+        if (turmas.isEmpty()) {
+            return List.of();
+        }
+
+        List<Long> turmaIds = turmas.stream()
+                .map(AlunoTurmaProjection::getTurmaId)
+                .toList();
+        Map<Long, List<String>> colegasPorTurma =
+                matriculaAlunoTurmaRepository.listarColegasAtivosPorTurmas(
+                                turmaIds,
+                                idAluno,
+                                MatriculaAlunoTurma.EnumStatusMatricula.ATIVO
+                        )
+                        .stream()
+                        .collect(Collectors.groupingBy(
+                                AlunoTurmaColegaProjection::getTurmaId,
+                                Collectors.mapping(AlunoTurmaColegaProjection::getColega, Collectors.toList())
+                        ));
+        Map<Long, List<String>> instrumentosPorTurma =
+                matriculaAlunoTurmaRepository.listarInstrumentosPorTurmas(turmaIds)
+                        .stream()
+                        .collect(Collectors.groupingBy(
+                                AlunoTurmaInstrumentoProjection::getTurmaId,
+                                Collectors.mapping(
+                                        AlunoTurmaInstrumentoProjection::getInstrumento,
+                                        Collectors.toList()
+                                )
+                        ));
+        return turmas.stream()
+                .map(turma -> new AlunoTurmaResponse(
+                        turma.getTurma(),
+                        turma.getProfessor(),
+                        turma.getSala(),
+                        turma.getTurno(),
+                        instrumentosPorTurma.getOrDefault(turma.getTurmaId(), List.of()),
+                        colegasPorTurma.getOrDefault(turma.getTurmaId(), List.of()).size(),
+                        colegasPorTurma.getOrDefault(turma.getTurmaId(), List.of())
+                ))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<AlunoTurmaHorarioResponse> listarHorariosAtuais(UUID idAluno, Pageable pageable) {
+        List<AlunoTurmaProjection> turmas = matriculaAlunoTurmaRepository.listarTurmasAtuaisDoAluno(
+                idAluno,
+                MatriculaAlunoTurma.EnumStatusMatricula.ATIVO,
+                ProfessorTurma.EnumStatusTurma.ATIVO
+        );
+        if (turmas.isEmpty()) {
+            return pageMapper.toResponse(new PageImpl<>(List.of(), pageable, 0));
+        }
+
+        Map<Long, List<AlunoHorarioIntervaloResponse>> horariosPorTurma =
+                matriculaAlunoTurmaRepository.listarHorariosAtuaisDoAluno(
+                                idAluno,
+                                MatriculaAlunoTurma.EnumStatusMatricula.ATIVO
+                        )
+                        .stream()
+                        .collect(Collectors.groupingBy(
+                                AlunoTurmaHorarioProjection::getTurmaId,
+                                Collectors.mapping(
+                                        intervalo -> new AlunoHorarioIntervaloResponse(
+                                                nomeDiaDaSemana(intervalo.getDiaDaSemana()),
+                                                intervalo.getInicio(),
+                                                intervalo.getFim()
+                                        ),
+                                        Collectors.toList()
+                                )
+                        ));
+
+        List<AlunoTurmaHorarioResponse> horarios = turmas.stream()
+                .map(turma -> new AlunoTurmaHorarioResponse(
+                        turma.getTurma(),
+                        turma.getProfessor(),
+                        turma.getSala(),
+                        turma.getTurno(),
+                        horariosPorTurma.getOrDefault(turma.getTurmaId(), List.of())
+                ))
+                .toList();
+        int inicio = (int) pageable.getOffset();
+        int fim = Math.min(inicio + pageable.getPageSize(), horarios.size());
+        List<AlunoTurmaHorarioResponse> conteudo = inicio >= horarios.size()
+                ? List.of()
+                : horarios.subList(inicio, fim);
+        return pageMapper.toResponse(new PageImpl<>(conteudo, pageable, horarios.size()));
+    }
+
+    private String nomeDiaDaSemana(DayOfWeek dia) {
+        return switch (dia) {
+            case MONDAY -> "SEGUNDA";
+            case TUESDAY -> "TERCA";
+            case WEDNESDAY -> "QUARTA";
+            case THURSDAY -> "QUINTA";
+            case FRIDAY -> "SEXTA";
+            case SATURDAY -> "SABADO";
+            case SUNDAY -> "DOMINGO";
+        };
     }
 }

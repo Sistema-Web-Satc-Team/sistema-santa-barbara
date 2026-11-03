@@ -28,5 +28,7 @@ public interface MembroVinculoRepository extends Repository<MembroVinculo, Integ
     @EntityGraph(attributePaths = "funcao")
     List<MembroVinculo> findByMembroId(UUID idMembro);
 
+    boolean existsByMembro_Id(UUID idMembro);
+
     boolean existsByFuncaoCodeAndDataTerminoIsNull(String code);
 }

@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.UUID;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Set;
 
 import br.org.bandasantabarbara.model.turma.MatriculaAlunoTurma;
+import br.org.bandasantabarbara.model.turma.ProfessorTurma;
 import br.org.bandasantabarbara.repositories.ensino.AlunoInstrumentoProjection;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,6 +21,107 @@ import org.springframework.data.domain.Pageable;
 import jakarta.persistence.LockModeType;
 
 public interface MatriculaAlunoTurmaRepository extends JpaRepository<MatriculaAlunoTurma, Long> {
+
+    @Query("""
+        SELECT COUNT(matricula)
+        FROM MatriculaAlunoTurma matricula
+        WHERE matricula.turma.id = :turmaId
+            AND matricula.status = :status
+            AND matricula.dataMatricula <= CURRENT_DATE
+            AND (matricula.dataSaida IS NULL OR matricula.dataSaida > CURRENT_DATE)
+    """)
+    long contarMatriculasAtivasPorTurma(
+        @Param("turmaId") Long turmaId,
+        @Param("status") MatriculaAlunoTurma.EnumStatusMatricula status
+    );
+
+    @Query("""
+        SELECT
+            turma.id AS turmaId,
+            turma.nome AS turma,
+            membroProfessor.nome AS professor,
+            sala.code AS sala,
+            turma.turno AS turno
+        FROM MatriculaAlunoTurma matricula
+        JOIN matricula.turma turma
+        JOIN turma.sala sala
+        LEFT JOIN turma.professores professorTurma
+            ON professorTurma.status = :statusProfessor
+        LEFT JOIN professorTurma.professor professor
+        LEFT JOIN professor.membro membroProfessor
+        WHERE matricula.aluno.id = :alunoId
+            AND matricula.status = :statusMatricula
+            AND matricula.dataMatricula <= CURRENT_DATE
+            AND (matricula.dataSaida IS NULL OR matricula.dataSaida > CURRENT_DATE)
+            AND turma.dataInicio IS NOT NULL
+            AND turma.dataInicio <= CURRENT_DATE
+            AND (turma.dataFim IS NULL OR turma.dataFim > CURRENT_DATE)
+            AND turma.dataTermino IS NULL
+        ORDER BY turma.nome
+    """)
+    List<AlunoTurmaProjection> listarTurmasAtuaisDoAluno(
+        @Param("alunoId") UUID alunoId,
+        @Param("statusMatricula") MatriculaAlunoTurma.EnumStatusMatricula statusMatricula,
+        @Param("statusProfessor") ProfessorTurma.EnumStatusTurma statusProfessor
+    );
+
+    @Query("""
+        SELECT DISTINCT
+            matricula.turma.id AS turmaId,
+            membro.nome AS colega
+        FROM MatriculaAlunoTurma matricula
+        JOIN matricula.aluno aluno
+        JOIN aluno.membro membro
+        WHERE matricula.turma.id IN :turmaIds
+            AND matricula.aluno.id <> :alunoId
+            AND matricula.status = :status
+            AND matricula.dataMatricula <= CURRENT_DATE
+            AND (matricula.dataSaida IS NULL OR matricula.dataSaida > CURRENT_DATE)
+        ORDER BY matricula.turma.id, membro.nome
+    """)
+    List<AlunoTurmaColegaProjection> listarColegasAtivosPorTurmas(
+        @Param("turmaIds") Collection<Long> turmaIds,
+        @Param("alunoId") UUID alunoId,
+        @Param("status") MatriculaAlunoTurma.EnumStatusMatricula status
+    );
+
+    @Query("""
+        SELECT DISTINCT
+            instrumentoTurma.turma.id AS turmaId,
+            instrumento.nome AS instrumento
+        FROM InstrumentoTurma instrumentoTurma
+        JOIN instrumentoTurma.instrumento instrumento
+        WHERE instrumentoTurma.turma.id IN :turmaIds
+        ORDER BY instrumentoTurma.turma.id, instrumento.nome
+    """)
+    List<AlunoTurmaInstrumentoProjection> listarInstrumentosPorTurmas(
+        @Param("turmaIds") Collection<Long> turmaIds
+    );
+
+    @Query("""
+        SELECT
+            turma.id AS turmaId,
+            intervalo.diaSemana AS diaDaSemana,
+            intervalo.inicio AS inicio,
+            intervalo.fim AS fim
+        FROM MatriculaAlunoTurma matricula
+        JOIN matricula.turma turma
+        JOIN turma.horario horario
+        JOIN horario.intervalos intervalo
+        WHERE matricula.aluno.id = :alunoId
+            AND matricula.status = :status
+            AND matricula.dataMatricula <= CURRENT_DATE
+            AND (matricula.dataSaida IS NULL OR matricula.dataSaida > CURRENT_DATE)
+            AND turma.dataInicio IS NOT NULL
+            AND turma.dataInicio <= CURRENT_DATE
+            AND (turma.dataFim IS NULL OR turma.dataFim > CURRENT_DATE)
+            AND turma.dataTermino IS NULL
+        ORDER BY turma.id, intervalo.diaSemana, intervalo.inicio
+    """)
+    List<AlunoTurmaHorarioProjection> listarHorariosAtuaisDoAluno(
+        @Param("alunoId") UUID alunoId,
+        @Param("status") MatriculaAlunoTurma.EnumStatusMatricula status
+    );
 
     @Query("""
         SELECT 
@@ -208,4 +311,19 @@ public interface MatriculaAlunoTurmaRepository extends JpaRepository<MatriculaAl
     List<AlunoInstrumentoProjection> findInstrumentosDeAlunosComMatriculaAtiva(
             @Param("alunoIds") Collection<UUID> alunoIds
     );
+
+
+    // Achar a as matrículas ativas de uma turma específica
+
+    @Query("""
+        SELECT m.id
+        FROM MatriculaAlunoTurma m
+        WHERE m.turma.id = :turmaId
+            AND m.status = 'ATIVO'
+            AND m.dataMatricula <= CURRENT_DATE
+            AND (m.dataSaida IS NULL OR m.dataSaida > CURRENT_DATE)
+    """)
+    Set<Long> findAllIdsAtivasByTurmaId(@Param("turmaId") Long turmaId);
+
+
 }

@@ -28,6 +28,7 @@ import br.org.bandasantabarbara.repositories.membro.MembroCredencialRepository;
 import br.org.bandasantabarbara.repositories.membro.MembroRepository;
 import br.org.bandasantabarbara.repositories.membro.MembroResponsavelRepository;
 import br.org.bandasantabarbara.repositories.membro.MembroSpecs;
+import br.org.bandasantabarbara.repositories.membro.MembroVinculoRepository;
 
 @Service
 public class MembroService {
@@ -35,6 +36,7 @@ public class MembroService {
     private final MembroRepository membroRepository;
     private final MembroCredencialRepository membroCredencialRepository;
     private final MembroResponsavelRepository membroResponsavelRepository;
+    private final MembroVinculoRepository membroVinculoRepository;
 
     private final MembroMapper membroMapper;
     private final PageMapper pageMapper;
@@ -46,7 +48,8 @@ public class MembroService {
         MembroResponsavelRepository membroResponsavelRepository,
         PageMapper pageMapper,
         MembroCredencialRepository membroCredencialRepository,
-        ResponsavelMapper responsavelMapper
+        ResponsavelMapper responsavelMapper,
+        MembroVinculoRepository membroVinculoRepository
     ) {
         this.membroRepository = membroRepository;
         this.membroMapper = membroMapper;
@@ -54,6 +57,7 @@ public class MembroService {
         this.pageMapper = pageMapper;
         this.membroCredencialRepository = membroCredencialRepository;
         this.responsavelMapper = responsavelMapper;
+        this.membroVinculoRepository = membroVinculoRepository;
     }
 
     public MembroResponse cadastrarMaiorIdade(MembroRequest request) {
@@ -237,8 +241,21 @@ public class MembroService {
         return membroRepository.findAll(spec, pageable); 
     }
 
-    // TO-DO: Remover membro
-    public void remover() {}
+    @Transactional
+    public void remover(UUID membroId) {
+        Membro membro = membroRepository.findByIdForUpdate(membroId)
+            .orElseThrow(() -> new NotFoundException("Membro não encontrado."));
+
+        if (membroVinculoRepository.existsByMembro_Id(membroId)) {
+            throw new BadRequestException("Não é possível remover um membro que possui vínculos.");
+        }
+
+        if (membroCredencialRepository.existsByIdMembro(membroId)) {
+            throw new BadRequestException("Não é possível remover um membro que possui credencial associada.");
+        }
+
+        membroRepository.delete(membro);
+    }
 
     private MembroResponsavel salvarRelacaoResponsavel(
         Membro responsavel, 

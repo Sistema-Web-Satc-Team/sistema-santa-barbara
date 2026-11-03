@@ -80,14 +80,14 @@ public class MembroController {
         membroService.atualizar(id, dto);
     }
 
-    @DeleteMapping("{id}")
-    @Operation(summary = "Remover membro", description = "Endpoint reservado para remoção de membro; a operação ainda não está implementada.")
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Remover membro", description = "Remove um membro sem vínculos e sem credencial associada.")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public void deletarMembro(
             @PathVariable UUID id
     ) {
-        // Must to be implemented
+        membroService.remover(id);
     }
 
     /*
