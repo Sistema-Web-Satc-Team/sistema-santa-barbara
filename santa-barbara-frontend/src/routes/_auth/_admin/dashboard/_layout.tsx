@@ -82,7 +82,7 @@ function Layout() {
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={location.pathname === "/dashboard/instrumentos"}>
+            <SidebarMenuButton asChild isActive={pathname === "/dashboard/instrumentos"}>
               <Link to="/dashboard/instrumentos">
                 <Guitar />
                 <span>Instrumentos</span>
