@@ -114,105 +114,122 @@ export function AlunosFilters({
 
   return (
     <div className="mb-6 space-y-3">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
-        <Field className="min-w-0 flex-1">
-          <FieldLabel htmlFor="aluno-search">Buscar aluno</FieldLabel>
-          <ButtonGroup>
-            <Input
-              id="aluno-search"
-              ref={searchInputRef}
-              defaultValue={search}
-              placeholder="Busque por nome ou e-mail..."
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleSearchSubmit()
-                }
-              }}
-            />
-            <Button type="button" variant="outline" onClick={handleSearchSubmit}>
-              Buscar
-            </Button>
-          </ButtonGroup>
-        </Field>
-
-        <Field className="sm:w-72">
-          <FieldLabel htmlFor="aluno-instrumentos-filter">
-            Filtrar por instrumento
-          </FieldLabel>
-          <Popover
-            open={open}
-            onOpenChange={(next) => {
-              setOpen(next)
-              if (!next) setTerm('')
-            }}
-          >
-            <PopoverTrigger asChild>
+      <div className="flex flex-wrap items-end gap-4">
+        <div className="w-full sm:min-w-[240px] sm:max-w-md sm:flex-1">
+          <Field>
+            <FieldLabel htmlFor="aluno-search" className="whitespace-nowrap">
+              Buscar aluno
+            </FieldLabel>
+            <ButtonGroup className="w-full">
+              <Input
+                id="aluno-search"
+                ref={searchInputRef}
+                defaultValue={search}
+                placeholder="Busque por nome ou e-mail..."
+                className="min-w-0 flex-1"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearchSubmit()
+                  }
+                }}
+              />
               <Button
-                id="aluno-instrumentos-filter"
                 type="button"
                 variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className="w-full justify-between font-normal"
+                className="shrink-0"
+                onClick={handleSearchSubmit}
               >
-                <span className="flex min-w-0 items-center gap-2 truncate">
-                  <GuitarIcon className="size-4 shrink-0 text-muted-foreground" />
-                  <span
-                    className={
-                      selectedInstruments.length === 0
-                        ? 'text-muted-foreground truncate'
-                        : 'truncate'
-                    }
-                  >
-                    {selectedInstruments.length === 0
-                      ? 'Todos os instrumentos'
-                      : selectedInstruments.length === 1
-                        ? capitalizeAll(selectedInstruments[0])
-                        : `${selectedInstruments.length} instrumentos selecionados`}
-                  </span>
-                </span>
-                <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
+                Buscar
               </Button>
-            </PopoverTrigger>
+            </ButtonGroup>
+          </Field>
+        </div>
 
-            <PopoverContent className="w-72 p-0" align="start">
-              <Command shouldFilter={false}>
-                <CommandInput
-                  value={term}
-                  onValueChange={setTerm}
-                  placeholder="Buscar instrumento..."
-                />
-                <CommandList>
-                  {filteredOptions.length === 0 && (
-                    <CommandEmpty>Nenhum instrumento encontrado.</CommandEmpty>
-                  )}
+        <div className="w-full sm:w-64 sm:shrink-0">
+          <Field>
+            <FieldLabel
+              htmlFor="aluno-instrumentos-filter"
+              className="whitespace-nowrap"
+            >
+              Filtrar por instrumento
+            </FieldLabel>
+            <Popover
+              open={open}
+              onOpenChange={(next) => {
+                setOpen(next)
+                if (!next) setTerm('')
+              }}
+            >
+              <PopoverTrigger asChild>
+                <Button
+                  id="aluno-instrumentos-filter"
+                  type="button"
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={open}
+                  className="w-full justify-between font-normal"
+                >
+                  <span className="flex min-w-0 items-center gap-2 truncate">
+                    <GuitarIcon className="size-4 shrink-0 text-muted-foreground" />
+                    <span
+                      className={
+                        selectedInstruments.length === 0
+                          ? 'text-muted-foreground truncate'
+                          : 'truncate'
+                      }
+                    >
+                      {selectedInstruments.length === 0
+                        ? 'Todos os instrumentos'
+                        : selectedInstruments.length === 1
+                          ? capitalizeAll(selectedInstruments[0])
+                          : `${selectedInstruments.length} instrumentos selecionados`}
+                    </span>
+                  </span>
+                  <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
 
-                  <CommandGroup>
-                    {filteredOptions.map((instrument) => {
-                      const selected = isSelected(instrument)
-                      return (
-                        <CommandItem
-                          key={instrument}
-                          value={instrument}
-                          onSelect={() => toggleInstrument(instrument)}
-                        >
-                          <CheckIcon
-                            className={
-                              selected ? 'size-4 opacity-100' : 'size-4 opacity-0'
-                            }
-                          />
-                          {capitalizeAll(instrument)}
-                        </CommandItem>
-                      )
-                    })}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        </Field>
+              <PopoverContent className="w-64 p-0" align="start">
+                <Command shouldFilter={false}>
+                  <CommandInput
+                    value={term}
+                    onValueChange={setTerm}
+                    placeholder="Buscar instrumento..."
+                  />
+                  <CommandList>
+                    {filteredOptions.length === 0 && (
+                      <CommandEmpty>Nenhum instrumento encontrado.</CommandEmpty>
+                    )}
 
-        <div className="flex h-9 items-center gap-2.5 rounded-md border bg-card px-3">
+                    <CommandGroup>
+                      {filteredOptions.map((instrument) => {
+                        const selected = isSelected(instrument)
+                        return (
+                          <CommandItem
+                            key={instrument}
+                            value={instrument}
+                            onSelect={() => toggleInstrument(instrument)}
+                          >
+                            <CheckIcon
+                              className={
+                                selected
+                                  ? 'size-4 opacity-100'
+                                  : 'size-4 opacity-0'
+                              }
+                            />
+                            {capitalizeAll(instrument)}
+                          </CommandItem>
+                        )
+                      })}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </Field>
+        </div>
+
+        <div className="flex h-9 w-full shrink-0 items-center gap-2.5 rounded-md border bg-card px-3 sm:w-auto">
           <Switch
             id="apenas-menores-switch"
             checked={apenasMenores}
@@ -220,7 +237,7 @@ export function AlunosFilters({
           />
           <label
             htmlFor="apenas-menores-switch"
-            className="cursor-pointer text-sm font-medium select-none"
+            className="cursor-pointer text-sm font-medium whitespace-nowrap select-none"
           >
             Apenas menores de 18 anos
           </label>
@@ -232,7 +249,7 @@ export function AlunosFilters({
             variant="ghost"
             size="sm"
             onClick={handleClearAll}
-            className="h-9 text-muted-foreground hover:text-foreground"
+            className="h-9 shrink-0 whitespace-nowrap text-muted-foreground hover:text-foreground"
           >
             <XIcon className="size-4" />
             Limpar filtros

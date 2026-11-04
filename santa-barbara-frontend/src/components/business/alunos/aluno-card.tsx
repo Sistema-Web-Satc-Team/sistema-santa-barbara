@@ -1,110 +1,27 @@
-import type { Aluno, AlunoResponsavel } from '#/api/alunos'
-import { formatPhone, initials } from '#/components/business/membros/members'
+import type { Aluno } from '#/api/alunos'
+import {
+  AlunoAvatar,
+  AlunoDetailsDialog,
+  formatSexo,
+} from '#/components/business/alunos/aluno-details-dialog'
+import { formatPhone } from '#/components/business/membros/members'
 import { Badge } from '#/components/ui/badge'
+import { Button } from '#/components/ui/button'
 import { Card, CardContent } from '#/components/ui/card'
 import { Separator } from '#/components/ui/separator'
-import { normalizeText } from '#/lib/text'
 import { capitalizeAll, cn } from '#/lib/utils'
-import {
-  GraduationCap,
-  Guitar,
-  Mail,
-  Phone,
-  ShieldAlert,
-  UsersRound,
-} from 'lucide-react'
-
-const SEXO_LABEL: Record<string, string> = {
-  MASCULINO: 'Masculino',
-  FEMININO: 'Feminino',
-  NAO_INFORMADO: 'Não informado',
-  'NAO INFORMADO': 'Não informado',
-}
-
-const RELACAO_LABEL: Record<string, string> = {
-  mae: 'Mãe',
-  pai: 'Pai',
-  avo: 'Avô/Avó',
-  tio: 'Tio/Tia',
-  tia: 'Tia',
-  padrinho: 'Padrinho',
-  madrinha: 'Madrinha',
-  progenitores: 'Pai/Mãe',
-  responsavel_legal: 'Responsável legal',
-  'responsavel legal': 'Responsável legal',
-}
-
-function formatSexo(sexo: string): string {
-  const key = sexo?.toUpperCase().trim()
-  if (SEXO_LABEL[key]) return SEXO_LABEL[key]
-  return capitalizeAll(sexo.toLowerCase())
-}
-
-function formatRelacao(relacao?: string | null): string {
-  if (!relacao) return 'Responsável'
-  const norm = normalizeText(relacao)
-  if (RELACAO_LABEL[norm]) return RELACAO_LABEL[norm]
-  return capitalizeAll(relacao.toLowerCase())
-}
-
-function AlunoAvatar({ name, minor }: { name: string; minor: boolean }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={cn(
-        'inline-flex size-12 shrink-0 items-center justify-center rounded-full text-sm font-bold overflow-hidden',
-        minor ? 'bg-warning/15 text-warning' : 'bg-primary/10 text-primary',
-      )}
-    >
-      {initials(name)}
-    </span>
-  )
-}
-
-function ResponsavelBox({ responsavel }: { responsavel: AlunoResponsavel }) {
-  const nome = capitalizeAll(String(responsavel.nome).toLowerCase())
-  const relacao = formatRelacao(responsavel.relacao)
-  const telefone = responsavel.telefone ? formatPhone(responsavel.telefone) : null
-
-  return (
-    <div className="flex flex-col gap-1 rounded-lg border bg-muted/30 p-2.5 text-xs">
-      <div className="flex items-center justify-between gap-2">
-        <span className="font-semibold text-foreground truncate">{nome}</span>
-        <Badge variant="outline" className="px-1.5 py-0 text-[10px] shrink-0">
-          {relacao}
-        </Badge>
-      </div>
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground">
-        {telefone && (
-          <span className="inline-flex items-center gap-1 tabular-nums">
-            <Phone className="size-3 shrink-0" aria-hidden="true" />
-            {telefone}
-          </span>
-        )}
-        {responsavel.email && (
-          <span className="inline-flex items-center gap-1 min-w-0 truncate">
-            <Mail className="size-3 shrink-0" aria-hidden="true" />
-            <span className="truncate">{responsavel.email}</span>
-          </span>
-        )}
-        {!telefone && !responsavel.email && (
-          <span className="italic">Sem contato informado</span>
-        )}
-      </div>
-    </div>
-  )
-}
+import { Eye, GraduationCap, Mail, Phone } from 'lucide-react'
+import { useState } from 'react'
 
 export interface AlunoCardProps {
   aluno: Aluno
+  onViewDetails: (aluno: Aluno) => void
 }
 
-export function AlunoCard({ aluno }: AlunoCardProps) {
+export function AlunoCard({ aluno, onViewDetails }: AlunoCardProps) {
   const nome = capitalizeAll(String(aluno.nome).toLowerCase())
   const isMinor = Number(aluno.idade) < 18
   const telefone = aluno.telefone ? formatPhone(aluno.telefone) : 'Não informado'
-  const instrumentos = aluno.instrumentos?.aprendendo ?? []
-  const responsaveis = aluno.responsaveis ?? []
 
   return (
     <Card className="h-full py-5">
@@ -118,6 +35,25 @@ export function AlunoCard({ aluno }: AlunoCardProps) {
                 {nome}
               </h3>
 
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="size-7 shrink-0 text-muted-foreground hover:text-foreground"
+                aria-label={`Ver detalhes de ${nome}`}
+                title="Ver mais detalhes"
+                onClick={() => onViewDetails(aluno)}
+              >
+                <Eye className="size-4" />
+              </Button>
+            </div>
+
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {aluno.idade} {aluno.idade === 1 ? 'ano' : 'anos'} • Sexo:{' '}
+              {formatSexo(String(aluno.sexo))}
+            </p>
+
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
               {aluno.temTurma ? (
                 <Badge variant="success" className="shrink-0">
                   <span
@@ -135,18 +71,13 @@ export function AlunoCard({ aluno }: AlunoCardProps) {
                   Sem Turma
                 </Badge>
               )}
+
+              {isMinor && (
+                <Badge variant="warning" className="shrink-0">
+                  Menor de 18 anos
+                </Badge>
+              )}
             </div>
-
-            <p className="mt-1 text-xs text-muted-foreground">
-              {aluno.idade} {aluno.idade === 1 ? 'ano' : 'anos'} • Sexo:{' '}
-              {formatSexo(String(aluno.sexo))}
-            </p>
-
-            {isMinor && (
-              <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                <Badge variant="warning">Menor de 18 anos</Badge>
-              </div>
-            )}
           </div>
         </div>
 
@@ -162,7 +93,9 @@ export function AlunoCard({ aluno }: AlunoCardProps) {
             <span
               className={cn(
                 'min-w-0 truncate',
-                aluno.email ? 'text-foreground font-medium' : 'text-muted-foreground italic',
+                aluno.email
+                  ? 'text-foreground font-medium'
+                  : 'text-muted-foreground italic',
               )}
             >
               {aluno.email || 'E-mail não informado'}
@@ -181,54 +114,16 @@ export function AlunoCard({ aluno }: AlunoCardProps) {
           </div>
         </div>
 
-        <Separator />
-
-        <div className="space-y-2">
-          <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            <Guitar className="size-3.5" aria-hidden="true" />
-            <span>Instrumentos aprendendo</span>
-          </div>
-
-          {instrumentos.length > 0 ? (
-            <div className="flex flex-wrap gap-1.5">
-              {instrumentos.map((inst) => (
-                <Badge key={inst} variant="secondary" className="gap-1">
-                  <Guitar className="size-3" aria-hidden="true" />
-                  {capitalizeAll(inst)}
-                </Badge>
-              ))}
-            </div>
-          ) : (
-            <p className="text-xs italic text-muted-foreground">
-              Nenhum instrumento vinculado
-            </p>
-          )}
-        </div>
-
-        {isMinor && (
-          <>
-            <Separator />
-            <div className="space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                <UsersRound className="size-3.5" aria-hidden="true" />
-                <span>Responsável Legal</span>
-              </div>
-
-              {responsaveis.length > 0 ? (
-                <div className="flex flex-col gap-2">
-                  {responsaveis.map((resp, idx) => (
-                    <ResponsavelBox key={resp.id ?? idx} responsavel={resp} />
-                  ))}
-                </div>
-              ) : (
-                <div className="inline-flex items-center gap-1.5 text-xs text-warning">
-                  <ShieldAlert className="size-3.5 shrink-0" />
-                  <span>Responsável não informado</span>
-                </div>
-              )}
-            </div>
-          </>
-        )}
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="mt-auto w-full gap-2"
+          onClick={() => onViewDetails(aluno)}
+        >
+          <Eye className="size-4" />
+          Ver mais
+        </Button>
       </CardContent>
     </Card>
   )
@@ -240,6 +135,8 @@ export interface AlunosGridProps {
 }
 
 export function AlunosGrid({ alunos, hasFilters = false }: AlunosGridProps) {
+  const [selectedAluno, setSelectedAluno] = useState<Aluno | null>(null)
+
   if (alunos.length === 0) {
     return (
       <div className="flex flex-col items-center rounded-xl border border-dashed bg-card px-6 py-16 text-center">
@@ -259,10 +156,24 @@ export function AlunosGrid({ alunos, hasFilters = false }: AlunosGridProps) {
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-      {alunos.map((aluno, index) => (
-        <AlunoCard key={aluno.id ?? index} aluno={aluno} />
-      ))}
-    </div>
+    <>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {alunos.map((aluno, index) => (
+          <AlunoCard
+            key={aluno.id ?? index}
+            aluno={aluno}
+            onViewDetails={setSelectedAluno}
+          />
+        ))}
+      </div>
+
+      <AlunoDetailsDialog
+        aluno={selectedAluno}
+        open={Boolean(selectedAluno)}
+        onOpenChange={(open) => {
+          if (!open) setSelectedAluno(null)
+        }}
+      />
+    </>
   )
 }
