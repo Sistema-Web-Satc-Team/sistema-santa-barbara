@@ -22,7 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     React.useEffect(() => {
         if (currentRole === null && user?.funcoes.length === 1) {
-            setCurrentRole(user.funcoes[0])
+            setCurrentRole(user.funcoes[0].code)
         }
     }, [currentRole, user])
 
