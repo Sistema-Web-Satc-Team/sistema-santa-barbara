@@ -22,12 +22,17 @@ const EDITOR_ROLES = ['SUPER_ADMIN', 'ADMIN', 'MAESTRO']
 const DELETE_ROLES = ['SUPER_ADMIN', 'ADMIN','MAESTRO']
 const CREATE_ROLES = ['SUPER_ADMIN', 'ADMIN','MAESTRO']
 
-export function MusicasPage() {
+interface MusicasPageProps {
+  permitirRemocao?: boolean
+}
+
+export function MusicasPage({ permitirRemocao = false }: MusicasPageProps) {
     const { state: authState } = useAuth()
 
-  const canEdit =  EDITOR_ROLES.includes(authState.currentRole ?? "")
-  const canDelete = DELETE_ROLES.includes(authState.currentRole ?? "")
-  const canCreate = CREATE_ROLES.includes(authState.currentRole ?? "")
+  const role = authState.currentRole;
+  const canEdit = EDITOR_ROLES.includes(role ?? "")
+  const canDelete = permitirRemocao && DELETE_ROLES.includes(role ?? "")
+  const canCreate = CREATE_ROLES.includes(role ?? "")
 
 
   const [searchInput, setSearchInput] = useState('')
@@ -44,7 +49,7 @@ export function MusicasPage() {
   }, [searchInput])
 
   const { musicas, totalElements, state, actions } = useListMusicas(search)
- const { create, update, remove } = useMusicaMutations()
+  const { create, update, remove } = useMusicaMutations()
 
   const sentinel = useInfiniteScroll({
     onLoadMore: actions.loadMore,

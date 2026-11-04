@@ -1,7 +1,8 @@
 package br.org.bandasantabarbara.application.mapper;
 
 import br.org.bandasantabarbara.application.dtos.membros.vinculos.VinculoResponse;
-import br.org.bandasantabarbara.model.MembroVinculo;
+import br.org.bandasantabarbara.model.membro.MembroVinculo;
+
 import org.springframework.stereotype.Component;
 
 

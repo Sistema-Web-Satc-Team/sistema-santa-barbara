@@ -1,7 +1,7 @@
 package br.org.bandasantabarbara.application.services.security;
 
 import br.org.bandasantabarbara.application.dtos.MessageResponse;
-import br.org.bandasantabarbara.repositories.MembroVinculoRepository;
+import br.org.bandasantabarbara.repositories.membro.MembroVinculoRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -37,6 +37,7 @@ import { Route as AuthSecretarioDashboardLayoutConvitesIndexRouteImport } from '
 import { Route as AuthSecretarioDashboardLayoutMembrosIndexRouteImport } from './routes/_auth/secretario/dashboard/_layout.membros/index'
 import { Route as AuthSecretarioDashboardLayoutMusicosIndexRouteImport } from './routes/_auth/secretario/dashboard/_layout.musicos/index'
 import { Route as AuthSecretarioDashboardLayoutProfessoresIndexRouteImport } from './routes/_auth/secretario/dashboard/_layout.professores/index'
+import { Route as AuthSecretarioDashboardLayoutTurmasIndexRouteImport } from './routes/_auth/secretario/dashboard/_layout.turmas/index'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -194,6 +195,12 @@ const AuthSecretarioDashboardLayoutProfessoresIndexRoute =
     path: '/professores/',
     getParentRoute: () => AuthSecretarioDashboardLayoutRoute,
   } as any)
+const AuthSecretarioDashboardLayoutTurmasIndexRoute =
+  AuthSecretarioDashboardLayoutTurmasIndexRouteImport.update({
+    id: '/turmas/',
+    path: '/turmas/',
+    getParentRoute: () => AuthSecretarioDashboardLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
@@ -223,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/secretario/dashboard/membros/': typeof AuthSecretarioDashboardLayoutMembrosIndexRoute
   '/secretario/dashboard/musicos/': typeof AuthSecretarioDashboardLayoutMusicosIndexRoute
   '/secretario/dashboard/professores/': typeof AuthSecretarioDashboardLayoutProfessoresIndexRoute
+  '/secretario/dashboard/turmas/': typeof AuthSecretarioDashboardLayoutTurmasIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -252,6 +260,7 @@ export interface FileRoutesByTo {
   '/secretario/dashboard/membros': typeof AuthSecretarioDashboardLayoutMembrosIndexRoute
   '/secretario/dashboard/musicos': typeof AuthSecretarioDashboardLayoutMusicosIndexRoute
   '/secretario/dashboard/professores': typeof AuthSecretarioDashboardLayoutProfessoresIndexRoute
+  '/secretario/dashboard/turmas': typeof AuthSecretarioDashboardLayoutTurmasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -283,6 +292,7 @@ export interface FileRoutesById {
   '/_auth/secretario/dashboard/_layout/membros/': typeof AuthSecretarioDashboardLayoutMembrosIndexRoute
   '/_auth/secretario/dashboard/_layout/musicos/': typeof AuthSecretarioDashboardLayoutMusicosIndexRoute
   '/_auth/secretario/dashboard/_layout/professores/': typeof AuthSecretarioDashboardLayoutProfessoresIndexRoute
+  '/_auth/secretario/dashboard/_layout/turmas/': typeof AuthSecretarioDashboardLayoutTurmasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -314,6 +324,7 @@ export interface FileRouteTypes {
     | '/secretario/dashboard/membros/'
     | '/secretario/dashboard/musicos/'
     | '/secretario/dashboard/professores/'
+    | '/secretario/dashboard/turmas/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -343,6 +354,7 @@ export interface FileRouteTypes {
     | '/secretario/dashboard/membros'
     | '/secretario/dashboard/musicos'
     | '/secretario/dashboard/professores'
+    | '/secretario/dashboard/turmas'
   id:
     | '__root__'
     | '/_auth'
@@ -373,6 +385,7 @@ export interface FileRouteTypes {
     | '/_auth/secretario/dashboard/_layout/membros/'
     | '/_auth/secretario/dashboard/_layout/musicos/'
     | '/_auth/secretario/dashboard/_layout/professores/'
+    | '/_auth/secretario/dashboard/_layout/turmas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -580,6 +593,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSecretarioDashboardLayoutProfessoresIndexRouteImport
       parentRoute: typeof AuthSecretarioDashboardLayoutRoute
     }
+    '/_auth/secretario/dashboard/_layout/turmas/': {
+      id: '/_auth/secretario/dashboard/_layout/turmas/'
+      path: '/turmas'
+      fullPath: '/secretario/dashboard/turmas/'
+      preLoaderRoute: typeof AuthSecretarioDashboardLayoutTurmasIndexRouteImport
+      parentRoute: typeof AuthSecretarioDashboardLayoutRoute
+    }
   }
 }
 
@@ -670,6 +690,7 @@ interface AuthSecretarioDashboardLayoutRouteChildren {
   AuthSecretarioDashboardLayoutMembrosIndexRoute: typeof AuthSecretarioDashboardLayoutMembrosIndexRoute
   AuthSecretarioDashboardLayoutMusicosIndexRoute: typeof AuthSecretarioDashboardLayoutMusicosIndexRoute
   AuthSecretarioDashboardLayoutProfessoresIndexRoute: typeof AuthSecretarioDashboardLayoutProfessoresIndexRoute
+  AuthSecretarioDashboardLayoutTurmasIndexRoute: typeof AuthSecretarioDashboardLayoutTurmasIndexRoute
 }
 
 const AuthSecretarioDashboardLayoutRouteChildren: AuthSecretarioDashboardLayoutRouteChildren =
@@ -684,6 +705,8 @@ const AuthSecretarioDashboardLayoutRouteChildren: AuthSecretarioDashboardLayoutR
       AuthSecretarioDashboardLayoutMusicosIndexRoute,
     AuthSecretarioDashboardLayoutProfessoresIndexRoute:
       AuthSecretarioDashboardLayoutProfessoresIndexRoute,
+    AuthSecretarioDashboardLayoutTurmasIndexRoute:
+      AuthSecretarioDashboardLayoutTurmasIndexRoute,
   }
 
 const AuthSecretarioDashboardLayoutRouteWithChildren =

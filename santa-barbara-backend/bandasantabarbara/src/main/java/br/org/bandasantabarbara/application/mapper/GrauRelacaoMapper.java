@@ -1,8 +1,9 @@
 package br.org.bandasantabarbara.application.mapper;
 
-import br.org.bandasantabarbara.model.Membro;
-import br.org.bandasantabarbara.model.MembroResponsavel;
 import org.springframework.stereotype.Component;
+
+import br.org.bandasantabarbara.model.membro.Membro;
+import br.org.bandasantabarbara.model.membro.MembroResponsavel;
 
 @Component
 public class GrauRelacaoMapper {

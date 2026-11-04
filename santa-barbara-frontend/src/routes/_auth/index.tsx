@@ -1,9 +1,8 @@
-import type { Role } from "#/api/funcoes";
 import { HubCard } from "#/components/business/hub/HubCard";
 import { Spinner } from "#/components/ui/spinner";
+import { type ToPathOption, createFileRoute, redirect, Navigate } from "@tanstack/react-router";
 import { useAuth } from "#/hooks/use-auth";
-import { Navigate, createFileRoute, redirect, type ToPathOption } from "@tanstack/react-router";
-
+import { type Role } from "#/api/funcoes";
 
 const RolePageRedirect: Record<string, ToPathOption & {}> = {
   SUPER_ADMIN: "/dashboard/membros",
@@ -17,6 +16,9 @@ const RolePageRedirect: Record<string, ToPathOption & {}> = {
 
 export const Route = createFileRoute('/_auth/')({
   beforeLoad: ({ context }) => {
+    if (!context.profile || context.profile.funcoes.length == 0) {
+      throw redirect({ to: "/" })
+    }
 
     if (context.profile.funcoes.length == 1) {
       const role = context.profile.funcoes[0].code;
@@ -49,6 +51,4 @@ function Hub() {
           ))}
         </div>
     </>
-
-
 }

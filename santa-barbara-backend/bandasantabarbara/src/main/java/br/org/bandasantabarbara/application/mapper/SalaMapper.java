@@ -2,7 +2,8 @@ package br.org.bandasantabarbara.application.mapper;
 
 import br.org.bandasantabarbara.application.dtos.sala.SalaRequestDTO;
 import br.org.bandasantabarbara.application.dtos.sala.SalaResponseDTO;
-import br.org.bandasantabarbara.model.Sala;
+import br.org.bandasantabarbara.model.turma.Sala;
+
 import org.springframework.stereotype.Component;
 
 @Component

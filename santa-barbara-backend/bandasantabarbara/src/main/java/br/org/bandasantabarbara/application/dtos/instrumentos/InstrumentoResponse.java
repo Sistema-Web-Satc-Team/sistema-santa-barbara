@@ -1,6 +1,6 @@
 package br.org.bandasantabarbara.application.dtos.instrumentos;
 
-import br.org.bandasantabarbara.model.Instrumento;
+import br.org.bandasantabarbara.model.musica.Instrumento;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record InstrumentoResponse(

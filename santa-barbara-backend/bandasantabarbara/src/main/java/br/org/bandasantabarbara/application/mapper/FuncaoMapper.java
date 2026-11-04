@@ -1,7 +1,8 @@
 package br.org.bandasantabarbara.application.mapper;
 
 import br.org.bandasantabarbara.application.dtos.membros.FuncaoResponse;
-import br.org.bandasantabarbara.model.Funcao;
+import br.org.bandasantabarbara.model.membro.Funcao;
+
 import org.springframework.stereotype.Component;
 
 @Component
