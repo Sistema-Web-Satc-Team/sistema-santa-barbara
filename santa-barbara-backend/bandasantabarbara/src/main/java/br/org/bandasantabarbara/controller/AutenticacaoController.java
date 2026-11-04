@@ -12,6 +12,8 @@ import br.org.bandasantabarbara.application.services.storage.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
@@ -33,6 +35,15 @@ public class AutenticacaoController {
     private final PerfilService perfilService;
     private final FileService fileService;
 
+    @Value("${app.security.cookie.secure}")
+    private boolean cookieSecure;
+
+    @Value("${app.security.cookie.same-site}")
+    private String cookieSameSite;
+
+    @Value("${app.security.cookie.path}")
+    private String cookiePath;
+
     public AutenticacaoController(AuthService authService, FileService fileService, PerfilService perfilService) {
         this.authService = authService;
         this.perfilService = perfilService;
@@ -44,29 +55,35 @@ public class AutenticacaoController {
     public ResponseEntity<MessageResponse> login(@RequestBody @Valid LoginRequest request) {
         TokenResponse response = authService.executar(request);
 
-        ResponseCookie cookie = ResponseCookie.from("access_token", response.token())
+        ResponseCookie cookie = ResponseCookie
+                .from("access_token", response.token())
                 .httpOnly(true)
-                .secure(false)
-                .path("/")
+                .secure(cookieSecure)
+                .path(cookiePath)
                 .maxAge(response.expiraEmEmSegundos())
-                .sameSite("Lax")
+                .sameSite(cookieSameSite)
                 .build();
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new MessageResponse("Login realizado com sucesso!"));
+                .body(
+                    new MessageResponse(
+                        "Login realizado com sucesso!"
+                    )
+                );
     }
 
     @PostMapping("/logout")
     @Operation(summary = "Realizar logout", description = "Remove o cookie de acesso da sessão atual.")
     public ResponseEntity<MessageResponse> logout() {
-        ResponseCookie cookie = ResponseCookie.from("access_token", "")
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(0)
-                .sameSite("Lax")
-                .build();
+        ResponseCookie cookie = ResponseCookie
+            .from("access_token", "")
+            .httpOnly(true)
+            .secure(cookieSecure)
+            .path(cookiePath)
+            .maxAge(0)
+            .sameSite(cookieSameSite)
+            .build();
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())

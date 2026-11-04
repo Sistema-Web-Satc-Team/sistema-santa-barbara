@@ -7,8 +7,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.stereotype.Component;
@@ -19,7 +17,6 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-@Order(Ordered.HIGHEST_PRECEDENCE)
 public class SetupModeFilter extends OncePerRequestFilter {
 
     private final MembroVinculoRepository membroVinculoRepository;
@@ -33,6 +30,17 @@ public class SetupModeFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
         String method = request.getMethod();
+
+        if (("GET".equalsIgnoreCase(method) && "/csrf".equals(path))
+            || "OPTIONS".equalsIgnoreCase(method)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (!adminJaCriado) {
+            adminJaCriado = membroVinculoRepository
+                    .existsByFuncaoCodeAndDataTerminoIsNull("SUPER_ADMIN");
+        }
 
         if (!adminJaCriado) {
             adminJaCriado =  membroVinculoRepository.existsByFuncaoCodeAndDataTerminoIsNull("SUPER_ADMIN");
