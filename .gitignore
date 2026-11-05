@@ -99,3 +99,7 @@ certs/**
 */venv/*
 pyvenv.cfg
 */api-seed/*
+
+# Cookies
+
+cookies.txt

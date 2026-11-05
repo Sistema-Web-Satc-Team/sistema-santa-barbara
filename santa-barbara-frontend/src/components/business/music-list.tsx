@@ -79,10 +79,10 @@ export function MusicList({
                   </DropdownMenuItem>
                   {canDelete && (
                     <DropdownMenuItem
-                      className="text-destructive focus:text-destructive"
+                      className="text-destructive focus:text-destructive hover:bg-destructive"
                       onSelect={() => onDelete(musica)}
                     >
-                      <Trash2Icon />
+                      <Trash2Icon className='text-destructive' />
                       Remover
                     </DropdownMenuItem>
                   )}

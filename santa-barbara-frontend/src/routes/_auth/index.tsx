@@ -23,6 +23,9 @@ export const Route = createFileRoute('/_auth/')({
 
     if (context.profile.funcoes.length == 1) {
       const role = context.profile.funcoes[0].code;
+
+      context.queryClient.setQueryData(['current-role'], role);
+      
       throw redirect({ to: RolePageRedirect[role] })
     }
 

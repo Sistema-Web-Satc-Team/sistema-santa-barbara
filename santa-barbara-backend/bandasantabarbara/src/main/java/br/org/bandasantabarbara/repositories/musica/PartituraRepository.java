@@ -23,4 +23,6 @@ public interface PartituraRepository extends JpaRepository<Partitura, UUID> {
 
 
     List<Partitura> findByMusicaId(UUID musicaId);
+
+    boolean existsByMusicaId(UUID musicaId);
 }

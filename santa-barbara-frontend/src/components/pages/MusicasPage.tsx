@@ -19,15 +19,18 @@ import { useEffect, useState } from 'react'
 
 
 const EDITOR_ROLES = ['SUPER_ADMIN', 'ADMIN', 'MAESTRO']
-const DELETE_ROLES = ['SUPER_ADMIN', 'ADMIN','MAESTRO']
-const CREATE_ROLES = ['SUPER_ADMIN', 'ADMIN','MAESTRO']
+const DELETE_ROLES = ['SUPER_ADMIN', 'ADMIN', 'MAESTRO']
+const CREATE_ROLES = ['SUPER_ADMIN', 'ADMIN', 'MAESTRO']
 
 interface MusicasPageProps {
   permitirRemocao?: boolean
 }
 
 export function MusicasPage({ permitirRemocao = false }: MusicasPageProps) {
-    const { state: authState } = useAuth()
+  const { state: authState } = useAuth()
+
+
+  console.log(authState);
 
   const currentRole = authState.currentRole
   const canEdit = currentRole !== null && EDITOR_ROLES.includes(currentRole)
@@ -92,7 +95,7 @@ export function MusicasPage({ permitirRemocao = false }: MusicasPageProps) {
           )}
         </div>
         {canCreate && (
-          <Button className="w-full sm:w-auto" onClick={() => setCreating(true)}>
+          <Button className="w-full sm:w-auto font-semibold" onClick={() => setCreating(true)}>
             <PlusIcon />
             Adicionar música
           </Button>

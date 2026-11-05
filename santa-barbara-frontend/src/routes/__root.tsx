@@ -22,13 +22,17 @@ interface MyRouterContext {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   beforeLoad: async ({ context }) => {
+    const currentRole = context.queryClient.getQueryData<string | null>(
+      ['current-role']
+    ) ?? null;
+    
     const profile = await context.queryClient.query({
       queryKey: ['user-profile'],
       queryFn: fetchProfile,  
       staleTime: 1000 * 60 * 5,
     })
 
-    return { profile }           
+    return { profile, currentRole }           
   },
   head: () => ({
     meta: [

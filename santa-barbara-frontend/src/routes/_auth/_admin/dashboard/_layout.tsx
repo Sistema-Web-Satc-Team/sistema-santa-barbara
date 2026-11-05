@@ -1,6 +1,6 @@
 import { SidebarMenuButton, SidebarMenuItem } from '#/components/ui/sidebar'
 import { createFileRoute, Link, redirect, useLocation } from '@tanstack/react-router'
-import { GraduationCap, Guitar, Mail, Music2, Shield, Users, UserSquare2 } from 'lucide-react'
+import { GraduationCap, Guitar, Mail, Music2, School, Shield, Users, UserSquare2 } from 'lucide-react'
 
 import { DashboardLayout } from '#/components/layout/DashboardLayout'
 
@@ -89,6 +89,15 @@ function Layout() {
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
+
+          <SidebarMenuItem>
+          <SidebarMenuButton asChild isActive={pathname === "/dashboard/membros/turmas"}>
+            <Link to="/secretario/dashboard/turmas">
+              <School />
+              <span>Turmas</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
       </DashboardLayout>
   )
 }

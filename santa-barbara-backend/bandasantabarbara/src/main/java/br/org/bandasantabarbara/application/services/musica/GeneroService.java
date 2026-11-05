@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.org.bandasantabarbara.model.musica.Genero;
 import br.org.bandasantabarbara.repositories.musica.GeneroRepository;
@@ -16,6 +17,7 @@ public class GeneroService {
         this.generoRepository = generoRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<String> sugerir(String q) {
         if (q == null || q.isBlank()) {
             return List.of();

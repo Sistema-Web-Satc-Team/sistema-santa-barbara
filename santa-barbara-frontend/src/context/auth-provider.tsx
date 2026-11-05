@@ -8,7 +8,20 @@ import { AuthContext } from "./auth-context";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 
-    const [currentRole, setCurrentRole] = React.useState<string | null>(null);
+    const { data: currentRole = null } = useQuery<string | null>({
+        queryKey: ['current-role'],
+
+        queryFn: () => {
+            return Promise.resolve(
+                localStorage.getItem('currentRole')
+            );
+        },
+
+        enabled: typeof window !== 'undefined',
+
+        staleTime: Infinity,
+        retry: false,
+    });
 
     const queryClient = useQueryClient();
 
@@ -20,11 +33,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         refetchOnWindowFocus: false,
     })
 
-    React.useEffect(() => {
-        if (currentRole === null && user?.funcoes.length === 1) {
-            setCurrentRole(user.funcoes[0].code)
+    const setCurrentRole = (role: string | null) => {
+        if (typeof window !== 'undefined') {
+            if (role === null) {
+                localStorage.removeItem('currentRole');
+            } else {
+                localStorage.setItem('currentRole', role);
+            }
         }
-    }, [currentRole, user])
+
+        queryClient.setQueryData(['current-role'], role);
+    };
 
 
     const updateMutation = useMutation({
@@ -36,12 +55,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const logoutMutation = useMutation({
         mutationFn: logout,
-        onSuccess: () => {
+        onSuccess: async () => {
+            await queryClient.cancelQueries({
+                queryKey: ['user-profile'],
+            });
+
             setCurrentRole(null);
+
             queryClient.setQueryData(['user-profile'], null);
-            queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+
+            queryClient.removeQueries({
+                queryKey: ['user-profile'],
+                type: 'inactive',
+            });
         }
-    })
+    });
 
     const loginMutation = useMutation({
         mutationFn: login,

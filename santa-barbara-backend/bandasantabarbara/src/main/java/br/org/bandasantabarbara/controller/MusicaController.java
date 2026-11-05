@@ -101,7 +101,7 @@ public class MusicaController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public ResponseEntity<Void> remover(@PathVariable UUID id) {
-        this.musicaService.executar(id);
+        this.musicaService.remover(id);
         return ResponseEntity.noContent().build();
     }
 
