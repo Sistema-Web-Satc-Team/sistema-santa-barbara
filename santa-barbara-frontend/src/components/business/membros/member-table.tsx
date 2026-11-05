@@ -1,4 +1,4 @@
-import type { Member, Sexo, StatusCredencialAcesso } from '#/api/member';
+import type { Member, StatusCredencialAcesso } from '#/api/member';
 import { Button } from '#/components/ui/button';
 import {
     DropdownMenu,
@@ -17,7 +17,8 @@ import {
 } from '#/components/ui/table';
 import { capitalizeAll, cn } from '#/lib/utils';
 import { Briefcase, Ellipsis, Lock, LockOpen, Mail, MapPin, Pencil, Phone, Users, UsersRound } from 'lucide-react';
-import { Badge, type VariantBadgeType } from '../../ui/badge';
+import { Badge } from '../../ui/badge';
+import type { VariantBadgeType } from '../../ui/badge';
 import { formatPhone, initials } from './members';
 
 
@@ -31,10 +32,15 @@ const STATUS: Record<string, { label: string; variant: VariantBadgeType }> = {
     SEM_ACESSO: { label: 'Sem acesso', variant: 'muted' }
 };
 
-const SEXO: Record<Sexo ,{ label: string }> = {
+const SEXO: Record<string, { label: string }> = {
     MASCULINO: { label: "masculino"},
     FEMININO: { label: "feminino" },
     NAO_INFORMADO: { label: "não informado"}
+}
+
+function sexoLabel(sexo: unknown): string {
+    if (typeof sexo !== 'string') return 'não informado'
+    return Object.hasOwn(SEXO, sexo) ? SEXO[sexo].label : 'não informado'
 }
 
 function StatusBadge({ value }: { value: StatusCredencialAcesso }) {
@@ -128,7 +134,7 @@ export function MemberTable({ membros, onManageRoles, onEdit, onBlock, onUnblock
                 </TableHeader>
 
                 <TableBody>
-                    {membros.map((member, index) => {
+                    {membros.map((member) => {
                         const nome = capitalizeAll(String(member.nome).toLocaleLowerCase());
                         const minor = Number(member.idade) < 18;
                         const status = String(member.statusCredencialAcesso);
@@ -136,14 +142,14 @@ export function MemberTable({ membros, onManageRoles, onEdit, onBlock, onUnblock
                         const telefone = member.telefone ? formatPhone(member.telefone) : '-';
 
                         return (
-                            <TableRow key={member.id ?? index} className="align-top">
+                            <TableRow key={member.id} className="align-top">
                                 <TableCell className="align-top px-4 py-4">
                                     <div className="flex items-start gap-3">
                                         <MemberAvatar name={nome} minor={minor} avatar={member.avatarUrl} />
                                         <div className="flex min-w-0 flex-col">
                                             <span className="text-[0.95rem] font-semibold leading-tight text-foreground">{nome}</span>
                                             <span className="mt-0.5 text-xs text-muted-foreground">
-                                                {member.idade} anos • sexo {SEXO[member.sexo].label}
+                                            {member.idade} anos • sexo {sexoLabel(member.sexo)}
                                             </span>
                                             <div className="mt-2 flex flex-wrap items-center gap-1.5">
                                                 <StatusBadge value={member.statusCredencialAcesso} />

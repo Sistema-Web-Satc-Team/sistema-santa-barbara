@@ -1,4 +1,5 @@
-import { updateMemberById, type Member } from "#/api/member";
+import { updateMemberById } from "#/api/member";
+import type { Member } from "#/api/member";
 import { DataPagination } from "#/components/business/data-pagination";
 import { MemberEditDialog } from "#/components/business/membros/member-edit-dialog";
 import { MemberFormDialog } from "#/components/business/membros/member-form-dialog";
@@ -11,6 +12,7 @@ import { Field, FieldLabel } from '#/components/ui/field';
 import { Input } from "#/components/ui/input";
 import { Spinner } from '#/components/ui/spinner';
 import { useMembers } from "#/hooks/use-members";
+import { mensagemDeErro } from "#/lib/mensagem-erro";
 import { registrarMembro } from "#/lib/registrar-membro";
 import type { MemberFormValues } from "#/schemas/form-schema-member";
 import { UserPlus } from "lucide-react";
@@ -83,7 +85,14 @@ export function MembrosPage() {
 
 
 
-            {state.isEmpty ? (
+            {state.error ? (
+                <div role="alert" className="flex flex-col items-center gap-3 p-12 text-center text-destructive">
+                    <p>{mensagemDeErro(state.error, "Não foi possível carregar os membros.")}</p>
+                    <Button variant="outline" onClick={actions.refresh}>
+                        Tentar novamente
+                    </Button>
+                </div>
+            ) : state.isEmpty ? (
                     <div className="w-full flex items-center justify-center p-12 text-muted-foreground">
                         Nenhum membro encontrado.
                     </div>
@@ -100,17 +109,19 @@ export function MembrosPage() {
             )}
 
 
-            <DataPagination 
-                pagesSizes={[5,10,20,25,50]}
-                pagination={{
-                    page: state.members?.page ?? 0,
-                    size: state.members?.size ?? 1,
-                    totalElements: state.members?.totalElements ?? 1,
-                    totalPages: state.members?.totalPages ?? 1,
-                }}
-                onPageChange={(value: number) => actions.setFilter("page", value)}
-                onSizeChange={(value: number) => actions.setFilter("size", value)}
-            />
+            {!state.error && state.members && (
+                <DataPagination
+                    pagesSizes={[5,10,20,25,50]}
+                    pagination={{
+                        page: state.members.page,
+                        size: state.members.size,
+                        totalElements: state.members.totalElements,
+                        totalPages: state.members.totalPages,
+                    }}
+                    onPageChange={(value: number) => actions.setFilter("page", value)}
+                    onSizeChange={(value: number) => actions.setFilter("size", value)}
+                />
+            )}
 
 
 

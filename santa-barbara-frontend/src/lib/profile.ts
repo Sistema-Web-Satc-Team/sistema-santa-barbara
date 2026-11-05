@@ -1,3 +1,4 @@
+import { normalizeMeProfile } from '#/api/auth'
 import type { MeProfileResponse } from '#/api/auth'
 import { api } from '#/lib/axios'
 import { createIsomorphicFn } from '@tanstack/react-start'
@@ -12,15 +13,15 @@ export const fetchProfile = createIsomorphicFn()
         headers: { cookie },
       })
       if (!res.ok) return null
-      return (await res.json()) as MeProfileResponse
+      return normalizeMeProfile(await res.json())
     } catch {
       return null
     }
   })
   .client(async (): Promise<MeProfileResponse | null> => {
     try {
-      const { data } = await api.get('/api/v1/auth/me')
-      return data
+      const { data } = await api.get<unknown>('/api/v1/auth/me')
+      return normalizeMeProfile(data)
     } catch {
       return null
     }
