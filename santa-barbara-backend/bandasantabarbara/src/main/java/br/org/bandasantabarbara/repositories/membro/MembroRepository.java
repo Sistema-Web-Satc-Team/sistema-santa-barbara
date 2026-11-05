@@ -44,4 +44,11 @@ public interface MembroRepository extends JpaRepository<Membro, UUID>, JpaSpecif
     List<Membro> findAllWithVinculosByIds(
         @Param("ids") Collection<UUID> ids
     );
+
+    boolean existsByEmailIgnoreCase(String email);
+
+    boolean existsByEmailIgnoreCaseAndIdNot(
+        String email,
+        UUID id
+    );
 }

@@ -19,6 +19,7 @@ import br.org.bandasantabarbara.application.mapper.MembroMapper;
 import br.org.bandasantabarbara.application.mapper.PageMapper;
 import br.org.bandasantabarbara.application.mapper.ResponsavelMapper;
 import br.org.bandasantabarbara.exception.BadRequestException;
+import br.org.bandasantabarbara.exception.ConflictException;
 import br.org.bandasantabarbara.exception.NotFoundException;
 import br.org.bandasantabarbara.model.membro.Membro;
 import br.org.bandasantabarbara.model.membro.MembroResponsavel;
@@ -66,6 +67,10 @@ public class MembroService {
         if ( membro.ehMenorDeIdade() ) 
            throw new BadRequestException("Membro cadastrado não pode ser menor de idade.");
 
+        if (membroRepository.existsByEmailIgnoreCase(membro.getEmail())) 
+            throw new ConflictException("Este e-mail já está cadastrado.");
+
+
        this.membroRepository.save(membro);
        return this.membroMapper.toResponse(membro);
     }
@@ -81,7 +86,12 @@ public class MembroService {
                     new NotFoundException("Responsável não encontrado.")
             );
 
+
         Membro menor = membroMapper.toEntityMenor(request.menor());
+
+        if (!menor.getEmail().isBlank())
+            if (membroRepository.existsByEmailIgnoreCase(menor.getEmail())) 
+                throw new ConflictException("Este e-mail já está cadastrado.");
 
         if (!menor.ehMenorDeIdade()) {
             throw new BadRequestException(
@@ -144,6 +154,16 @@ public class MembroService {
         });
 
         var foiMenorIdade = membro.ehMenorDeIdade();
+
+        if (request.email() != null &&
+            membroRepository.existsByEmailIgnoreCaseAndIdNot(
+                request.email(),
+                membroId
+            )) {
+            throw new ConflictException(
+                "Este e-mail já está cadastrado para outro membro."
+            );
+        }
 
         this.membroMapper.toUpdate(request, membro);
 
