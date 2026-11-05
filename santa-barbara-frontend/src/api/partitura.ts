@@ -25,9 +25,17 @@ export interface CriarPartituraParams {
   dados: CriarPartituraRequest
 }
 
-export async function listarPartiturasDaMusica(idMusica: string): Promise<Partitura[]> {
-  const { data } = await api.get<Partitura[]>(`api/v1/musicas/${idMusica}/partituras`)
+export async function listarPartiturasDaMusica(
+  idMusica: string,
+): Promise<Partitura[]> {
+  const { data } = await api.get<Partitura[]>(
+    `api/v1/musicas/${idMusica}/partituras`,
+  )
   return data
+}
+
+export async function excluirPartitura(idPartitura: string): Promise<void> {
+  await api.delete(`api/v1/musicas/partituras/${idPartitura}`)
 }
 
 export async function criarPartitura({

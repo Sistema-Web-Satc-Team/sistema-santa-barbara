@@ -53,7 +53,7 @@ export function MusicSheetActions({ musica, canAdd }: MusicSheetActionsProps) {
         </div>
         {listOpen && (
           <div id={listId}>
-            <PartituraList idMusica={musica.id} />
+            <PartituraList idMusica={musica.id} canDelete={canAdd} />
           </div>
         )}
       </div>
