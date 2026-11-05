@@ -38,7 +38,9 @@ export function MusicList({
               <MusicIcon className="size-4" aria-hidden />
             </div>
             <div className="min-w-0 flex-1">
-              <h3 className="break-words font-medium">{musica.titulo}</h3>
+              <h3 className="break-words font-medium">
+                {capitalize(musica.titulo)}
+              </h3>
               <p className="break-words text-sm text-muted-foreground">
                 {musica.compositor?.trim()
                   ? musica.compositor
@@ -82,7 +84,7 @@ export function MusicList({
                       className="text-destructive focus:text-destructive hover:bg-destructive"
                       onSelect={() => onDelete(musica)}
                     >
-                      <Trash2Icon className='text-destructive' />
+                      <Trash2Icon className="text-destructive" />
                       Remover
                     </DropdownMenuItem>
                   )}

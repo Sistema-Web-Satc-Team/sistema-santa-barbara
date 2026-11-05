@@ -15,7 +15,6 @@ import { Spinner } from '#/components/ui/spinner'
 import { useForm } from '@tanstack/react-form'
 import z from 'zod'
 
-
 const formSchema = z.object({
   titulo: z.string().trim().min(1, 'O título é obrigatório.'),
   compositor: z.string().trim(),
@@ -28,7 +27,6 @@ interface CreateFormProps {
   onClose: () => void
   onSubmit: (values: MusicaInput) => Promise<void>
 }
-
 
 function CreateForm({ onClose, onSubmit }: CreateFormProps) {
   const form = useForm({
@@ -44,13 +42,11 @@ function CreateForm({ onClose, onSubmit }: CreateFormProps) {
       try {
         await onSubmit({
           titulo: value.titulo.trim(),
-          compositor: value.compositor.trim(),
+          compositor: value.compositor.trim() || undefined,
           generos: value.generos,
         })
         onClose()
-      } catch {
-
-      }
+      } catch {}
     },
   })
 
@@ -65,7 +61,8 @@ function CreateForm({ onClose, onSubmit }: CreateFormProps) {
     >
       <form.Field name="titulo">
         {(field) => {
-          const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
+          const isInvalid =
+            field.state.meta.isTouched && field.state.meta.errors.length > 0
           return (
             <Field data-invalid={isInvalid} className="text-foreground">
               <FieldLabel htmlFor={field.name}>Nome da música*</FieldLabel>
@@ -78,7 +75,12 @@ function CreateForm({ onClose, onSubmit }: CreateFormProps) {
                 aria-invalid={isInvalid}
                 placeholder="Ex.: Sleigh Ride"
               />
-              {isInvalid && <FieldError errors={field.state.meta.errors} className="-mt-1" />}
+              {isInvalid && (
+                <FieldError
+                  errors={field.state.meta.errors}
+                  className="-mt-1"
+                />
+              )}
             </Field>
           )
         }}
@@ -123,7 +125,9 @@ function CreateForm({ onClose, onSubmit }: CreateFormProps) {
         <Button type="button" variant="outline" onClick={onClose}>
           Cancelar
         </Button>
-        <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
+        <form.Subscribe
+          selector={(state) => [state.canSubmit, state.isSubmitting]}
+        >
           {([canSubmit, isSubmitting]) => (
             <Button type="submit" disabled={!canSubmit}>
               {isSubmitting ? <Spinner className="mr-2 size-4" /> : null}
@@ -142,7 +146,11 @@ interface MusicCreateDialogProps {
   onSubmit: (values: MusicaInput) => Promise<void>
 }
 
-export function MusicCreateDialog({ open, onOpenChange, onSubmit }: MusicCreateDialogProps) {
+export function MusicCreateDialog({
+  open,
+  onOpenChange,
+  onSubmit,
+}: MusicCreateDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">

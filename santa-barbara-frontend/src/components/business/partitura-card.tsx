@@ -3,15 +3,22 @@ import { baixarArquivoPartitura } from '#/api/partitura'
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
 import { getErrorMessage } from '#/lib/api-error'
-import { DownloadIcon, FileTextIcon } from 'lucide-react'
+import { capitalize } from '#/lib/utils'
+import { DownloadIcon, FileTextIcon, Trash2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
 interface PartituraCardProps {
   partitura: Partitura
+  canDelete: boolean
+  onDelete: () => void
 }
 
-export function PartituraCard({ partitura }: PartituraCardProps) {
+export function PartituraCard({
+  partitura,
+  canDelete,
+  onDelete,
+}: PartituraCardProps) {
   const [isDownloading, setIsDownloading] = useState(false)
 
   async function handleDownload() {
@@ -48,7 +55,9 @@ export function PartituraCard({ partitura }: PartituraCardProps) {
 
       <div className="min-w-0 flex-1 space-y-2">
         <div>
-          <h3 className="truncate font-medium">{partitura.titulo}</h3>
+          <h3 className="truncate font-medium">
+            {capitalize(partitura.titulo)}
+          </h3>
           {partitura.arranjador && (
             <p className="truncate text-sm text-muted-foreground">
               Arranjador: {partitura.arranjador}
@@ -60,7 +69,7 @@ export function PartituraCard({ partitura }: PartituraCardProps) {
           {partitura.instrumentos.length > 0 ? (
             partitura.instrumentos.map((instrumento) => (
               <Badge key={instrumento.id} variant="secondary">
-                {instrumento.nome}
+                {capitalize(instrumento.nome)}
               </Badge>
             ))
           ) : (
@@ -69,17 +78,31 @@ export function PartituraCard({ partitura }: PartituraCardProps) {
         </div>
       </div>
 
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        className="w-full sm:w-auto"
-        disabled={isDownloading || !partitura.partituraUrl}
-        onClick={() => void handleDownload()}
-      >
-        <DownloadIcon />
-        {isDownloading ? 'Baixando...' : 'Baixar PDF'}
-      </Button>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="w-full sm:w-auto"
+          disabled={isDownloading || !partitura.partituraUrl}
+          onClick={() => void handleDownload()}
+        >
+          <DownloadIcon />
+          {isDownloading ? 'Baixando...' : 'Baixar PDF'}
+        </Button>
+        {canDelete && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="w-full text-destructive hover:text-destructive sm:w-auto"
+            onClick={onDelete}
+          >
+            <Trash2Icon />
+            Remover
+          </Button>
+        )}
+      </div>
     </article>
   )
 }
