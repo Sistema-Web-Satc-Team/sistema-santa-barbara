@@ -75,9 +75,6 @@ public class Convite {
             throw new ExpiredException("Este convite já expirou.");
         }
 
-        if (!foiEnviado()) {
-            throw new ExpiredException("Este convite não está mais disponível para aceite.");
-        }
     }
 
     public boolean podeSerAceito() {
@@ -86,10 +83,6 @@ public class Convite {
         }
 
         if (estaExpirado()) {
-            return false;
-        }
-
-        if (!foiEnviado()) {
             return false;
         }
 

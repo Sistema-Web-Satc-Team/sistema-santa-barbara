@@ -9,13 +9,19 @@ import { capitalizeAll } from '#/lib/utils';
 import { formSchemaProfileUpdate } from '#/schemas/form-schema-profile-update';
 import { useForm } from '@tanstack/react-form';
 import { createFileRoute, Navigate, useNavigate } from '@tanstack/react-router';
+import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 
 
 export const Route = createFileRoute('/profile/')({
+    validateSearch: (search): { redirect?: string } => ({
+        redirect:
+            typeof search.redirect === "string"
+                ? search.redirect
+                : undefined,
+    }),
     component: Profile,
-})
-
+});
 
 
 function Profile() {
@@ -23,6 +29,7 @@ function Profile() {
     const profile = state.profile;
 
     const navigate = useNavigate();
+    const { redirect } = Route.useSearch();
 
     const displayName = profile?.nomeUsuario ?? capitalizeAll(profile?.nome || profile?.email || "Usuário");
 
@@ -68,7 +75,26 @@ function Profile() {
 
 
     return (
+        <>
+        <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label="Voltar"
+            title="Voltar"
+            className="absolute left-4 top-4 rounded-full"
+            onClick={() => {
+                if (redirect?.startsWith("/") && !redirect.startsWith("//")) {
+                    window.location.assign(redirect);
+                } else {
+                    navigate({ to: "/" });
+                }
+            }}
+        >
+            <ArrowLeft className="size-5" />
+        </Button>
         <div className="flex min-h-screen w-full items-center justify-center px-4 py-8">
+            
             <Card className='w-full max-w-xl min-w-0'>
                 <CardHeader className="flex flex-row items-center gap-4 space-y-0">
                     <div className="flex flex-col">
@@ -174,5 +200,6 @@ function Profile() {
                 </form>
             </Card>
         </div>
+        </>
     );
 }

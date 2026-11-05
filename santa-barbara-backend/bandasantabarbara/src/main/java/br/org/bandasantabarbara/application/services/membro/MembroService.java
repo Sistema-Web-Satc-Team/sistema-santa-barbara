@@ -98,6 +98,7 @@ public class MembroService {
         return membroMapper.toResponse(menor);
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<MembroResponse> listarMembros(
         String busca, 
         Boolean maiorDeIdade, 
@@ -112,12 +113,21 @@ public class MembroService {
             pageable
         );
 
+        if (!membrosPage.isEmpty()) {
+            List<UUID> ids = membrosPage.getContent()
+                .stream()
+                .map(Membro::getId)
+                .toList();
+
+            membroRepository.findAllWithVinculosByIds(ids);
+        }
+
         return this.pageMapper.toResponse(membrosPage.map(
                 this.membroMapper::toResponse
         ));
     }
 
-
+    @Transactional
     public MembroResponse atualizar(UUID membroId, MembroRequest request) {
 
         var membro = this.membroRepository.findById(membroId)
@@ -154,6 +164,7 @@ public class MembroService {
         return  this.membroMapper.toResponse(membro);
     }
 
+    @Transactional
     public void adicionarResponsavelAoDependente(
         UUID idResponsavel, 
         UUID idMembro, 
@@ -179,6 +190,7 @@ public class MembroService {
         this.membroResponsavelRepository.save(relacao);
     }
 
+    @Transactional(readOnly = true)
     public MembroResponsaveisResponse consultarResponsaveisDoMembro(UUID membroId) {
         Membro dependente = this.membroRepository.findById(membroId).orElseThrow(() -> new NotFoundException("Membro informado não encontrado."));
 

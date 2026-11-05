@@ -63,7 +63,13 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 <DropdownMenuGroup className='p-0'>
                     <DropdownMenuLabel className='font-normal text-foreground transition-colors hover:bg-primary/10 px-2 py-2'
                     onClick={() => {
-                        navigate({ to: "/profile", replace: true });
+                        navigate({ 
+                            to: "/profile", 
+                            replace: true,
+                            search: {
+                                redirect: location.href
+                            } 
+                        });
                     }}
                     >Perfil</DropdownMenuLabel>
                 </DropdownMenuGroup>

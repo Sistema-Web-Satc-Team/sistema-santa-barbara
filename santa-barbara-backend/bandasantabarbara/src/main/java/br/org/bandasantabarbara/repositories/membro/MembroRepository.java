@@ -1,10 +1,6 @@
 package br.org.bandasantabarbara.repositories.membro;
 
 import br.org.bandasantabarbara.model.membro.Membro;
-import br.org.bandasantabarbara.model.musica.Partitura;
-import jakarta.persistence.Entity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Lock;
@@ -12,12 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import jakarta.persistence.LockModeType;
 
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
-
 import java.util.*;
 
-@Repository
+
 public interface MembroRepository extends JpaRepository<Membro, UUID>, JpaSpecificationExecutor<Membro> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
@@ -39,4 +32,16 @@ public interface MembroRepository extends JpaRepository<Membro, UUID>, JpaSpecif
 
     @Query("SELECT m FROM Membro m JOIN FETCH m.avatarFile WHERE m.avatarFile.id = :fileId")
     Optional<Membro> findByFileIdWithFile(@Param("fileId") UUID fileId);
+
+
+    @Query("""
+        SELECT DISTINCT m
+        FROM Membro m
+        LEFT JOIN FETCH m.vinculos v
+        LEFT JOIN FETCH v.funcao
+        WHERE m.id IN :ids
+    """)
+    List<Membro> findAllWithVinculosByIds(
+        @Param("ids") Collection<UUID> ids
+    );
 }

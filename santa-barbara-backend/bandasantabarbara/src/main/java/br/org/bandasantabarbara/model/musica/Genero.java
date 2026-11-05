@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.text.Normalizer;
+import java.time.Instant;
 import java.util.regex.Pattern;
 
 @Entity
@@ -24,13 +25,24 @@ public class Genero {
     @Getter
     private String nome;
 
+    @Column(name = "criado_em")
+    @Getter
+    private Instant criadoEm;
+
+    @Column(name = "atualizado_em")
+    @Getter
+    private Instant atualizadoEm;
+
     /*
     *
     * Construtor
     *
      */
 
-    protected  Genero() { }
+    protected  Genero() {
+        this.criadoEm = Instant.now();
+        this.atualizadoEm = Instant.now();
+    }
 
     public Genero(String nome) {
         this();
