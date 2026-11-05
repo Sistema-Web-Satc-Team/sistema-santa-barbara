@@ -63,6 +63,7 @@ public class MembroResponsavel {
 
             values.add("Progenitores");
             values.add("Avo");
+            values.add("Padrinho");
             values.add("Tio");
             values.add("Responsavel Legal");
 
