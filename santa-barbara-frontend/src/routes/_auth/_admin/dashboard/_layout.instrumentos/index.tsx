@@ -39,8 +39,11 @@ function Instrumentos() {
   const searchTermRef = useRef('')
 
   const canManage =
-    authState.currentRole !== null &&
-    MANAGER_ROLES.includes(authState.currentRole)
+    authState.profile?.funcoes.some(
+      (funcao) => funcao.code === 'SUPER_ADMIN',
+    ) ||
+    (authState.currentRole !== null &&
+      MANAGER_ROLES.includes(authState.currentRole))
 
   const page = filters.page ?? 0
   const totalPages = data?.totalPages ?? 1
