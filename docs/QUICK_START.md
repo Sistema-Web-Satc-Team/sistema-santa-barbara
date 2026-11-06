@@ -6,12 +6,12 @@ Este guia apresenta os requisitos e procedimentos necessários para configurar e
 
 Antes de iniciar, instale:
 
-| Tecnologia | Versão |
-|---|---|
-| Java JDK | 25 |
-| Node.js | 22 |
+| Tecnologia                      | Versão                        |
+| ------------------------------- | ----------------------------- |
+| Java JDK                        | 25                            |
+| Node.js                         | 22                            |
 | Docker Engine ou Docker Desktop | Compatível com Docker Compose |
-| Git | Versão recente |
+| Git                             | Versão recente                |
 
 O backend utiliza o Maven Wrapper, dispensando a instalação global do Maven.
 

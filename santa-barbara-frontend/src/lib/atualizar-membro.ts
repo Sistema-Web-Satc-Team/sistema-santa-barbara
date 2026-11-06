@@ -19,6 +19,7 @@ export function memberToUpdateValues(m: Member): MemberUpdateValues {
     telefone: m.telefone ?? '',
     endereco: m.endereco ?? '',
     dataNascimento: parseData(m.dataNascimento),
+    avaliacao: m.avaliacao || 0,
   }
 }
 
@@ -39,6 +40,7 @@ export function buildUpdateRequest(original: Member, v: MemberUpdateValues): Upd
 
   const data = formatarData(v.dataNascimento)
   if (data !== original.dataNascimento) req.dataNascimento = data
+  if (v.avaliacao !== (original.avaliacao || 0)) req.avaliacao = v.avaliacao
 
   return req
 }

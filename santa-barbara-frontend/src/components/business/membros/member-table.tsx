@@ -16,7 +16,7 @@ import {
     TableRow
 } from '#/components/ui/table';
 import { capitalizeAll, cn } from '#/lib/utils';
-import { Briefcase, Ellipsis, Lock, LockOpen, Mail, MapPin, Pencil, Phone, Users, UsersRound } from 'lucide-react';
+import { Briefcase, Ellipsis, Lock, LockOpen, Mail, MapPin, Pencil, Phone, Star, Users, UsersRound } from 'lucide-react';
 import { Badge } from '../../ui/badge';
 import type { VariantBadgeType } from '../../ui/badge';
 import { formatPhone, initials } from './members';
@@ -80,6 +80,29 @@ function ContactLine({ icon: Icon, label, children }: { icon: typeof Mail; label
             <span className="min-w-0 truncate text-sm font-medium text-foreground">{children}</span>
         </div>
     );
+}
+
+function MemberRating({ value }: { value: number }) {
+    const stars = value / 10
+    const color = value === 50 ? 'text-amber-400' : 'text-primary'
+
+    return (
+        <span className="mt-1 inline-flex items-center gap-0.5" role="img" aria-label={`Avaliação: ${stars.toLocaleString('pt-BR')} de 5 estrelas`}>
+            {Array.from({ length: 5 }, (_, index) => {
+                const fill = Math.max(0, Math.min(1, stars - index))
+                return (
+                    <span key={index} className="relative inline-flex">
+                        <Star className="size-3.5 text-muted-foreground/50" aria-hidden="true" />
+                        {fill > 0 && (
+                            <span className="absolute inset-y-0 left-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
+                                <Star className={`size-3.5 fill-current ${color}`} aria-hidden="true" />
+                            </span>
+                        )}
+                    </span>
+                )
+            })}
+        </span>
+    )
 }
 
 /* ───────────── Tabela ───────────── */
@@ -148,6 +171,9 @@ export function MemberTable({ membros, onManageRoles, onEdit, onBlock, onUnblock
                                         <MemberAvatar name={nome} minor={minor} avatar={member.avatarUrl} />
                                         <div className="flex min-w-0 flex-col">
                                             <span className="text-[0.95rem] font-semibold leading-tight text-foreground">{nome}</span>
+                                            {member.avaliacao != null && member.avaliacao > 0 && member.avaliacao <= 50 && member.avaliacao % 5 === 0 && (
+                                                <MemberRating value={member.avaliacao} />
+                                            )}
                                             <span className="mt-0.5 text-xs text-muted-foreground">
                                             {member.idade} anos • sexo {sexoLabel(member.sexo)}
                                             </span>

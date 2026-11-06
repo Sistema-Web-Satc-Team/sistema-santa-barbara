@@ -21,6 +21,12 @@ export const formMemberUpdateSchema = z
       .string()
       .trim()
       .refine((v) => v === '' || v.length >= 2, 'O endereço deve ter pelo menos 2 caracteres.'),
+    avaliacao: z
+      .number()
+      .int()
+      .min(0)
+      .max(50)
+      .refine((value) => value === 0 || value % 5 === 0, 'Escolha uma avaliação em intervalos de meia estrela.'),
   })
   .superRefine((data, ctx) => {
     if (data.email) {
