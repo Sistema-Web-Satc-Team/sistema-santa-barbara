@@ -85,6 +85,10 @@ public class MembroMapper {
             membro.setEmail(request.email());
         }
 
+        if (request.avaliacao() != null) {
+            membro.setAvaliacao(request.avaliacao());
+        }
+
         return membro;
     }
 
@@ -98,6 +102,7 @@ public class MembroMapper {
           membro.getDataNascimento(),
           membro.getSexo(),
           membro.getIdade(),
+          membro.getAvaliacao(),
           membro.hasVinculoAtivo(),
           membro.ehMenorDeIdade(),
           membro.getStatusCredencial(),
