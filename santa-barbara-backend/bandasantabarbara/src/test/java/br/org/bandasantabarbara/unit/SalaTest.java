@@ -9,7 +9,9 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.Disabled;
 
+@Disabled("Módulo de aulas temporariamente fora do escopo da primeira entrega")
 @ActiveProfiles("test")
 public class SalaTest {
 

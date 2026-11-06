@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -33,6 +35,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/turmas/{idTurma}/aulas")
 @Tag(name = "Aulas", description = "Início, encerramento, frequência e consultas de aulas.")
+@ConditionalOnProperty(
+    prefix = "app.features",
+    name = "turmas",
+    havingValue = "true",
+    matchIfMissing = false
+)
 public class AulaController {
 
     private final AulaService aulaService;

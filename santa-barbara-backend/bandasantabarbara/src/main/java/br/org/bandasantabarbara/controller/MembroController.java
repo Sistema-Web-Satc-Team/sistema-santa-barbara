@@ -9,19 +9,33 @@ import br.org.bandasantabarbara.application.dtos.membros.vinculos.VincularMembro
 import br.org.bandasantabarbara.application.dtos.membros.vinculos.VinculoResponse;
 import br.org.bandasantabarbara.application.services.membro.MembroService;
 import br.org.bandasantabarbara.application.services.membro.MembroVinculoService;
+import br.org.bandasantabarbara.application.services.storage.FileService;
 import br.org.bandasantabarbara.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,13 +46,16 @@ public class MembroController {
 
     private final MembroService membroService;
     private final MembroVinculoService membroVinculoService;
+    private final FileService fileService;
 
     public MembroController(
             MembroService membroService,
-            MembroVinculoService membroVinculoService
+            MembroVinculoService membroVinculoService,
+            FileService fileService
     ) {
         this.membroService = membroService;
         this.membroVinculoService = membroVinculoService;
+        this.fileService = fileService;
     }
 
     @PostMapping
@@ -223,6 +240,31 @@ public class MembroController {
     ) {
         return this.membroService.consultarResponsaveisDoMembro(idMembro);
     }
+
+    /*
+    * Fotos dos membros
+    *
+    **/
+
+    @GetMapping("/files/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
+    @Operation(summary = "Baixar foto de perfil", description = "Retorna a foto de perfil do membro.")
+    public ResponseEntity<Resource> download(@PathVariable UUID id) {
+        var fileMetadata = this.fileService.getMetadata(id);
+        var inputStream = this.membroService.verFotoPerfil(id);
+
+        ContentDisposition disposition = ContentDisposition.inline()
+                .filename(fileMetadata.getFilename(), StandardCharsets.UTF_8)
+                .build();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(fileMetadata.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
+                .header("X-Content-Type-Options", "nosniff")
+                .body(new InputStreamResource(inputStream));
+
+    }
+
 
 
 }

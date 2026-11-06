@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -31,6 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/matriculas")
 @Tag(name = "Matrículas", description = "Alocação e histórico de matrícula de alunos em turmas.")
 @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO', 'PRESIDENTE')")
+@ConditionalOnProperty(
+    prefix = "app.features",
+    name = "turmas",
+    havingValue = "true",
+    matchIfMissing = false
+)
 public class MatriculaController {
 
     private final MatriculaService matriculaService;

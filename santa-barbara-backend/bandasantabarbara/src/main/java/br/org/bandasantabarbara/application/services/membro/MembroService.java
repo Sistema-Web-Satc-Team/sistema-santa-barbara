@@ -1,5 +1,6 @@
 package br.org.bandasantabarbara.application.services.membro;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import br.org.bandasantabarbara.application.dtos.membros.responsaveis.MembroResp
 import br.org.bandasantabarbara.application.mapper.MembroMapper;
 import br.org.bandasantabarbara.application.mapper.PageMapper;
 import br.org.bandasantabarbara.application.mapper.ResponsavelMapper;
+import br.org.bandasantabarbara.application.services.storage.FileService;
 import br.org.bandasantabarbara.exception.BadRequestException;
 import br.org.bandasantabarbara.exception.ConflictException;
 import br.org.bandasantabarbara.exception.NotFoundException;
@@ -43,6 +45,8 @@ public class MembroService {
     private final PageMapper pageMapper;
     private final ResponsavelMapper responsavelMapper;
 
+    private final FileService fileService;
+
     public MembroService(
         MembroRepository membroRepository,
         MembroMapper membroMapper,
@@ -50,7 +54,8 @@ public class MembroService {
         PageMapper pageMapper,
         MembroCredencialRepository membroCredencialRepository,
         ResponsavelMapper responsavelMapper,
-        MembroVinculoRepository membroVinculoRepository
+        MembroVinculoRepository membroVinculoRepository,
+        FileService fileService
     ) {
         this.membroRepository = membroRepository;
         this.membroMapper = membroMapper;
@@ -59,6 +64,7 @@ public class MembroService {
         this.membroCredencialRepository = membroCredencialRepository;
         this.responsavelMapper = responsavelMapper;
         this.membroVinculoRepository = membroVinculoRepository;
+        this.fileService = fileService;
     }
 
     public MembroResponse cadastrarMaiorIdade(MembroRequest request) {
@@ -305,5 +311,16 @@ public class MembroService {
     private boolean jaEhResponsavel(UUID idResponsavel, UUID idMembro) {
         return this.membroResponsavelRepository
             .existsByResponsavel_IdAndMembroMenor_Id(idResponsavel, idMembro);
+    }
+
+    @Transactional(readOnly = true)
+    public InputStream verFotoPerfil(UUID fileId) {
+        var membro = this.membroRepository
+            .findByFileIdWithFile(fileId)
+            .orElseThrow(
+                () -> new NotFoundException("Foto perfil não encontrada.")
+            );
+
+        return this.fileService.open(membro.getAvatarFile());
     }
 }

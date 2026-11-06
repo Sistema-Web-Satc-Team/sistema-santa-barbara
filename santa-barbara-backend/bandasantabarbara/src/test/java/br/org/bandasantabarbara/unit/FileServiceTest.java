@@ -5,6 +5,7 @@ import br.org.bandasantabarbara.application.services.storage.StorageService;
 import br.org.bandasantabarbara.repositories.storage.StoredFileRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,6 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ActiveProfiles("test")
 class FileServiceTest {
 
     @Test

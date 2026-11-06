@@ -1,5 +1,6 @@
 package br.org.bandasantabarbara.application.services.musica;
 
+import br.org.bandasantabarbara.application.dtos.instrumentos.AtualizarInstrumentoRequest;
 import br.org.bandasantabarbara.application.dtos.instrumentos.InstrumentoRequest;
 import br.org.bandasantabarbara.application.dtos.instrumentos.InstrumentoResponse;
 import br.org.bandasantabarbara.application.mapper.InstrumentoMapper;
@@ -38,7 +39,7 @@ public class InstrumentoService {
     }
 
     @Transactional
-    public InstrumentoResponse atualizarInstrumento(int id, InstrumentoRequest request) {
+    public InstrumentoResponse atualizarInstrumento(int id, AtualizarInstrumentoRequest request) {
         var instrumento = this.instrumentoRepository.findById(id).orElseThrow(() -> new NotFoundException("Instrumento não foi encontrado."));
 
         this.instrumentoMapper.toUpdate(request, instrumento);

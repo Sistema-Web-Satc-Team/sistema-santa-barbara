@@ -27,6 +27,8 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
+@Disabled("Módulo de salas fora do escopo da primeira entrega")
 class AulaServiceIntegrationTest {
 
     private static final ZoneId ZONE_ID = ZoneId.of("America/Sao_Paulo");

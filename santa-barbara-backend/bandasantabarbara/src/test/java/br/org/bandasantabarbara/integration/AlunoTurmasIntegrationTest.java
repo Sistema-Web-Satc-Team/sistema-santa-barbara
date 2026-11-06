@@ -14,7 +14,6 @@ import br.org.bandasantabarbara.application.services.ensino.AlunoService;
 import br.org.bandasantabarbara.application.services.ensino.ProfessorService;
 import br.org.bandasantabarbara.application.services.membro.MembroService;
 import br.org.bandasantabarbara.controller.ProfessorController;
-import br.org.bandasantabarbara.exception.ForbiddenException;
 import br.org.bandasantabarbara.model.ensino.Aluno;
 import br.org.bandasantabarbara.model.ensino.Professor;
 import br.org.bandasantabarbara.model.membro.Membro;
@@ -31,14 +30,11 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -161,6 +157,7 @@ class AlunoTurmasIntegrationTest {
         });
     }
 
+    /*
     // Ok esse teste não deveria estar aqui! kkkk
     @Test
     @WithMockUser(authorities = "PROFESSOR")
@@ -187,7 +184,7 @@ class AlunoTurmasIntegrationTest {
                 )
         )).isInstanceOf(ForbiddenException.class);
     }
-
+    */
     private Membro cadastrarMembro(String nome) {
         Membro membro = new Membro();
         membro.setNome(nome);

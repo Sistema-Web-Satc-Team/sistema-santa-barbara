@@ -75,15 +75,6 @@ function Layout() {
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
-
-          <SidebarMenuItem>
-          <SidebarMenuButton asChild isActive={pathname === "/dashboard/membros/turmas"}>
-            <Link to="/secretario/dashboard/turmas">
-              <School />
-              <span>Turmas</span>
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
       </DashboardLayout>
   )
 }

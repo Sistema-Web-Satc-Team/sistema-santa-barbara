@@ -9,6 +9,7 @@ import br.org.bandasantabarbara.repositories.turma.TurmaRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
+@Disabled("Módulo de salas fora do escopo da primeira entrega")
 public class TurmaRepositoryIntegrationTest {
 
     @Autowired

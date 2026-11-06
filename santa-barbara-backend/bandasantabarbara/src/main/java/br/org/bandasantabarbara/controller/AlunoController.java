@@ -2,25 +2,17 @@ package br.org.bandasantabarbara.controller;
 
 import br.org.bandasantabarbara.application.dtos.PageResponse;
 import br.org.bandasantabarbara.application.dtos.alunos.AlunoResponse;
-import br.org.bandasantabarbara.application.dtos.alunos.AlunoTurmaResponse;
-import br.org.bandasantabarbara.application.dtos.alunos.AlunoTurmaHorarioResponse;
-import br.org.bandasantabarbara.application.dtos.turmas.MatriculaResponseDTO;
 import br.org.bandasantabarbara.application.services.ensino.AlunoService;
 import br.org.bandasantabarbara.application.services.turma.MatriculaService;
-import br.org.bandasantabarbara.exception.ForbiddenException;
-import br.org.bandasantabarbara.model.turma.MatriculaAlunoTurma;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
-import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -56,6 +48,7 @@ public class AlunoController {
         return alunoService.listar(pageable, search, instrumentosAprendendo, apenasMenores);
     }
 
+    /*
     @GetMapping("/{idAluno}/matriculas")
     @Operation(summary = "Listar matrículas do aluno", description = "Lista o histórico paginado de matrículas do aluno.")
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO', 'PRESIDENTE', 'ALUNO')")
@@ -114,5 +107,5 @@ public class AlunoController {
         }
         return alunoService.listarHorariosAtuais(idAluno, pageable);
     }
-
+    */
 }

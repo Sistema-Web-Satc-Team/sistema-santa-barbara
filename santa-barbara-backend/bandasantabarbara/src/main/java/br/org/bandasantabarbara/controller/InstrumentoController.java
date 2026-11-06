@@ -1,10 +1,12 @@
 package br.org.bandasantabarbara.controller;
 
+import br.org.bandasantabarbara.application.dtos.instrumentos.AtualizarInstrumentoRequest;
 import br.org.bandasantabarbara.application.dtos.instrumentos.InstrumentoRequest;
 import br.org.bandasantabarbara.application.dtos.instrumentos.InstrumentoResponse;
 import br.org.bandasantabarbara.application.services.musica.InstrumentoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,7 +33,7 @@ public class InstrumentoController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public InstrumentoResponse criarInstrumento(
-            @RequestBody InstrumentoRequest body
+            @RequestBody @Valid InstrumentoRequest body
     ) {
         return this.instrumentoService.cadastrarInstrumento(body);
     }
@@ -65,7 +67,7 @@ public class InstrumentoController {
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public InstrumentoResponse atualizarInstrumentos(
             @PathVariable int id,
-            @RequestBody InstrumentoRequest body
+            @RequestBody @Valid AtualizarInstrumentoRequest body
     ) {
         return this.instrumentoService.atualizarInstrumento(id, body);
     }

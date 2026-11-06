@@ -2,16 +2,10 @@ package br.org.bandasantabarbara.controller;
 
 import br.org.bandasantabarbara.application.services.turma.ProfessorTurmaService;
 import java.util.List;
-import java.util.UUID;
 
 import br.org.bandasantabarbara.application.dtos.PageResponse;
 import br.org.bandasantabarbara.application.dtos.professores.ProfessorResponse;
-import br.org.bandasantabarbara.application.dtos.professores.ProfessorTurmaAtualResponse;
-import br.org.bandasantabarbara.application.dtos.professores.ProfessorTurmaHorarioResponse;
-import br.org.bandasantabarbara.application.dtos.turmas.ProfessorTurmaResponseDTO;
 import br.org.bandasantabarbara.application.services.ensino.ProfessorService;
-import br.org.bandasantabarbara.exception.ForbiddenException;
-import br.org.bandasantabarbara.model.turma.ProfessorTurma;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,10 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,7 +49,7 @@ public class ProfessorController {
         return professorService.listar(pageable, search, instrumentosEnsinando);
     }
 
-
+    /*
     @GetMapping("/{idProfessor}/vinculos")
     @Operation(summary = "Listar turmas do professor", description = "Lista o histórico paginado de turmas do professor.")
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO', 'PRESIDENTE', 'ALUNO')")
@@ -122,5 +113,6 @@ public class ProfessorController {
             throw new ForbiddenException("Acesso negado: você só pode consultar suas próprias turmas.");
         }
     }
+    */
 
 }

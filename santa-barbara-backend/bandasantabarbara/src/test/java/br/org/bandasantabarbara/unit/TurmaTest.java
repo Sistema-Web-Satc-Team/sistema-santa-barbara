@@ -20,7 +20,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Disabled;
 
+@Disabled("Módulo de aulas temporariamente fora do escopo da primeira entrega")
 public class TurmaTest {
 
 

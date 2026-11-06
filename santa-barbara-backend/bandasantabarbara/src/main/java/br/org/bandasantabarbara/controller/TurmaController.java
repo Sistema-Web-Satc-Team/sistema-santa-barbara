@@ -19,9 +19,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import java.util.List;
-import java.util.Map;
-import br.org.bandasantabarbara.application.dtos.turmas.TurmaAlunoResponseDTO;
-import br.org.bandasantabarbara.application.dtos.turmas.TurmaProfessorResponseDTO;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -42,6 +41,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/turmas")
 @Tag(name = "Turmas", description = "Cadastro e gerenciamento do ciclo de vida das turmas.")
 @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO', 'PRESIDENTE')")
+@ConditionalOnProperty(
+    prefix = "app.features",
+    name = "turmas",
+    havingValue = "true",
+    matchIfMissing = false
+)
 public class TurmaController {
 
     private final TurmaService turmaService;

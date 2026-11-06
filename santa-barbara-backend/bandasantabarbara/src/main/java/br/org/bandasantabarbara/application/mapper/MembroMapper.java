@@ -106,7 +106,7 @@ public class MembroMapper {
           membro.hasVinculoAtivo(),
           membro.ehMenorDeIdade(),
           membro.getStatusCredencial(),
-          this.fileService.urlFor(membro.getAvatarFile())
+          this.fileService.urlForByResource("/membros",membro.getAvatarFile())
         );
     }
 }

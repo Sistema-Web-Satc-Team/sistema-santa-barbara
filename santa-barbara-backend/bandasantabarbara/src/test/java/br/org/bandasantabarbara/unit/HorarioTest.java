@@ -5,6 +5,7 @@ import br.org.bandasantabarbara.model.turma.Horario;
 import br.org.bandasantabarbara.model.turma.HorarioIntervalo;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -26,7 +27,10 @@ Esse é um horário primitivo, sem assuntos ou eventos que ocorreram entre os ho
 
 */
 
+import org.junit.jupiter.api.Disabled;
 
+@Disabled("Módulo de aulas temporariamente fora do escopo da primeira entrega")
+@ActiveProfiles("test")
 public class HorarioTest {
 
 

@@ -8,6 +8,8 @@ import br.org.bandasantabarbara.exception.ConflictException;
 import br.org.bandasantabarbara.model.turma.Turma;
 import br.org.bandasantabarbara.repositories.turma.SalaRepository;
 import br.org.bandasantabarbara.repositories.turma.TurmaRepository;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +26,7 @@ import org.assertj.core.api.Assertions;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
+@Disabled("Módulo de salas fora do escopo da primeira entrega")
 public class SalaServiceIntegrationTest {
 
     @Autowired

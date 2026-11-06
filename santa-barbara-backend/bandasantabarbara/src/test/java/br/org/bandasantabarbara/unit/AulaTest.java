@@ -1,6 +1,7 @@
 package br.org.bandasantabarbara.unit;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import br.org.bandasantabarbara.exception.BadRequestException;
 import br.org.bandasantabarbara.model.aula.Aula;
@@ -11,6 +12,10 @@ import br.org.bandasantabarbara.model.turma.Turma;
 import org.assertj.core.api.Assertions;
 import java.time.LocalDateTime;
 
+import org.junit.jupiter.api.Disabled;
+
+@Disabled("Módulo de aulas temporariamente fora do escopo da primeira entrega")
+@ActiveProfiles("test")
 class AulaTest {
 
     private static final LocalDateTime INICIO = LocalDateTime.of(2026, 6, 15, 14, 40);
