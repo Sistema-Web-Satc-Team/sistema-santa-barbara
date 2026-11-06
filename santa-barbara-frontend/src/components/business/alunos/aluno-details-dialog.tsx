@@ -137,6 +137,11 @@ export function AlunoDetailsDialog({
               </DialogDescription>
 
               <div className="mt-2 flex flex-wrap items-center gap-1.5">
+
+                {/* 
+                
+                MODULO DE TURMAS NAO IMPLEMENTADO
+
                 {aluno.temTurma ? (
                   <Badge variant="success">
                     <span
@@ -154,6 +159,8 @@ export function AlunoDetailsDialog({
                     Sem Turma
                   </Badge>
                 )}
+                
+                */}
 
                 {isMinor && <Badge variant="warning">Menor de 18 anos</Badge>}
               </div>

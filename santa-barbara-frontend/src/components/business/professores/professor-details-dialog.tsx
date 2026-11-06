@@ -70,6 +70,11 @@ export function ProfessorDetailsDialog({
               </DialogDescription>
 
               <div className="mt-2 flex flex-wrap items-center gap-1.5">
+
+                {/* 
+                
+                MODULO DE TURMAS NAO IMPLEMENTADO
+
                 {professor.temTurma ? (
                   <Badge variant="success">
                     <span
@@ -87,6 +92,8 @@ export function ProfessorDetailsDialog({
                     Sem Turma
                   </Badge>
                 )}
+
+                */}
               </div>
             </div>
           </div>

@@ -57,6 +57,10 @@ export function ProfessorCard({
             </p>
 
             <div className="mt-2 flex flex-wrap items-center gap-1.5">
+
+              {/* 
+              MODULO DE TURMAS NAO IMPLEMENTADO
+
               {professor.temTurma ? (
                 <Badge variant="success" className="shrink-0">
                   <span
@@ -74,6 +78,8 @@ export function ProfessorCard({
                   Sem Turma
                 </Badge>
               )}
+              
+              */}
             </div>
           </div>
         </div>

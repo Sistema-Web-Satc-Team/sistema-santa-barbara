@@ -53,7 +53,13 @@ export function AlunoCard({ aluno, onViewDetails }: AlunoCardProps) {
               {formatSexo(String(aluno.sexo))}
             </p>
 
+             
+              
             <div className="mt-2 flex flex-wrap items-center gap-1.5">
+
+              {/* 
+              MODULO DE TURMAS NAO IMPLEMENTADO
+
               {aluno.temTurma ? (
                 <Badge variant="success" className="shrink-0">
                   <span
@@ -71,6 +77,7 @@ export function AlunoCard({ aluno, onViewDetails }: AlunoCardProps) {
                   Sem Turma
                 </Badge>
               )}
+              */}
 
               {isMinor && (
                 <Badge variant="warning" className="shrink-0">
@@ -78,8 +85,10 @@ export function AlunoCard({ aluno, onViewDetails }: AlunoCardProps) {
                 </Badge>
               )}
             </div>
+  
           </div>
         </div>
+
 
         <Separator />
 
