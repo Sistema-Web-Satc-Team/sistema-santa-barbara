@@ -1,16 +1,11 @@
 import { SidebarMenuButton, SidebarMenuItem } from '#/components/ui/sidebar'
-import { createFileRoute, Link, redirect, useLocation } from '@tanstack/react-router'
+import { createFileRoute, Link, useLocation } from '@tanstack/react-router'
 import { GraduationCap, Guitar, Mail, Music2, School, Shield, Users, UserSquare2 } from 'lucide-react'
 
 import { DashboardLayout } from '#/components/layout/DashboardLayout'
 
 export const Route = createFileRoute('/_auth/_admin/dashboard/_layout')({
-  component: Layout,
-  beforeLoad: ({ context }) => {
-    if (!context.profile.funcoes.some((funcao) => funcao.code === 'SUPER_ADMIN' || funcao.code === 'ADMIN')) {
-      throw redirect({ to: '/' })
-    }
-  },
+  component: Layout
 })
 
 function Layout() {
@@ -41,15 +36,6 @@ function Layout() {
               <Link to="/dashboard/professores">
                 <GraduationCap />
                 <span>Professores</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === "/dashboard/musicos"}>
-              <Link to="/dashboard/musicos">
-                <Music2 />
-                <span>Músicos</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

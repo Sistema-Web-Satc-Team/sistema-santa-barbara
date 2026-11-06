@@ -10,15 +10,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const { data: currentRole = null } = useQuery<string | null>({
         queryKey: ['current-role'],
-
-        queryFn: () => {
-            return Promise.resolve(
-                localStorage.getItem('currentRole')
-            );
-        },
-
+        queryFn: () => localStorage.getItem('currentRole'),
         enabled: typeof window !== 'undefined',
-
+        initialData: null,
         staleTime: Infinity,
         retry: false,
     });
@@ -44,6 +38,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         queryClient.setQueryData(['current-role'], role);
     };
+
+    React.useEffect(() => {
+        if (!user) return;
+
+        if (user.funcoes.length === 1) {
+            setCurrentRole(user.funcoes[0].code);
+        }
+    }, [user]);
 
 
     const updateMutation = useMutation({
