@@ -24,8 +24,8 @@ export function DataPagination({
 }: DataPaginationProps) {
 
   return (
-    <div className="flex items-center justify-between mt-4">
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+    <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
         <span>Itens por página</span>
         <Select value={String(pagination.size)} onValueChange={(v) => onSizeChange(Math.floor(Number(v)))}>
           <SelectTrigger className="w-20">

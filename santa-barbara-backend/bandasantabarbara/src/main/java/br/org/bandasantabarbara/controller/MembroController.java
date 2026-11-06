@@ -7,69 +7,70 @@ import br.org.bandasantabarbara.application.dtos.membros.responsaveis.MembroResp
 import br.org.bandasantabarbara.application.dtos.membros.vinculos.MembroVinculosResponse;
 import br.org.bandasantabarbara.application.dtos.membros.vinculos.VincularMembroRequest;
 import br.org.bandasantabarbara.application.dtos.membros.vinculos.VinculoResponse;
-import br.org.bandasantabarbara.application.usecase.membros.*;
+import br.org.bandasantabarbara.application.services.membro.MembroService;
+import br.org.bandasantabarbara.application.services.membro.MembroVinculoService;
+import br.org.bandasantabarbara.application.services.storage.FileService;
+import br.org.bandasantabarbara.exception.NotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/membros")
+@Tag(name = "Membros", description = "Cadastro e administração de membros, responsáveis e vínculos.")
 public class MembroController {
 
-    private final CadastrarMembroUseCase cadastrarMembroUseCase;
-    private final ConsultarMembrosUseCase consultarMembrosUseCase;
-    private final AtualizarDadosMembroUseCase atualizarDadosMembroUseCase;
-    private final VincularFuncaoUseCase vincularFuncaoUseCase;
-
-    private final ConsultarVinculosUseCase consultarVinculosUseCase;
-    private final EncerrarVinculoUseCase encerrarVinculoUseCase;
-    private final CancelarVinculoUseCase cancelarVinculoUseCase;
-
-    private final AdicionarResponsavelUseCase adicionarResponsavelUseCase;
-    private final RemoverResponsavelUseCase removerResponsavelUseCase;
-    private final ConsultarResponsaveisDependente consultarResponsaveisDependente;
+    private final MembroService membroService;
+    private final MembroVinculoService membroVinculoService;
+    private final FileService fileService;
 
     public MembroController(
-            CadastrarMembroUseCase cadastrarMembroUseCase,
-            ConsultarMembrosUseCase consultarMembrosUseCase,
-            AtualizarDadosMembroUseCase atualizarDadosMembroUseCase,
-            VincularFuncaoUseCase vincularFuncaoUseCase,
-            ConsultarVinculosUseCase consultarVinculosUseCase,
-            EncerrarVinculoUseCase encerrarVinculoUseCase,
-            CancelarVinculoUseCase cancelarVinculoUseCase,
-            AdicionarResponsavelUseCase adicionarResponsavelUseCase,
-            RemoverResponsavelUseCase removerResponsavelUseCase,
-            ConsultarResponsaveisDependente consultarResponsaveisDependente
+            MembroService membroService,
+            MembroVinculoService membroVinculoService,
+            FileService fileService
     ) {
-        this.cadastrarMembroUseCase = cadastrarMembroUseCase;
-        this.consultarMembrosUseCase = consultarMembrosUseCase;
-        this.atualizarDadosMembroUseCase = atualizarDadosMembroUseCase;
-        this.vincularFuncaoUseCase = vincularFuncaoUseCase;
-        this.consultarVinculosUseCase = consultarVinculosUseCase;
-        this.encerrarVinculoUseCase = encerrarVinculoUseCase;
-        this.cancelarVinculoUseCase = cancelarVinculoUseCase;
-        this.adicionarResponsavelUseCase = adicionarResponsavelUseCase;
-        this.removerResponsavelUseCase = removerResponsavelUseCase;
-        this.consultarResponsaveisDependente = consultarResponsaveisDependente;
+        this.membroService = membroService;
+        this.membroVinculoService = membroVinculoService;
+        this.fileService = fileService;
     }
 
     @PostMapping
+    @Operation(summary = "Cadastrar membro", description = "Cadastra um membro maior de idade.")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public MembroResponse registrarMembro(
             @RequestBody @Valid MembroRequest dto
     ) {
-        return cadastrarMembroUseCase.execute(dto);
+        return membroService.cadastrarMaiorIdade(dto);
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @Operation(summary = "Listar membros", description = "Lista membros paginados com filtros opcionais.")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public PageResponse<MembroResponse> listarMembros(
             @PageableDefault(
                     size = 20,
@@ -81,27 +82,29 @@ public class MembroController {
             @RequestParam(required = false) Boolean maiorDeIdade,
             @RequestParam(required = false) Boolean semAcesso
     ) {
-        return consultarMembrosUseCase.listarMembros(search, maiorDeIdade, semAcesso, pageable);
+        return membroService.listarMembros(search, maiorDeIdade, semAcesso, pageable);
     }
 
 
     @PatchMapping("/{id}")
+    @Operation(summary = "Atualizar membro", description = "Atualiza os dados de um membro.")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public void atualizarMembro(
             @PathVariable UUID id,
             @RequestBody @Valid MembroRequest dto
     ) {
-        atualizarDadosMembroUseCase.execute(id, dto);
+        membroService.atualizar(id, dto);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Remover membro", description = "Remove um membro sem vínculos e sem credencial associada.")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public void deletarMembro(
             @PathVariable UUID id
     ) {
-        // Must to be implemented
+        membroService.remover(id);
     }
 
     /*
@@ -111,44 +114,79 @@ public class MembroController {
      */
 
     @GetMapping("/{id}/vinculos")
+    @Operation(summary = "Listar vínculos do membro", description = "Consulta vínculos ativos, agendados, encerrados e cancelados.")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public MembroVinculosResponse listarVinculosMembro(
             @PathVariable UUID id
     ) {
-        return this.consultarVinculosUseCase.execute(id);
+        return this.membroVinculoService.pegarVinculosDeUmMembroPorId(id);
     }
 
 
     @PostMapping("/{id}/vinculos")
+    @Operation(summary = "Criar vínculo", description = "Vincula uma função ao membro.")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public VinculoResponse criarVinculoMembro(
             @RequestBody @Valid VincularMembroRequest dto,
-            @PathVariable UUID id
+            @PathVariable UUID id,
+            @AuthenticationPrincipal Jwt jwt
     ) {
-        return vincularFuncaoUseCase.execute(dto, id);
+        List<String> papeis = jwt.getClaim("papeis");
+
+        List<String> hierarquia = List.of("SUPER_ADMIN", "ADMIN", "SECRETARIO");
+
+        String papelMaisForte = hierarquia.stream()
+                .filter(papeis::contains)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Nenhum papel válido encontrado"));
+
+        return membroVinculoService.vincularFuncao(dto, id, papelMaisForte);
     }
 
 
     @PostMapping("/{idMembro}/vinculos/{idVinculo}/encerrar")
+    @Operation(summary = "Encerrar vínculo", description = "Encerra um vínculo vigente do membro.")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public void encerrarVinculoMembro(
             @PathVariable UUID idMembro,
-            @PathVariable int idVinculo
+            @PathVariable int idVinculo,
+            @AuthenticationPrincipal Jwt jwt
     ) {
-        this.encerrarVinculoUseCase.execute(idMembro, idVinculo);
+        List<String> papeis = jwt.getClaim("papeis");
+
+        List<String> hierarquia = List.of("SUPER_ADMIN", "ADMIN", "SECRETARIO");
+
+        String papelMaisForte = hierarquia.stream()
+                .filter(papeis::contains)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Nenhum papel válido encontrado"));
+
+
+        this.membroVinculoService.encerrar(idMembro, idVinculo, papelMaisForte);
     }
 
     @DeleteMapping("/{idMembro}/vinculos/{idVinculo}/cancelar")
+    @Operation(summary = "Cancelar vínculo agendado", description = "Cancela um vínculo agendado do membro.")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public void cancelarVinculoMembro(
             @PathVariable UUID idMembro,
-            @PathVariable int idVinculo
+            @PathVariable int idVinculo,
+            @AuthenticationPrincipal Jwt jwt
     ) {
-        this.cancelarVinculoUseCase.cancelar(idMembro, idVinculo);
+        List<String> papeis = jwt.getClaim("papeis");
+
+        List<String> hierarquia = List.of("SUPER_ADMIN", "ADMIN", "SECRETARIO");
+
+        String papelMaisForte = hierarquia.stream()
+                .filter(papeis::contains)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Nenhum papel válido encontrado"));
+
+        this.membroVinculoService.cancelar(idMembro, idVinculo, papelMaisForte);
     }
 
     /*
@@ -159,45 +197,74 @@ public class MembroController {
 
 
     @PostMapping("/menores")
+    @Operation(summary = "Cadastrar membro menor de idade", description = "Cadastra um menor e associa o responsável informado.")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public MembroResponse criarMembroMenor(
             @RequestBody @Valid RegistrarMembroMenorRequest dto
     ) {
-       return this.cadastrarMembroUseCase.cadastrarMenorIdade(dto);
+       return this.membroService.cadastrarMenorIdade(dto);
     }
 
     @PutMapping("/{idMembro}/responsaveis/{idResponsavel}")
+    @Operation(summary = "Atribuir responsável", description = "Associa um responsável ao membro dependente.")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public void atribuirResponsavel(
             @RequestBody @Valid MembroRelacaoRequest dto,
             @PathVariable UUID idMembro,
             @PathVariable UUID idResponsavel
     ) {
-        this.adicionarResponsavelUseCase.execute(idResponsavel, idMembro, dto);
+        this.membroService.adicionarResponsavelAoDependente(idResponsavel, idMembro, dto);
     }
 
 
     @DeleteMapping("/{idMembro}/responsaveis/{idResponsavel}")
+    @Operation(summary = "Remover responsável", description = "Remove a associação do responsável com o membro dependente.")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public void removerResponsavel(
             @PathVariable UUID idMembro,
             @PathVariable UUID idResponsavel
     ) {
-       this.removerResponsavelUseCase.execute(idResponsavel, idMembro);
+       this.membroService.removerResponsavelDoMembro(idResponsavel, idMembro);
     }
 
 
     @GetMapping("/{idMembro}/responsaveis")
+    @Operation(summary = "Listar responsáveis", description = "Consulta os responsáveis associados ao membro dependente.")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
     public MembroResponsaveisResponse listarResponsaveisDependente(
             @PathVariable UUID idMembro
     ) {
-        return this.consultarResponsaveisDependente.execute(idMembro);
+        return this.membroService.consultarResponsaveisDoMembro(idMembro);
     }
+
+    /*
+    * Fotos dos membros
+    *
+    **/
+
+    @GetMapping("/files/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'SECRETARIO')")
+    @Operation(summary = "Baixar foto de perfil", description = "Retorna a foto de perfil do membro.")
+    public ResponseEntity<Resource> download(@PathVariable UUID id) {
+        var fileMetadata = this.fileService.getMetadata(id);
+        var inputStream = this.membroService.verFotoPerfil(id);
+
+        ContentDisposition disposition = ContentDisposition.inline()
+                .filename(fileMetadata.getFilename(), StandardCharsets.UTF_8)
+                .build();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(fileMetadata.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
+                .header("X-Content-Type-Options", "nosniff")
+                .body(new InputStreamResource(inputStream));
+
+    }
+
 
 
 }

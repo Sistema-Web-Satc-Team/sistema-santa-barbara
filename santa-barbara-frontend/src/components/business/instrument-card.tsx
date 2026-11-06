@@ -2,7 +2,9 @@ import { getInstrumentTypeLabel } from '#/api/instrumento'
 import type { Instrumento } from '#/api/instrumento'
 import { InstrumentIcon } from '#/components/business/instrument-icon'
 import { Card, CardContent } from '#/components/ui/card'
+import { capitalize, capitalizeAll } from '#/lib/utils'
 import type { ReactNode } from 'react'
+import { Badge } from '../ui/badge'
 
 interface InstrumentCardProps {
   instrumento: Pick<Instrumento, 'nome' | 'descricao' | 'tipo'>
@@ -21,12 +23,12 @@ export function InstrumentCard({ instrumento, actions }: InstrumentCardProps) {
         </div>
 
         <div className="min-w-0 flex-1 space-y-1">
-          <h3 className="truncate font-semibold">{instrumento.nome}</h3>
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+          <h3 className="truncate font-semibold">{capitalizeAll(instrumento.nome)}</h3>
+          <Badge className="text-xs">
             {getInstrumentTypeLabel(instrumento.tipo)}
-          </p>
+          </Badge>
           <p className="text-sm text-muted-foreground">
-            {description ? description : 'Sem descrição'}
+            {description ? capitalize(description) : 'Sem descrição'}
           </p>
         </div>
 

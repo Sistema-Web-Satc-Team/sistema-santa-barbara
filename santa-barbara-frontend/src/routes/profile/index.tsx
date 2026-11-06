@@ -9,13 +9,19 @@ import { capitalizeAll } from '#/lib/utils';
 import { formSchemaProfileUpdate } from '#/schemas/form-schema-profile-update';
 import { useForm } from '@tanstack/react-form';
 import { createFileRoute, Navigate, useNavigate } from '@tanstack/react-router';
+import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 
 
 export const Route = createFileRoute('/profile/')({
+    validateSearch: (search): { redirect?: string } => ({
+        redirect:
+            typeof search.redirect === "string"
+                ? search.redirect
+                : undefined,
+    }),
     component: Profile,
-})
-
+});
 
 
 function Profile() {
@@ -23,6 +29,7 @@ function Profile() {
     const profile = state.profile;
 
     const navigate = useNavigate();
+    const { redirect } = Route.useSearch();
 
     const displayName = profile?.nomeUsuario ?? capitalizeAll(profile?.nome || profile?.email || "Usuário");
 
@@ -68,8 +75,27 @@ function Profile() {
 
 
     return (
-        <div className="flex items-center justify-center w-screen h-screen">
-            <Card className='min-w-xl'>
+        <>
+        <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label="Voltar"
+            title="Voltar"
+            className="absolute left-4 top-4 rounded-full"
+            onClick={() => {
+                if (redirect?.startsWith("/") && !redirect.startsWith("//")) {
+                    window.location.assign(redirect);
+                } else {
+                    navigate({ to: "/" });
+                }
+            }}
+        >
+            <ArrowLeft className="size-5" />
+        </Button>
+        <div className="flex min-h-screen w-full items-center justify-center px-4 py-8">
+            
+            <Card className='w-full max-w-xl min-w-0'>
                 <CardHeader className="flex flex-row items-center gap-4 space-y-0">
                     <div className="flex flex-col">
                         <CardTitle className="text-2xl">{displayName}</CardTitle>
@@ -80,9 +106,9 @@ function Profile() {
                     <ProfileAvatarEditor />
                 </CardContent>
 
-                <div className="mb-0 ml-6 text-foreground flex items-center ">
+                <div className="mb-0 ml-6 flex min-w-0 flex-wrap items-center gap-x-2 text-foreground">
                     <span className='font-semibold'>E-mail:</span>
-                    <span className='text-sm ml-2'>{profile.email}</span>
+                    <span className='min-w-0 break-all text-sm'>{profile.email}</span>
                 </div>
 
                 <form onSubmit={(e) => {
@@ -134,10 +160,11 @@ function Profile() {
                         </form.Field>
                     </CardContent>
 
-                    <CardFooter className="flex justify-end gap-2 mt-8">
+                    <CardFooter className="mt-8 flex flex-col-reverse justify-end gap-2 sm:flex-row">
                         <Button
                             type="button"
                             variant="outline"
+                            className="w-full sm:w-auto"
                             onClick={() => navigate({ to: "/" })}
                         >
                             Voltar
@@ -160,6 +187,7 @@ function Profile() {
                                 return (
                                     <Button
                                         type="submit"
+                                        className="w-full sm:w-auto"
                                         disabled={!canSubmit || isSubmitting || !hasChanges}
                                     >
                                         {isSubmitting && <Spinner className="mr-2 size-4" />}
@@ -172,5 +200,6 @@ function Profile() {
                 </form>
             </Card>
         </div>
+        </>
     );
 }

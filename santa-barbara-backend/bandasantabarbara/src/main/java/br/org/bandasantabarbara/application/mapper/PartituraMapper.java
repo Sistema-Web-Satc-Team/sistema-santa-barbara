@@ -3,8 +3,9 @@ package br.org.bandasantabarbara.application.mapper;
 import br.org.bandasantabarbara.application.dtos.partituras.PartituraRequest;
 
 import br.org.bandasantabarbara.application.dtos.partituras.PartituraResponse;
-import br.org.bandasantabarbara.model.Musica;
-import br.org.bandasantabarbara.model.Partitura;
+import br.org.bandasantabarbara.model.musica.Musica;
+import br.org.bandasantabarbara.model.musica.Partitura;
+
 import org.springframework.stereotype.Component;
 
 

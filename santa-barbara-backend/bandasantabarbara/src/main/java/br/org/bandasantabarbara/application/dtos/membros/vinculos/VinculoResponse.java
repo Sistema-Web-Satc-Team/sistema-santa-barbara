@@ -1,7 +1,7 @@
 package br.org.bandasantabarbara.application.dtos.membros.vinculos;
 
 import br.org.bandasantabarbara.application.dtos.membros.FuncaoResponse;
-import br.org.bandasantabarbara.model.MembroVinculo;
+import br.org.bandasantabarbara.model.membro.MembroVinculo;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.Instant;

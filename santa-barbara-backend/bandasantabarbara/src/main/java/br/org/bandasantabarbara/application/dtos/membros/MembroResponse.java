@@ -1,7 +1,8 @@
 package br.org.bandasantabarbara.application.dtos.membros;
 
-import br.org.bandasantabarbara.model.Membro;
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import br.org.bandasantabarbara.model.membro.Membro;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
@@ -56,6 +57,13 @@ public record MembroResponse(
                 example = "22"
         )
         int idade,
+
+
+        @Schema(
+                description = "Avaliação do membro.",
+                example = "22"
+        )
+        Integer avaliacao,
 
         @Schema(
                 description = "Indica se o membro possui vínculos cadastrados.",

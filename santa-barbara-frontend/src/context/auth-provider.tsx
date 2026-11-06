@@ -1,11 +1,21 @@
-import { fetchUserProfile, login, logout, updateUserProfile, type LoginRequest, type MeUpdateRequest } from "#/api/auth";
+import type { LoginRequest, MeUpdateRequest } from "#/api/auth";
+import { fetchUserProfile, login, logout, updateUserProfile } from "#/api/auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import type React from "react";
+import React from "react";
 import { AuthContext } from "./auth-context";
 
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+
+    const { data: currentRole = null } = useQuery<string | null>({
+        queryKey: ['current-role'],
+        queryFn: () => localStorage.getItem('currentRole'),
+        enabled: typeof window !== 'undefined',
+        initialData: null,
+        staleTime: Infinity,
+        retry: false,
+    });
 
     const queryClient = useQueryClient();
 
@@ -17,6 +27,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         refetchOnWindowFocus: false,
     })
 
+    const setCurrentRole = (role: string | null) => {
+        if (typeof window !== 'undefined') {
+            if (role === null) {
+                localStorage.removeItem('currentRole');
+            } else {
+                localStorage.setItem('currentRole', role);
+            }
+        }
+
+        queryClient.setQueryData(['current-role'], role);
+    };
+
+    React.useEffect(() => {
+        if (!user) return;
+
+        if (user.funcoes.length === 1) {
+            setCurrentRole(user.funcoes[0].code);
+        }
+    }, [user]);
+
 
     const updateMutation = useMutation({
         mutationFn: updateUserProfile,
@@ -27,15 +57,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const logoutMutation = useMutation({
         mutationFn: logout,
-        onSuccess: () => {
+        onSuccess: async () => {
+            await queryClient.cancelQueries({
+                queryKey: ['user-profile'],
+            });
+
+            setCurrentRole(null);
+
             queryClient.setQueryData(['user-profile'], null);
-            queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+
+            queryClient.removeQueries({
+                queryKey: ['user-profile'],
+                type: 'inactive',
+            });
         }
-    })
+    });
 
     const loginMutation = useMutation({
         mutationFn: login,
         onSuccess: () => {
+            setCurrentRole(null);
             queryClient.invalidateQueries({ queryKey: ['user-profile'] });
         }
     })
@@ -46,8 +87,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         state: {
             profile: user ?? null,
             isLoading,
-            error: error as Error | null,
+            error,
             isUpdating: updateMutation.isPending,
+            currentRole,
             loggedIn: () => { return user != null; }
         },
         actions: {
@@ -70,7 +112,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
                     throw new Error("Ocorreu um erro interno.");
                 }
-            }
+            },
+            setCurrentRole: (value: string) => { setCurrentRole(value) }
            
         }
     }

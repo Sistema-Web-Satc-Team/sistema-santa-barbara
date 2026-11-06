@@ -3,7 +3,8 @@ package br.org.bandasantabarbara.application.mapper;
 import br.org.bandasantabarbara.application.dtos.membros.MembroRequest;
 import br.org.bandasantabarbara.application.dtos.membros.MembroResponse;
 import br.org.bandasantabarbara.application.services.storage.FileService;
-import br.org.bandasantabarbara.model.Membro;
+import br.org.bandasantabarbara.model.membro.Membro;
+
 import org.springframework.stereotype.Component;
 
 
@@ -84,6 +85,10 @@ public class MembroMapper {
             membro.setEmail(request.email());
         }
 
+        if (request.avaliacao() != null) {
+            membro.setAvaliacao(request.avaliacao());
+        }
+
         return membro;
     }
 
@@ -97,10 +102,11 @@ public class MembroMapper {
           membro.getDataNascimento(),
           membro.getSexo(),
           membro.getIdade(),
+          membro.getAvaliacao(),
           membro.hasVinculoAtivo(),
           membro.ehMenorDeIdade(),
           membro.getStatusCredencial(),
-          this.fileService.urlFor(membro.getAvatarFile())
+          this.fileService.urlForByResource("/membros",membro.getAvatarFile())
         );
     }
 }

@@ -3,8 +3,9 @@ package br.org.bandasantabarbara.application.mapper;
 
 import br.org.bandasantabarbara.application.dtos.musicas.MusicaRequest;
 import br.org.bandasantabarbara.application.dtos.musicas.MusicaResponse;
-import br.org.bandasantabarbara.model.Genero;
-import br.org.bandasantabarbara.model.Musica;
+import br.org.bandasantabarbara.model.musica.Genero;
+import br.org.bandasantabarbara.model.musica.Musica;
+
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -20,7 +21,7 @@ public class MusicaMapper {
             musica.setCompositor(request.compositor());
         }
 
-        if (!request.generos().isEmpty()) {
+        if (request.generos() != null && !request.generos().isEmpty()) {
             var generos = request.generos().stream().map(Genero::new).collect(Collectors.toSet());
             musica.setGeneros(generos);
         }
@@ -47,10 +48,6 @@ public class MusicaMapper {
             musica.setCompositor(request.compositor());
         }
 
-        if (request.generos() != null) {
-            var generos = request.generos().stream().map(Genero::new).collect(Collectors.toSet());
-            musica.setGeneros(generos);
-        }
     }
 
 

@@ -1,0 +1,164 @@
+import { updateMemberById } from "#/api/member";
+import type { Member } from "#/api/member";
+import { DataPagination } from "#/components/business/data-pagination";
+import { MemberEditDialog } from "#/components/business/membros/member-edit-dialog";
+import { MemberFormDialog } from "#/components/business/membros/member-form-dialog";
+import { MemberTable } from "#/components/business/membros/member-table";
+import { MemberResponsaveisDialog } from "#/components/business/membros/responsaveis/member-responsaveis-dialog";
+import { MemberVinculosDrawer } from "#/components/business/vinculos/member-vinculos-drawer";
+import { Button } from '#/components/ui/button';
+import { ButtonGroup } from "#/components/ui/button-group";
+import { Field, FieldLabel } from '#/components/ui/field';
+import { Input } from "#/components/ui/input";
+import { Spinner } from '#/components/ui/spinner';
+import { useMembers } from "#/hooks/use-members";
+import { mensagemDeErro } from "#/lib/mensagem-erro";
+import { registrarMembro } from "#/lib/registrar-membro";
+import type { MemberFormValues } from "#/schemas/form-schema-member";
+import { UserPlus } from "lucide-react";
+import { useRef, useState } from "react";
+
+
+
+export function MembrosPage() {
+    const { state, actions } = useMembers();
+    const searchTermRef = useRef<string>("")
+    const [isOpen, setIsOpen] = useState(false);
+
+    const [respMember, setRespMember] = useState<Member | null>(null)
+    const [editing, setEditing] = useState<Member | null>(null)
+    const [vincMember, setVincMember] = useState<Member | null>(null)
+
+
+
+
+
+
+    if (state.isLoading) {
+        return <div className="w-full flex items-center justify-center min-h-screen">
+            <Spinner />
+        </div>
+    }
+
+
+    return (
+        <>
+
+            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+                <h2 className="mr-auto text-3xl font-bold">Membros</h2>
+
+                <div className="w-full sm:w-auto">
+                    <Button onClick={() => setIsOpen(true)} className="w-full text-primary-foreground font-semibold sm:w-auto">
+                        <UserPlus />
+                        Novo Membro
+                    </Button>
+                    <MemberFormDialog onSubmit={async (values: MemberFormValues) =>  {
+                        await registrarMembro(values)
+                        actions.refresh();
+                    } } open={isOpen} onOpenChange={setIsOpen} />
+                </div>
+            </div>
+
+           
+   
+            <Field className="mb-4">
+                <FieldLabel htmlFor="input-button-group">Buscar</FieldLabel>
+                <ButtonGroup>
+                    <Input placeholder="Busque por email ou nome..."
+                    
+                        onChange={(e) => { searchTermRef.current = e.target.value;}}
+
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                actions.setFilter("search", searchTermRef.current);
+                            }
+                        }}
+                    />
+
+                    <Button variant="outline"
+                        onClick={() => actions.setFilter("search", searchTermRef.current)}
+                    >
+                        Buscar
+                    </Button>
+                </ButtonGroup>
+            </Field>
+
+
+
+            {state.error ? (
+                <div role="alert" className="flex flex-col items-center gap-3 p-12 text-center text-destructive">
+                    <p>{mensagemDeErro(state.error, "Não foi possível carregar os membros.")}</p>
+                    <Button variant="outline" onClick={actions.refresh}>
+                        Tentar novamente
+                    </Button>
+                </div>
+            ) : state.isEmpty ? (
+                    <div className="w-full flex items-center justify-center p-12 text-muted-foreground">
+                        Nenhum membro encontrado.
+                    </div>
+                ) : (
+                    <MemberTable 
+                        membros={state.members?.content ?? []}
+
+                        onEdit={setEditing}
+                        onManageResponsaveis={setRespMember}
+                        onManageRoles={setVincMember}
+
+                    />
+
+            )}
+
+
+            {!state.error && state.members && (
+                <DataPagination
+                    pagesSizes={[5,10,20,25,50]}
+                    pagination={{
+                        page: state.members.page,
+                        size: state.members.size,
+                        totalElements: state.members.totalElements,
+                        totalPages: state.members.totalPages,
+                    }}
+                    onPageChange={(value: number) => actions.setFilter("page", value)}
+                    onSizeChange={(value: number) => actions.setFilter("size", value)}
+                />
+            )}
+
+
+
+            {editing && (
+                <MemberEditDialog
+                    key={editing.id} 
+                    member={editing}
+                    open
+                    onOpenChange={(o) => !o && setEditing(null)}
+                    onSubmit={async (id, req) => {
+                        await updateMemberById(id, req)
+                        actions.refresh();
+                    }}
+                />
+            )}
+
+
+            {respMember && (
+                <MemberResponsaveisDialog
+                    key={respMember.id}
+                    member={respMember}
+                    open
+                    onOpenChange={(o) => !o && setRespMember(null)}
+                />
+            )}
+
+
+            {vincMember && (
+                <MemberVinculosDrawer
+                    key={vincMember.id}
+                    member={vincMember}
+                    open
+                    onOpenChange={(o) => !o && setVincMember(null)}
+                />
+            )}
+                        
+
+        </>
+    )
+}

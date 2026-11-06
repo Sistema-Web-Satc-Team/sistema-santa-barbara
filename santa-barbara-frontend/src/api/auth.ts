@@ -1,5 +1,6 @@
 import { api } from "#/lib/axios";
 import type { UUID } from "node:crypto";
+import type { Role } from "./funcoes";
 
 export interface LoginRequest {
   login: string;
@@ -21,8 +22,46 @@ export interface MeProfileResponse {
   dataNascimento: string,
   sexo: string,
   idade: number,
-  funcoes: string[],
+  funcoes: Role[],
   avatarURL: string
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+function normalizeRoles(value: unknown): Role[] {
+  const roles = Array.isArray(value) ? value : isRecord(value) || typeof value === "string" ? [value] : null
+
+  if (!roles) {
+    throw new Error("Formato de funções inválido na resposta do perfil.")
+  }
+
+  return roles.map((role) => {
+    if (typeof role === "string") {
+      return { code: role, nome: role, descricao: "" }
+    }
+
+    if (
+      isRecord(role) &&
+      typeof role.code === "string" &&
+      typeof role.nome === "string" &&
+      typeof role.descricao === "string"
+    ) {
+      return { code: role.code, nome: role.nome, descricao: role.descricao }
+    }
+
+    throw new Error("Formato de função inválido na resposta do perfil.")
+  })
+}
+
+export function normalizeMeProfile(data: unknown): MeProfileResponse {
+  if (!isRecord(data)) {
+    throw new Error("Formato inválido na resposta do perfil.")
+  }
+
+  const profile = data as Omit<MeProfileResponse, "funcoes"> & { funcoes: unknown }
+  return { ...profile, funcoes: normalizeRoles(profile.funcoes) }
 }
 
 
@@ -45,8 +84,8 @@ export async function loggedIn(): Promise<boolean> {
 }
 
 export async function fetchUserProfile(): Promise<MeProfileResponse> {
-  const { data } = await api.get('/api/v1/auth/me')
-  return data
+  const { data } = await api.get<unknown>('/api/v1/auth/me')
+  return normalizeMeProfile(data)
 }
 
 export async function updateUserProfile(data: MeUpdateRequest) {

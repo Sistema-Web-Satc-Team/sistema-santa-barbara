@@ -5,7 +5,7 @@ export const Route = createFileRoute('/_auth')({
     if (!context.profile) {
       throw redirect({ to: '/login', search: { redirect: location.href } })
     }
-    return { profile: context.profile }
+    return { profile: context.profile, currentRole: context.currentRole }
   },
   component: Outlet,
 })

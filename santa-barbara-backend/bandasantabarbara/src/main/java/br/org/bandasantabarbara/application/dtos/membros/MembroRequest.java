@@ -1,7 +1,8 @@
 package br.org.bandasantabarbara.application.dtos.membros;
 
-import br.org.bandasantabarbara.model.Membro;
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import br.org.bandasantabarbara.model.membro.Membro;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
@@ -38,6 +39,17 @@ public record MembroRequest(
                 message = "O telefone deve conter exatamente 11 dígitos."
         )
         String telefone,
+
+
+        @Schema(
+                description = "Avaliação do membro.",
+                example = "22",
+                minimum = "0",
+                maximum = "50"
+        )
+        @Min(0)
+        @Max(50)
+        Integer avaliacao,
 
         @Schema(
                 description = "Endereço residencial do membro.",

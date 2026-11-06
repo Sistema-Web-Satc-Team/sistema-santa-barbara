@@ -1,10 +1,12 @@
 package br.org.bandasantabarbara.application.mapper;
 
+import br.org.bandasantabarbara.application.dtos.instrumentos.AtualizarInstrumentoRequest;
 import br.org.bandasantabarbara.application.dtos.instrumentos.InstrumentoRequest;
 import br.org.bandasantabarbara.application.dtos.instrumentos.InstrumentoResponse;
 import br.org.bandasantabarbara.application.dtos.membros.FuncaoResponse;
-import br.org.bandasantabarbara.model.Funcao;
-import br.org.bandasantabarbara.model.Instrumento;
+import br.org.bandasantabarbara.model.membro.Funcao;
+import br.org.bandasantabarbara.model.musica.Instrumento;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,7 +33,7 @@ public class InstrumentoMapper {
         return instrumento;
     }
 
-    public void toUpdate(InstrumentoRequest request, Instrumento instrumento) {
+    public void toUpdate(AtualizarInstrumentoRequest request, Instrumento instrumento) {
 
         if (request.nome() != null) {
             instrumento.setNome(request.nome());

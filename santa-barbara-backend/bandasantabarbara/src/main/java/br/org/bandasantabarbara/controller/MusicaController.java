@@ -6,15 +6,12 @@ import br.org.bandasantabarbara.application.dtos.musicas.MusicaRequest;
 import br.org.bandasantabarbara.application.dtos.musicas.MusicaResponse;
 import br.org.bandasantabarbara.application.dtos.partituras.PartituraRequest;
 import br.org.bandasantabarbara.application.dtos.partituras.PartituraResponse;
-import br.org.bandasantabarbara.application.usecase.musica.*;
-import br.org.bandasantabarbara.application.usecase.partitura.AdicionarPartituraMusicaUseCase;
-import br.org.bandasantabarbara.application.usecase.partitura.AtualizarPartituraUseCase;
-import br.org.bandasantabarbara.application.usecase.partitura.ListarPartiturasMusicaUseCase;
-import br.org.bandasantabarbara.application.usecase.partitura.RemoverPartituraUseCase;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Encoding;
+import br.org.bandasantabarbara.application.services.musica.GeneroService;
+import br.org.bandasantabarbara.application.services.musica.MusicaService;
+import br.org.bandasantabarbara.application.services.musica.PartituraService;
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -31,61 +28,46 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/musicas")
+@Tag(name = "Músicas e partituras", description = "Cadastro de músicas, gêneros e partituras.")
 public class MusicaController {
 
-    private final CadastrarMusicaUseCase cadastrarMusicaUseCase;
-    private final SugerirGeneroUseCase sugerirGeneroUseCase;
-    private final ConsultarMusicaUseCase consultarMusicaUseCase;
-    private final AtualizarMusicaUseCase atualizarMusicaUseCase;
-    private final RemoverMusicaUseCase removerMusicaUseCase;
-
-    private final AdicionarPartituraMusicaUseCase adicionarPartituraMusicaUseCase;
-    private final ListarPartiturasMusicaUseCase listarPartiturasMusicaUseCase;
-    private final RemoverPartituraUseCase removerPartituraUseCase;
-    private final AtualizarPartituraUseCase atualizarPartituraUseCase;
+    private final MusicaService musicaService;
+    private final GeneroService generoService;
+    private final PartituraService partituraService;
 
 
     public MusicaController(
-            CadastrarMusicaUseCase cadastrarMusicaUseCase,
-            SugerirGeneroUseCase sugerirGeneroUseCase,
-            ConsultarMusicaUseCase consultarMusicaUseCase,
-            AtualizarMusicaUseCase atualizarMusicaUseCase,
-            RemoverMusicaUseCase removerMusicaUseCase,
-            AdicionarPartituraMusicaUseCase adicionarPartituraMusicaUseCase,
-            ListarPartiturasMusicaUseCase listarPartiturasMusicaUseCase,
-            RemoverPartituraUseCase removerPartituraUseCase,
-            AtualizarPartituraUseCase atualizarPartituraUseCase) {
-        this.cadastrarMusicaUseCase = cadastrarMusicaUseCase;
-        this.sugerirGeneroUseCase = sugerirGeneroUseCase;
-        this.consultarMusicaUseCase = consultarMusicaUseCase;
-        this.removerMusicaUseCase = removerMusicaUseCase;
-        this.atualizarMusicaUseCase = atualizarMusicaUseCase;
-        this.adicionarPartituraMusicaUseCase = adicionarPartituraMusicaUseCase;
-        this.listarPartiturasMusicaUseCase = listarPartiturasMusicaUseCase;
-        this.removerPartituraUseCase = removerPartituraUseCase;
-        this.atualizarPartituraUseCase = atualizarPartituraUseCase;
+            MusicaService musicaService,
+            GeneroService generoService,
+            PartituraService partituraService) {
+        this.musicaService = musicaService;
+        this.generoService = generoService;
+        this.partituraService = partituraService;
     }
 
     @PostMapping
+    @Operation(summary = "Cadastrar música", description = "Cadastra uma música e associa seus gêneros.")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public MusicaResponse cadastrar(
             @Valid @RequestBody MusicaRequest dto
     ) {
-        return this.cadastrarMusicaUseCase.cadastrar(dto);
+        return this.musicaService.cadastrar(dto);
     }
 
 
     @GetMapping("/generos/sugestoes")
+    @Operation(summary = "Sugerir gêneros", description = "Busca sugestões de gêneros a partir de um termo.")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'ALUNO', 'MAESTRO', 'MUSICO_BANDA', 'PROFESSOR', 'RESPONSAVEL')")
     public List<String> sugestionarGeneros(@RequestParam String q) {
-        return this.sugerirGeneroUseCase.sugerir(q);
+        return this.generoService.sugerir(q);
     }
 
     @GetMapping
+    @Operation(summary = "Listar músicas", description = "Lista músicas paginadas, com busca opcional.")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'ALUNO', 'MAESTRO', 'MUSICO_BANDA', 'PROFESSOR', 'RESPONSAVEL')")
     public PageResponse<MusicaResponse> listar(
             @PageableDefault(
                     size = 10,
@@ -95,16 +77,17 @@ public class MusicaController {
             Pageable pageable,
             @RequestParam(required = false) String search
     ) {
-        return this.consultarMusicaUseCase.listar(search, pageable);
+        return this.musicaService.listar(search, pageable);
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar música", description = "Atualiza os dados de uma música.")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public ResponseEntity<MusicaResponse> atualizar(
             @PathVariable UUID id,
             @Valid @RequestBody MusicaRequest request) {
-        return ResponseEntity.ok(this.atualizarMusicaUseCase.executar(id, request));
+        return ResponseEntity.ok(this.musicaService.atualizar(id, request));
     }
 
     /*
@@ -114,16 +97,18 @@ public class MusicaController {
      */
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Remover música", description = "Remove uma música.")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public ResponseEntity<Void> remover(@PathVariable UUID id) {
-        this.removerMusicaUseCase.executar(id);
+        this.musicaService.remover(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping(value = "/{musicaId}/partituras", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Adicionar partitura", description = "Envia o arquivo e os metadados de uma partitura para a música.")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public PartituraResponse cadastrarPartituras(
             @PathVariable UUID musicaId,
             @RequestPart("file") MultipartFile file,
@@ -131,34 +116,37 @@ public class MusicaController {
             ObjectMapper objectMapper
     ) {
         PartituraRequest partituraRequest = objectMapper.readValue(requestJson, PartituraRequest.class);
-        return this.adicionarPartituraMusicaUseCase.adicionar(musicaId, file, partituraRequest);
+        return this.partituraService.adicionar(musicaId, file, partituraRequest);
     }
 
     @GetMapping("/{musicaId}/partituras")
-    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'MAESTRO', 'ALUNO', 'MUSICO_BANDA', 'PROFESSOR')")
+    @Operation(summary = "Listar partituras da música", description = "Lista as partituras associadas a uma música.")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'RESPONSAVEL', 'ADMIN', 'MAESTRO', 'ALUNO', 'MUSICO_BANDA', 'PROFESSOR')")
     public List<PartituraResponse> listarPartiturasDaMusica(
             @PathVariable UUID musicaId
     ) {
-        return this.listarPartiturasMusicaUseCase.executar(musicaId);
+        return this.partituraService.listar(musicaId);
     }
 
     @DeleteMapping("/partituras/{id}")
+    @Operation(summary = "Remover partitura", description = "Remove uma partitura e seu arquivo associado.")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public ResponseEntity<Void> removerPartitura(@PathVariable UUID id) {
-        this.removerPartituraUseCase.executar(id);
+        this.partituraService.remover(id);
         return ResponseEntity.noContent().build();
     }
 
 
     @PutMapping("/partituras/{id}")
+    @Operation(summary = "Atualizar partitura", description = "Atualiza os metadados de uma partitura.")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'MAESTRO')")
     public PartituraResponse atualizarPartitura(
             @PathVariable UUID id,
             @RequestBody @Valid PartituraRequest request
     ) {
-        return this.atualizarPartituraUseCase.executar(id, request);
+        return this.partituraService.atualizar(id, request);
     }
 
 

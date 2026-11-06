@@ -13,6 +13,7 @@ export interface Member {
     dataNascimento: string;
     sexo: Sexo;
     idade: number;
+    avaliacao: number | null;
     hasVinculos: boolean;
     menorDeIdade: boolean;
     statusCredencialAcesso: StatusCredencialAcesso;
@@ -26,6 +27,7 @@ export interface UpdateMemberRequest {
     endereco?: string;
     sexo?: string;
     dataNascimento?: string;
+    avaliacao?: number;
 }
 
 export interface RegisterMemberRequest {
@@ -108,4 +110,3 @@ async function searchResponsaveis(search: string): Promise<Member[]> {
 }
 
 export { cadastrarMembroMenor, fetchMemberBindsById, fetchMembers, registerMember, searchResponsaveis, updateMemberById };
-

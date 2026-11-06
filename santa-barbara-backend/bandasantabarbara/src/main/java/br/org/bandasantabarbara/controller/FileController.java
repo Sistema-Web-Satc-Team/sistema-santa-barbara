@@ -2,7 +2,10 @@ package br.org.bandasantabarbara.controller;
 
 import br.org.bandasantabarbara.application.dtos.files.FileResponse;
 import br.org.bandasantabarbara.application.services.storage.FileService;
-import br.org.bandasantabarbara.model.StoredFile;
+import br.org.bandasantabarbara.model.storage.StoredFile;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
@@ -19,6 +22,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/files")
+@Tag(name = "Arquivos", description = "Upload, download e remoção de arquivos.")
 public class FileController {
 
     private final FileService service;
@@ -28,7 +32,8 @@ public class FileController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @Operation(summary = "Enviar arquivo", description = "Envia um arquivo permitido e retorna seus metadados.")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
     public ResponseEntity<FileResponse> upload(@RequestParam("file") MultipartFile file) {
         StoredFile saved = service.upload(file);
         URI location = URI.create("/files/" + saved.getId());
@@ -37,7 +42,8 @@ public class FileController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @Operation(summary = "Baixar arquivo", description = "Retorna o conteúdo de um arquivo pelo identificador.")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
     public ResponseEntity<Resource> download(@PathVariable UUID id) {
         StoredFile file = service.getMetadata(id);
 
@@ -53,7 +59,8 @@ public class FileController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @Operation(summary = "Remover arquivo", description = "Remove um arquivo pelo identificador.")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
