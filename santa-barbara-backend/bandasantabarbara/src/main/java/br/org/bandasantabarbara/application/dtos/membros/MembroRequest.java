@@ -40,6 +40,17 @@ public record MembroRequest(
         )
         String telefone,
 
+
+        @Schema(
+                description = "Avaliação do membro.",
+                example = "22",
+                minimum = "0",
+                maximum = "50"
+        )
+        @Min(0)
+        @Max(50)
+        Integer avaliacao,
+
         @Schema(
                 description = "Endereço residencial do membro.",
                 example = "Rua das Flores, 123"

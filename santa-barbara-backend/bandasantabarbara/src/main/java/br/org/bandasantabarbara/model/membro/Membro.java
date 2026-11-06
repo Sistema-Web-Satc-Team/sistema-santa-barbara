@@ -107,6 +107,10 @@ public class Membro implements Persistable<UUID> {
     @Column(name = "telefone")
     private String telefone;
 
+    @Getter 
+    @Column(name = "avaliacao")
+    private Integer avaliacao;
+
     @Getter
     @Column(name = "criado_em", nullable = false, updatable = false)
     private Instant criadoEm;
@@ -194,6 +198,17 @@ public class Membro implements Persistable<UUID> {
 
         this.telefone = telefoneInterno;
         this.atualizadoEm = Instant.now();
+    }
+
+    public void setAvaliacao(Integer avaliacao) {
+        
+        if (avaliacao < 0) 
+            throw new BadRequestException("Avaliação deve ser positiva.");
+
+        if (avaliacao > 50)
+            throw new BadRequestException("O número da avaliação não pode passar de 50");
+
+        this.avaliacao = avaliacao;
     }
 
     /**

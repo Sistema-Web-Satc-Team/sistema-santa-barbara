@@ -58,6 +58,13 @@ public record MembroResponse(
         )
         int idade,
 
+
+        @Schema(
+                description = "Avaliação do membro.",
+                example = "22"
+        )
+        Integer avaliacao,
+
         @Schema(
                 description = "Indica se o membro possui vínculos cadastrados.",
                 example = "true"
