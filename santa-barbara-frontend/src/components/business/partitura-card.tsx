@@ -4,9 +4,23 @@ import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
 import { getErrorMessage } from '#/lib/api-error'
 import { capitalize } from '#/lib/utils'
-import { DownloadIcon, FileTextIcon, Trash2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
+
+
+import {
+  DownloadIcon,
+  FileTextIcon,
+  MoreHorizontalIcon,
+  Trash2Icon,
+} from 'lucide-react'
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '#/components/ui/dropdown-menu'
 
 interface PartituraCardProps {
   partitura: Partitura
@@ -47,61 +61,76 @@ export function PartituraCard({
     }
   }
 
+  console.log(partitura.titulo)
+
   return (
-    <article className="flex min-w-0 flex-col gap-3 rounded-lg border p-4 sm:flex-row sm:items-start">
-      <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-muted">
-        <FileTextIcon className="size-5 text-muted-foreground" aria-hidden />
+    <article className="group flex min-w-0 items-center gap-3 rounded-xl border bg-card p-3 transition-colors hover:bg-muted/30">
+
+      <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
+        <FileTextIcon className="size-5 text-muted-foreground" />
       </div>
 
-      <div className="min-w-0 flex-1 space-y-2">
-        <div>
-          <h3 className="truncate font-medium">
-            {capitalize(partitura.titulo)}
-          </h3>
-          {partitura.arranjador && (
-            <p className="truncate text-sm text-muted-foreground">
-              Arranjador: {partitura.arranjador}
-            </p>
-          )}
-        </div>
+      <div className="min-w-0 flex-1">
+        <h3 className="truncate text-sm font-medium">
+          {capitalize(partitura.titulo)}
+        </h3>
 
-        <div className="flex flex-wrap gap-1.5">
-          {partitura.instrumentos.length > 0 ? (
-            partitura.instrumentos.map((instrumento) => (
-              <Badge key={instrumento.id} variant="secondary">
-                {capitalize(instrumento.nome)}
-              </Badge>
-            ))
-          ) : (
-            <Badge variant="outline">Geral / Todos</Badge>
-          )}
-        </div>
+        {partitura.arranjador && (
+          <p className="truncate text-xs text-muted-foreground">
+            {partitura.arranjador}
+          </p>
+        )}
+
+        <p className="truncate text-xs text-muted-foreground">
+          {partitura.instrumentos.length > 0
+            ? partitura.instrumentos
+                .map(i => capitalize(i.nome))
+                .join(', ')
+            : 'Geral / Todos'}
+        </p>
       </div>
 
-      <div className="flex flex-col gap-2 sm:flex-row">
+      <div className="flex shrink-0 items-center gap-1">
+
         <Button
           type="button"
-          variant="outline"
-          size="sm"
-          className="w-full sm:w-auto"
+          variant="ghost"
+          size="icon"
+          className="size-8"
+          title="Baixar PDF"
+          aria-label="Baixar PDF"
           disabled={isDownloading || !partitura.partituraUrl}
           onClick={() => void handleDownload()}
         >
-          <DownloadIcon />
-          {isDownloading ? 'Baixando...' : 'Baixar PDF'}
+          <DownloadIcon className="size-4" />
         </Button>
+
         {canDelete && (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="w-full text-destructive hover:text-destructive sm:w-auto"
-            onClick={onDelete}
-          >
-            <Trash2Icon />
-            Remover
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="size-8"
+                aria-label="Mais opções"
+              >
+                <MoreHorizontalIcon className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                variant="destructive"
+                onSelect={onDelete}
+              >
+                <Trash2Icon className="size-4" />
+                Remover partitura
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
+
       </div>
     </article>
   )

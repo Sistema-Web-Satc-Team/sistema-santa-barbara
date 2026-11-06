@@ -42,15 +42,6 @@ function Layout() {
       </SidebarMenuItem>
 
       <SidebarMenuItem>
-        <SidebarMenuButton asChild isActive={pathname === "/dashboard/musicos"}>
-          <Link to="/secretario/dashboard/musicos">
-            <Music2 />
-            <span>Músicos</span>
-          </Link>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-
-      <SidebarMenuItem>
         <SidebarMenuButton asChild isActive={pathname === "/dashboard/membros/convites"}>
           <Link to="/secretario/dashboard/convites" search={{ page: 0 }}>
             <Mail />

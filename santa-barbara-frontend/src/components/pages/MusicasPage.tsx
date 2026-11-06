@@ -14,6 +14,7 @@ import { useInfiniteScroll } from '#/hooks/use-infinite-scroll'
 import { useListMusicas } from '#/hooks/use-list-musicas'
 import { useMusicaMutations } from '#/hooks/use-musica-mutations'
 import { uniqueText } from '#/lib/text'
+import { useQueryClient } from '@tanstack/react-query'
 import { PlusIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -29,8 +30,21 @@ interface MusicasPageProps {
 export function MusicasPage({ permitirRemocao = false }: MusicasPageProps) {
   const { state: authState } = useAuth()
 
+  const queryClient = useQueryClient();
 
-  console.log(authState);
+  console.log("AUTH STATE:", authState.currentRole);
+
+  console.log(
+    "QUERY CACHE:",
+    queryClient.getQueryData(['current-role'])
+  );
+
+  console.log(
+    "LOCAL STORAGE:",
+    typeof window !== "undefined"
+      ? localStorage.getItem('currentRole')
+      : "SSR"
+  );
 
   const currentRole = authState.currentRole
   const canEdit = currentRole !== null && EDITOR_ROLES.includes(currentRole)
